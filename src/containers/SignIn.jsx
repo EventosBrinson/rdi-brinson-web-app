@@ -19,6 +19,10 @@ class SignIn extends React.Component {
 
   processSignIn(e) {
     if (e.preventDefault) e.preventDefault()
+
+    let data = (this.props.sign_in_form || Immutable.Map()).toJS()
+
+    this.props.submitRequest('SIGN_IN', data)
   }
 
   render() {
@@ -38,7 +42,7 @@ class SignIn extends React.Component {
           <input name='password' type='password' value={ form.get('password') || '' } onChange={ this.handleChange }/>
         </div>
         <div>
-          <button type="submit">Log In</button>
+          <button type="submit">Sign In</button>
         </div>
       </form>
     )
@@ -46,7 +50,6 @@ class SignIn extends React.Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state.toJS())
   return {
     sign_in_form: state.getIn(['forms', 'sign_in_form'])
   }
