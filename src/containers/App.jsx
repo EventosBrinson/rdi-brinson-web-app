@@ -1,10 +1,12 @@
 
 import React from 'react'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from '../store'
+import Layout from './Layout'
 import ScrollToTop from '../components/ScrollToTop'
-import SignInPage from '../containers/SignIn'
+import SignInPage from './SignIn'
+
 
 export default class App extends React.Component {
   render() {
@@ -12,9 +14,9 @@ export default class App extends React.Component {
       <Provider store={ store }>
         <Router>
           <ScrollToTop>
-            <div>
+            <Layout>
               <Route path="/sign_in" component={ SignInPage } />
-            </div>
+            </Layout>
           </ScrollToTop>
         </Router>
       </Provider>
