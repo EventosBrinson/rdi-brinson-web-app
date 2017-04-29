@@ -3,16 +3,24 @@ import { Cookies } from 'react-cookie';
 import Immutable from 'immutable'
 
 const cookies = new Cookies()
-var session_token = undefined
+var sessionToken = undefined
+
+export function initApp(state) {
+  sessionToken = cookies.get('ssid')
+  Api.post('SIGN_IN', '/sign_in', {}, sessionToken)
+
+  return state.set('session_status', 'FIRST_SIGNING_IN')
+}
 
 export function changeForm(state, form, field, value) {
   return state.setIn(['forms', form , field], Immutable.fromJS(value))
 }
 
 export function submitRequest(state, request, data) {
+  console.log("dude")
   switch (request) {
     case 'SIGN_IN':
-      Api.post(request, '/sign_in', data, session_token)
+      Api.post(request, '/sign_in', data)
       return state.deleteIn(['forms', 'sign_in_form']).set('session_status', 'SIGNING_IN')
     default:
       return state
@@ -24,7 +32,7 @@ export function requestSucceeded(state, request, data) {
     case 'SIGN_IN':
       if(data) {
         cookies.set('ssid', data.token)
-        session_token = data.token
+        sessionToken = data.token
 
         return state.merge({ 'session_status': 'SIGNED_IN', 'user': data.user })
       } else {
