@@ -13,12 +13,14 @@ class SignIn extends React.Component {
     this.processSignIn = this.processSignIn.bind(this)
   }
 
-  handleChange(e) {
-    this.props.changeForm('sign_in_form', e.target.name, e.target.value)
+  handleChange(event) {
+    this.props.changeForm('sign_in_form', event.target.name, event.target.value)
   }
 
-  processSignIn(e) {
-    if (e.preventDefault) e.preventDefault()
+  processSignIn(event) {
+    if (event.preventDefault) {
+      event.preventDefault()
+    }
 
     let data = (this.props.sign_in_form || Immutable.Map()).toJS()
 
@@ -26,11 +28,11 @@ class SignIn extends React.Component {
   }
 
   render() {
-    let form = this.props.sign_in_form || Immutable.Map()
-
     if(this.props.session_status === 'SIGNED_IN') {
       this.props.history.goBack()
     }
+
+    let form = this.props.sign_in_form || Immutable.Map()
 
     return (
       <form onSubmit={ this.processSignIn }>
