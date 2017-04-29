@@ -28,6 +28,10 @@ class SignIn extends React.Component {
   render() {
     let form = this.props.sign_in_form || Immutable.Map()
 
+    if(this.props.session_status === 'SIGNED_IN') {
+      this.props.history.goBack()
+    }
+
     return (
       <form onSubmit={ this.processSignIn }>
         <h2>
@@ -51,7 +55,8 @@ class SignIn extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    sign_in_form: state.getIn(['forms', 'sign_in_form'])
+    sign_in_form: state.getIn(['forms', 'sign_in_form']),
+    session_status: state.get('session_status')
   }
 }
 
