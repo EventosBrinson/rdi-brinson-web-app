@@ -4,6 +4,11 @@ import Immutable from 'immutable'
 
 const cookies = new Cookies()
 var sessionToken = undefined
+var routerHistory = undefined
+
+export function setRouterHistory(history) {
+  routerHistory = history
+}
 
 export function initApp(state) {
   sessionToken = cookies.get('ssid')
@@ -47,14 +52,22 @@ export function requestSucceeded(state, request, data) {
         cookies.set('ssid', data.token)
         sessionToken = data.token
 
-        return state.merge({ 'session_status': 'SIGNED_IN', 'user': data.user }).delete('reset_password_status')
+        if(routerHistory) {
+          routerHistory.replace('/')
+        }
+ 
+        return Immutable.Map({ 'session_status': 'SIGNED_IN', 'user': data.user })
       } else {
-        return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
+        return Immutable.Map({ 'session_status': 'SIGNED_IN_FAILED' })
       }
 
     case 'SIGN_OUT':
       cookies.remove('ssid')
       sessionToken = undefined
+
+      if(routerHistory) {
+        routerHistory.push('/sign_in')
+      }
 
       return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
 
@@ -72,7 +85,7 @@ export function requestFailed(state, request, data) {
       return Immutable.Map({ 'session_status': 'SIGNING_IN_ERROR' })
 
     case 'SIGN_OUT':
-      return state.set('session_status', 'SIGNED_IN')
+      return state.set('session_status', 'SIGN_OUT_ERROR')
 
     case 'REQUEST_RESET_PASSWORD':
       return state.set('recover_password_status', 'RECOVER_ERROR')
