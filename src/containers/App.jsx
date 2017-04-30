@@ -6,6 +6,8 @@ import store from '../store'
 import Layout from './Layout'
 import ScrollToTop from './ScrollToTop'
 import SignInPage from './SignIn'
+import RecoverPasswordPage from './RecoverPassword'
+import ResetPasswordPage from './ResetPassword'
 
 
 export default class App extends React.Component {
@@ -16,6 +18,8 @@ export default class App extends React.Component {
           <ScrollToTop>
             <Layout>
               <Route path="/sign_in" component={ SignInPage } />
+              <Route path="/recover" component={ RecoverPasswordPage } />
+              <Route path="/reset" component={ ResetPasswordPage } />
             </Layout>
           </ScrollToTop>
         </Router>

@@ -26,6 +26,14 @@ export function submitRequest(state, request, data) {
       Api.del(request, '/sign_out', data, sessionToken)
       return state.set('session_status', 'SIGNING_OUT')
 
+    case 'REQUEST_RESET_PASSWORD':
+      Api.post(request, '/reset_password', data)
+      return state.deleteIn(['forms', 'recover_password_form']).set('recover_password_status', 'SENDING')
+    
+    case 'RESET_PASSWORD':
+      Api.patch(request, '/reset_password', data)
+      return state.deleteIn(['forms', 'reset_password_form']).set('reset_password_status', 'RESETING')
+
     default:
       return state
   }
@@ -34,11 +42,12 @@ export function submitRequest(state, request, data) {
 export function requestSucceeded(state, request, data) {
   switch (request) {
     case 'SIGN_IN':
+    case 'RESET_PASSWORD':
       if(data) {
         cookies.set('ssid', data.token)
         sessionToken = data.token
 
-        return state.merge({ 'session_status': 'SIGNED_IN', 'user': data.user })
+        return state.merge({ 'session_status': 'SIGNED_IN', 'user': data.user }).delete('reset_password_status')
       } else {
         return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
       }
@@ -48,6 +57,9 @@ export function requestSucceeded(state, request, data) {
       sessionToken = undefined
 
       return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
+
+    case 'REQUEST_RESET_PASSWORD':
+      return state.set('recover_password_status', 'SENT')
 
     default:
       return state
@@ -61,6 +73,12 @@ export function requestFailed(state, request, data) {
 
     case 'SIGN_OUT':
       return state.set('session_status', 'SIGNED_IN')
+
+    case 'REQUEST_RESET_PASSWORD':
+      return state.set('recover_password_status', 'RECOVER_ERROR')
+
+    case 'RESET_PASSWORD':
+      return Immutable.Map({ 'reset_password_status': 'RESET_ERROR' })
 
     default:
       return state
