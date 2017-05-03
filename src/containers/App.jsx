@@ -8,6 +8,7 @@ import ScrollToTop from './ScrollToTop'
 import SignInPage from './SignIn'
 import RecoverPasswordPage from './RecoverPassword'
 import ResetPasswordPage from './ResetPassword'
+import AcceptInvitationPage from './AcceptInvitation'
 
 
 export default class App extends React.Component {
@@ -20,6 +21,7 @@ export default class App extends React.Component {
               <Route path="/sign_in" component={ SignInPage } />
               <Route path="/recover" component={ RecoverPasswordPage } />
               <Route path="/reset" component={ ResetPasswordPage } />
+              <Route path="/confirmation" component={ AcceptInvitationPage } />
             </Layout>
           </ScrollToTop>
         </Router>

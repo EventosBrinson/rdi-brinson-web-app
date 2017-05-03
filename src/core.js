@@ -39,6 +39,10 @@ export function submitRequest(state, request, data) {
       Api.patch(request, '/reset_password', data)
       return state.deleteIn(['forms', 'reset_password_form']).set('reset_password_status', 'RESETING')
 
+    case 'CONFIRM_ACCOUNT':
+      Api.patch(request, '/confirm', data)
+      return state.deleteIn(['forms', 'accept_invitation_form']).set('confirmation_status', 'CONFIRMING')
+
     default:
       return state
   }
@@ -48,6 +52,7 @@ export function requestSucceeded(state, request, data) {
   switch (request) {
     case 'SIGN_IN':
     case 'RESET_PASSWORD':
+    case 'CONFIRM_ACCOUNT':
       if(data) {
         cookies.set('ssid', data.token)
         sessionToken = data.token
@@ -58,7 +63,7 @@ export function requestSucceeded(state, request, data) {
  
         return Immutable.Map({ 'session_status': 'SIGNED_IN', 'user': data.user })
       } else {
-        return Immutable.Map({ 'session_status': 'SIGNED_IN_FAILED' })
+        return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
       }
 
     case 'SIGN_OUT':
@@ -92,6 +97,9 @@ export function requestFailed(state, request, data) {
 
     case 'RESET_PASSWORD':
       return Immutable.Map({ 'reset_password_status': 'RESET_ERROR' })
+
+    case 'CONFIRM_ACCOUNT':
+      return Immutable.Map({ 'confirmation_status': 'CONFIRMATION_ERROR' })
 
     default:
       return state
