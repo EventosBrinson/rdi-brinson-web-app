@@ -71,7 +71,7 @@ export function requestSucceeded(state, request, data) {
       sessionToken = undefined
 
       if(routerHistory) {
-        routerHistory.push('/sign_in')
+        routerHistory.push('/')
       }
 
       return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })

@@ -15,7 +15,12 @@ class Layout extends React.Component {
   render() {
     return (
       <div>
-        <Link to="/sign_in">Sign in</Link>
+        <Link to="/">Inicio</Link>
+        |
+        <Link to="/sign_in">Iniciar sesión</Link>
+        |
+        <Link to="/users">Usuarios</Link>
+        |
         <SignOutButton requestFunction={ this.props.submitRequest }>Sign Out</SignOutButton>
         { this.props.children }
         <pre>
