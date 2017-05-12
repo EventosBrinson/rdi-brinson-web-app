@@ -11,15 +11,53 @@ class Index extends React.Component {
     super(props)
   }
 
+  componentDidMount() {
+    this.props.submitRequest('GET_USERS')
+  }
+
   render() {
+    let users = this.props.users || Immutable.List()
+    let rendered_users = []
+
+    users.forEach( user => {
+      rendered_users.push(
+        <tr key={ user.get('id') }>
+          <td>{ user.get('username') }</td>
+          <td>{ user.get('firstname') }</td>
+          <td>{ user.get('lastname') }</td>
+          <td>{ user.get('email') }</td>
+          <td>{ user.get('active') ? 'Si' : 'No' }</td>
+          <td>{ user.get('active_since') }</td>
+        </tr>
+      )
+    })
+
     return (
-      <div></div>
+      <div>
+        <h3>Usuarios</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre de usuario</th>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>Email</th>
+              <th>Activo</th>
+              <th>Activo desde</th>
+            </tr>
+          </thead>
+          <tbody>
+            { rendered_users }
+          </tbody>
+        </table>
+      </div>
     )
   }
 }
 
 function mapStateToProps(state) {
   return {
+    users: state.getIn(['users', 'ordered'])
   }
 }
 

@@ -43,6 +43,10 @@ export function submitRequest(state, request, data) {
       Api.patch(request, '/confirm', data)
       return state.deleteIn(['forms', 'accept_invitation_form']).set('confirmation_status', 'CONFIRMING')
 
+    case 'GET_USERS':
+      Api.get(request, '/users', data, sessionToken)
+      return state.setIn(['users', 'get_users_status'], 'GETTING')
+
     default:
       return state
   }
@@ -57,7 +61,7 @@ export function requestSucceeded(state, request, data) {
         cookies.set('ssid', data.token)
         sessionToken = data.token
 
-        if(routerHistory) {
+        if(routerHistory && state.get('session_status') !== 'FIRST_SIGNING_IN') {
           routerHistory.replace('/')
         }
  
@@ -78,6 +82,15 @@ export function requestSucceeded(state, request, data) {
 
     case 'REQUEST_RESET_PASSWORD':
       return state.set('recover_password_status', 'SENT')
+
+    case 'GET_USERS':
+      var users_hash = {}
+      data.forEach( user => {
+        users_hash[user.id] = user
+      })
+      return state.setIn(['users', 'get_users_status'], 'READY').
+                   setIn(['users', 'hashed'], Immutable.fromJS(users_hash)).
+                   setIn(['users', 'ordered'], Immutable.fromJS(data))
 
     default:
       return state
@@ -100,6 +113,10 @@ export function requestFailed(state, request, data) {
 
     case 'CONFIRM_ACCOUNT':
       return Immutable.Map({ 'confirmation_status': 'CONFIRMATION_ERROR' })
+
+    case 'GET_USERS':
+      console.log(data)
+      return state.setIn(['users', 'get_users_status'], 'ERROR')
 
     default:
       return state
