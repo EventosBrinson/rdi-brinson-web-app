@@ -50,6 +50,8 @@ class Index extends React.Component {
             { rendered_users }
           </tbody>
         </table>
+        <br />
+        <Link to="/users/new">Crear nuevo</Link>
       </div>
     )
   }

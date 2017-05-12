@@ -44,8 +44,16 @@ export function submitRequest(state, request, data) {
       return state.deleteIn(['forms', 'accept_invitation_form']).set('confirmation_status', 'CONFIRMING')
 
     case 'GET_USERS':
-      Api.get(request, '/users', data, sessionToken)
-      return state.setIn(['users', 'get_users_status'], 'GETTING')
+      if(state.getIn(['users', 'get_users_status']) === 'READY') {
+        return state
+      } else {
+        Api.get(request, '/users', data, sessionToken)
+        return state.setIn(['users', 'get_users_status'], 'GETTING')
+      }
+
+    case 'CREATE_USER':
+      Api.post(request, '/users', { user: data }, sessionToken)
+      return state.deleteIn(['forms', 'user_form']).setIn(['users', 'create_user_status' ], 'CREATING')
 
     default:
       return state
@@ -92,6 +100,17 @@ export function requestSucceeded(state, request, data) {
                    setIn(['users', 'hashed'], Immutable.fromJS(users_hash)).
                    setIn(['users', 'ordered'], Immutable.fromJS(data))
 
+    case 'CREATE_USER':
+      if(routerHistory) {
+        setTimeout(() => {
+          routerHistory.push('/users')
+        }, 100) 
+      }
+
+      return state.setIn(['users', 'create_user_status'], 'CREATED').
+                   setIn(['users', 'hashed', data.id], Immutable.fromJS(data)).
+                   updateIn(['users', 'ordered'], ordered => (ordered || Immutable.List()).unshift(Immutable.fromJS(data)))
+
     default:
       return state
   }
@@ -115,8 +134,10 @@ export function requestFailed(state, request, data) {
       return Immutable.Map({ 'confirmation_status': 'CONFIRMATION_ERROR' })
 
     case 'GET_USERS':
-      console.log(data)
       return state.setIn(['users', 'get_users_status'], 'ERROR')
+
+    case 'CREATE_USER':
+      return state.setIn(['users', 'create_user_status'], 'ERROR')
 
     default:
       return state

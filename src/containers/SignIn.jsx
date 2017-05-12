@@ -57,8 +57,7 @@ class SignIn extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    sign_in_form: state.getIn(['forms', 'sign_in_form']),
-    session_status: state.get('session_status')
+    sign_in_form: state.getIn(['forms', 'sign_in_form'])
   }
 }
 
