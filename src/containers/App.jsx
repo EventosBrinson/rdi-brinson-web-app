@@ -11,7 +11,7 @@ import ResetPasswordPage from './ResetPassword'
 import AcceptInvitationPage from './AcceptInvitation'
 import UsersPage from './users/Index'
 import NewUserPage from './users/New'
-
+import EditUserPage from './users/Edit'
 
 export default class App extends React.Component {
   render() {
@@ -26,6 +26,7 @@ export default class App extends React.Component {
               <Route path="/confirmation" component={ AcceptInvitationPage } />
               <PrivateRoute exact path="/users" component={ UsersPage } />
               <PrivateRoute exact path="/users/new" component={ NewUserPage } />
+              <PrivateRoute exact path="/users/:id/edit" component={ EditUserPage } />
             </Layout>
           </ScrollToTop>
         </Router>

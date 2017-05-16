@@ -4,11 +4,6 @@ import Immutable from 'immutable'
 
 const cookies = new Cookies()
 var sessionToken = undefined
-var routerHistory = undefined
-
-export function setRouterHistory(history) {
-  routerHistory = history
-}
 
 export function initApp(state) {
   sessionToken = cookies.get('ssid')
@@ -55,6 +50,14 @@ export function submitRequest(state, request, data) {
       Api.post(request, '/users', { user: data }, sessionToken)
       return state.deleteIn(['forms', 'user_form']).setIn(['users', 'create_user_status' ], 'CREATING')
 
+    case 'GET_USER':
+      Api.get(request, `/users/${ data }`, undefined, sessionToken)
+      return state.setIn(['users', 'get_user_statuses', data ], 'GETTING')
+
+    case 'UPDATE_USER':
+      Api.patch(request, `/users/${ data.id }`, { user: data.user }, sessionToken)
+      return state.setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
+
     default:
       return state
   }
@@ -68,12 +71,8 @@ export function requestSucceeded(state, request, data) {
       if(data) {
         cookies.set('ssid', data.token)
         sessionToken = data.token
-
-        if(routerHistory && state.get('session_status') !== 'FIRST_SIGNING_IN') {
-          routerHistory.replace('/')
-        }
  
-        return Immutable.Map({ 'session_status': 'SIGNED_IN', 'user': data.user })
+        return Immutable.Map({ 'session_status': 'SIGNED_IN', 'user': Immutable.fromJS(data.user) })
       } else {
         return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
       }
@@ -81,10 +80,6 @@ export function requestSucceeded(state, request, data) {
     case 'SIGN_OUT':
       cookies.remove('ssid')
       sessionToken = undefined
-
-      if(routerHistory) {
-        routerHistory.push('/')
-      }
 
       return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
 
@@ -96,21 +91,22 @@ export function requestSucceeded(state, request, data) {
       data.forEach( user => {
         users_hash[user.id] = user
       })
-      return state.setIn(['users', 'get_users_status'], 'READY').
-                   setIn(['users', 'hashed'], Immutable.fromJS(users_hash)).
-                   setIn(['users', 'ordered'], Immutable.fromJS(data))
+      return state.setIn(['users', 'get_users_status'], 'READY')
+                  .setIn(['users', 'hashed'], Immutable.fromJS(users_hash))
+                  .setIn(['users', 'ordered'], Immutable.fromJS(data))
 
     case 'CREATE_USER':
-      if(routerHistory) {
-        setTimeout(() => {
-          routerHistory.push('/users')
-        }, 100) 
-      }
+      return state.setIn(['users', 'create_user_status'], 'CREATED')
+                  .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
+                  .updateIn(['users', 'ordered'], ordered => (ordered || Immutable.List()).unshift(Immutable.fromJS(data)))
 
-      return state.setIn(['users', 'create_user_status'], 'CREATED').
-                   setIn(['users', 'hashed', data.id], Immutable.fromJS(data)).
-                   updateIn(['users', 'ordered'], ordered => (ordered || Immutable.List()).unshift(Immutable.fromJS(data)))
+    case 'GET_USER':
+      return state.setIn(['users', 'get_user_statuses', String(data.id)], 'READY')
+                  .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
 
+    case 'UPDATE_USER':
+      return state.setIn(['users', 'update_user_statuses', String(data.id)], 'UPDATED')
+                  .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
     default:
       return state
   }
@@ -138,6 +134,12 @@ export function requestFailed(state, request, data) {
 
     case 'CREATE_USER':
       return state.setIn(['users', 'create_user_status'], 'ERROR')
+
+    case 'GET_USER':
+      return state.setIn(['users', 'get_user_statuses', data.request_data], 'ERROR')
+
+    case 'UPDATE_USER':
+      return state.setIn(['users', 'update_user_statuses', data.request_data.user.id], 'ERROR')
 
     default:
       return state

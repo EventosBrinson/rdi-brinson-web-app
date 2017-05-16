@@ -7,10 +7,6 @@ import Immutable from 'immutable'
 
 class Index extends React.Component {
 
-  constructor(props) {
-    super(props)
-  }
-
   componentDidMount() {
     this.props.submitRequest('GET_USERS')
   }
@@ -28,6 +24,7 @@ class Index extends React.Component {
           <td>{ user.get('email') }</td>
           <td>{ user.get('active') ? 'Si' : 'No' }</td>
           <td>{ user.get('active_since') }</td>
+          <td><Link to={'/users/' + user.get('id')+ '/edit'}>Edit</Link></td>
         </tr>
       )
     })
@@ -44,6 +41,7 @@ class Index extends React.Component {
               <th>Email</th>
               <th>Activo</th>
               <th>Activo desde</th>
+              <th />
             </tr>
           </thead>
           <tbody>

@@ -12,7 +12,7 @@ export function get(request, path, data, auth_token = undefined) {
    .set('Accept', 'application/json')
    .end(function(error, response){
      if (error || !response.ok) {
-       store.dispatch(actionCreators.requestFailed(request))
+       store.dispatch(actionCreators.requestFailed(request, { request_data: data, response: response }))
      } else {
        store.dispatch(actionCreators.requestSucceeded(request, response.body))
      }
@@ -27,7 +27,7 @@ export function post(request, path, data, auth_token = undefined) {
    .set('Accept', 'application/json')
    .end(function(error, response){
      if (error || !response.ok) {
-       store.dispatch(actionCreators.requestFailed(request))
+       store.dispatch(actionCreators.requestFailed(request, { request_data: data, response: response }))
      } else {
        store.dispatch(actionCreators.requestSucceeded(request, response.body))
      }
@@ -42,7 +42,7 @@ export function del(request, path, data, auth_token = undefined) {
    .set('Accept', 'application/json')
    .end(function(error, response){
      if (error || !response.ok) {
-       store.dispatch(actionCreators.requestFailed(request))
+       store.dispatch(actionCreators.requestFailed(request, { request_data: data, response: response }))
      } else {
        store.dispatch(actionCreators.requestSucceeded(request, response.body))
      }
@@ -57,7 +57,7 @@ export function patch(request, path, data, auth_token = undefined) {
    .set('Accept', 'application/json')
    .end(function(error, response){
      if (error || !response.ok) {
-       store.dispatch(actionCreators.requestFailed(request))
+       store.dispatch(actionCreators.requestFailed(request, { request_data: data, response: response }))
      } else {
        store.dispatch(actionCreators.requestSucceeded(request, response.body))
      }

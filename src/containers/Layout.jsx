@@ -3,14 +3,9 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom' 
 import * as actionCreators from '../action-creators'
-import { setRouterHistory } from '../core'
 import SignOutButton from '../components/SignOutButton'
 
 class Layout extends React.Component {
-
-  componentDidUpdate() {
-    setRouterHistory(this.props.history)
-  }
 
   render() {
     return (
