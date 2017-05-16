@@ -18,7 +18,9 @@ class Edit extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setUpUser(nextProps)
+    if(!this.user.get('id')) {
+      this.setUpUser(nextProps)
+    }
   }
 
   setUpUser(props) {
