@@ -21,15 +21,10 @@ class PrivateRoute extends React.Component {
 
     return (
       <Route {...rest} render={ props => (
-        this.authenticated() ? (
-          <Component {...props}/>
-        ) : (
-          <Redirect to={{
-            pathname: '/sign_in',
-            state: { from: props.location }
-          }}/>
-        )
-      )}/>
+        this.authenticated() ? (<Component {...props}/>
+      ) : (
+        <Redirect to={{ pathname: '/sign_in', state: { from: props.location }}}/>
+      ))}/>
     )
   }
 }

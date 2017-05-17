@@ -30,3 +30,9 @@ export function requestFailed(request, data) {
     data: data
   }
 }
+
+export function cleanRouter() {
+  return {
+    type: 'CLEAN_ROUTER'
+  }
+}

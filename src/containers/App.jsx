@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from '../store'
+import ReduxRouter from './ReduxRouter'
 import Layout from './Layout'
 import ScrollToTop from './ScrollToTop'
 import PrivateRoute from './PrivateRoute'
@@ -18,17 +19,19 @@ export default class App extends React.Component {
     return (
       <Provider store={ store }>
         <Router>
-          <ScrollToTop>
-            <Layout>
-              <Route path="/sign_in" component={ SignInPage } />
-              <Route path="/recover" component={ RecoverPasswordPage } />
-              <Route path="/reset" component={ ResetPasswordPage } />
-              <Route path="/confirmation" component={ AcceptInvitationPage } />
-              <PrivateRoute exact path="/users" component={ UsersPage } />
-              <PrivateRoute exact path="/users/new" component={ NewUserPage } />
-              <PrivateRoute exact path="/users/:id/edit" component={ EditUserPage } />
-            </Layout>
-          </ScrollToTop>
+          <ReduxRouter>
+            <ScrollToTop>
+              <Layout>
+                <Route path="/sign_in" component={ SignInPage } />
+                <Route path="/recover" component={ RecoverPasswordPage } />
+                <Route path="/reset" component={ ResetPasswordPage } />
+                <Route path="/confirmation" component={ AcceptInvitationPage } />
+                <PrivateRoute exact path="/users" component={ UsersPage } />
+                <PrivateRoute exact path="/users/new" component={ NewUserPage } />
+                <PrivateRoute exact path="/users/:id/edit" component={ EditUserPage } />
+              </Layout>
+            </ScrollToTop>
+          </ReduxRouter>
         </Router>
       </Provider>
     )

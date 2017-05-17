@@ -73,6 +73,8 @@ export function requestSucceeded(state, request, data) {
         sessionToken = data.token
  
         return Immutable.Map({ 'session_status': 'SIGNED_IN', 'user': Immutable.fromJS(data.user) })
+                        .setIn(['router', 'action'], 'REDIRECT_TO')
+                        .setIn(['router', 'pathname'], '/users')
       } else {
         return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
       }
@@ -99,6 +101,8 @@ export function requestSucceeded(state, request, data) {
       return state.setIn(['users', 'create_user_status'], 'CREATED')
                   .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
                   .updateIn(['users', 'ordered'], ordered => (ordered || Immutable.List()).unshift(Immutable.fromJS(data)))
+                  .setIn(['router', 'action'], 'REDIRECT_TO')
+                  .setIn(['router', 'pathname'], '/users')
 
     case 'GET_USER':
       return state.setIn(['users', 'get_user_statuses', String(data.id)], 'READY')
@@ -107,6 +111,8 @@ export function requestSucceeded(state, request, data) {
     case 'UPDATE_USER':
       return state.setIn(['users', 'update_user_statuses', String(data.id)], 'UPDATED')
                   .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
+                  .setIn(['router', 'action'], 'REDIRECT_TO')
+                  .setIn(['router', 'pathname'], '/users')
     default:
       return state
   }
@@ -144,4 +150,8 @@ export function requestFailed(state, request, data) {
     default:
       return state
   }
+}
+
+export function cleanRouter(state) {
+  return state.delete('router')
 }

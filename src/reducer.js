@@ -13,6 +13,8 @@ export default function reducer(state = Immutable.Map(), action) {
     return core.requestSucceeded(state, action.request, action.data)
   case 'REQUEST_FAILED':
     return core.requestFailed(state, action.request, action.data)
+  case 'CLEAN_ROUTER':
+    return core.cleanRouter(state)
   default:
     return state
   }
