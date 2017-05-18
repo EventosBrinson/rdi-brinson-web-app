@@ -14,18 +14,21 @@ class Edit extends React.Component {
     this.setUpUser = this.setUpUser.bind(this)
 
     this.user = Immutable.Map()
-    this.setUpUser(props)
+  }
+
+  componentWillMount() {
+    this.user_id = this.props.match.params.id
+
+    this.setUpUser(this.props)
   }
 
   componentWillReceiveProps(nextProps) {
-    if(!this.user.get('id')) {
+    if(this.user.get('id') === undefined) {
       this.setUpUser(nextProps)
     }
   }
 
   setUpUser(props) {
-    this.user_id = props.match.params.id
-
     if(props.session_status === 'SIGNED_IN') {
       if(props.users && (props.users.getIn(['get_user_statuses', this.user_id]) === 'READY' || props.users.get('get_users_status') === 'READY')) {
         this.user = props.users.getIn(['hashed', this.user_id])
