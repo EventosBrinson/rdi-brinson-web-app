@@ -8,11 +8,13 @@ import Immutable from 'immutable'
 class Index extends React.Component {
 
   componentDidMount() {
-    this.props.submitRequest('GET_USERS')
+    if(this.props.users.get('get_users_status') === undefined) {
+      this.props.submitRequest('GET_USERS') 
+    }
   }
 
   render() {
-    let users = this.props.users || Immutable.List()
+    let users = this.props.hashed_users || Immutable.List()
     let rendered_users = []
 
     users.forEach( user => {
@@ -57,7 +59,8 @@ class Index extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    users: state.getIn(['users', 'ordered'])
+    users: state.get('users') || Immutable.Map(),
+    hashed_users: state.getIn(['users', 'ordered'])
   }
 }
 

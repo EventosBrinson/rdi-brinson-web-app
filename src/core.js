@@ -39,12 +39,8 @@ export function submitRequest(state, request, data) {
       return state.deleteIn(['forms', 'accept_invitation_form']).set('confirmation_status', 'CONFIRMING')
 
     case 'GET_USERS':
-      if(state.getIn(['users', 'get_users_status']) === 'READY') {
-        return state
-      } else {
-        Api.get(request, '/users', data, sessionToken)
-        return state.setIn(['users', 'get_users_status'], 'GETTING')
-      }
+      Api.get(request, '/users', data, sessionToken)
+      return state.setIn(['users', 'get_users_status'], 'GETTING')
 
     case 'CREATE_USER':
       Api.post(request, '/users', { user: data }, sessionToken)
@@ -71,10 +67,15 @@ export function requestSucceeded(state, request, data) {
       if(data) {
         cookies.set('ssid', data.token)
         sessionToken = data.token
- 
-        return Immutable.Map({ 'session_status': 'SIGNED_IN', 'user': Immutable.fromJS(data.user) })
-                        .setIn(['router', 'action'], 'REDIRECT_TO')
-                        .setIn(['router', 'pathname'], '/users')
+
+        var newState = Immutable.Map({ 'session_status': 'SIGNED_IN', 'user': Immutable.fromJS(data.user) })
+
+        if(state.get('session_status') === 'SIGNING_IN') {
+          return newState.setIn(['router', 'action'], 'REDIRECT_TO')
+                         .setIn(['router', 'pathname'], '/')
+        } else {
+          return newState;
+        }
       } else {
         return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
       }
