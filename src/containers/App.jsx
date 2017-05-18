@@ -10,6 +10,7 @@ import SignInPage from './SignIn'
 import RecoverPasswordPage from './RecoverPassword'
 import ResetPasswordPage from './ResetPassword'
 import AcceptInvitationPage from './AcceptInvitation'
+import ProfilePage from './Profile'
 import UsersPage from './users/Index'
 import NewUserPage from './users/New'
 import EditUserPage from './users/Edit'
@@ -26,6 +27,7 @@ export default class App extends React.Component {
                 <Route path="/recover" component={ RecoverPasswordPage } />
                 <Route path="/reset" component={ ResetPasswordPage } />
                 <Route path="/confirmation" component={ AcceptInvitationPage } />
+                <PrivateRoute exact path="/profile" component={ ProfilePage } />
                 <PrivateRoute exact path="/users" component={ UsersPage } />
                 <PrivateRoute exact path="/users/new" component={ NewUserPage } />
                 <PrivateRoute exact path="/users/:id/edit" component={ EditUserPage } />
