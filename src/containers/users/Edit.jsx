@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import * as actionCreators from '../../action-creators'
+import * as formHelpers from '../../modules/form-helpers'
 import Immutable from 'immutable'
 
 class Edit extends React.Component {
@@ -64,27 +65,27 @@ class Edit extends React.Component {
         </h2>
         <div>
           <label>Email</label>
-          <input name='email' type='email' value={ form.get('email') || this.user.get('email') || '' } onChange={ this.handleChange } />
+          <input name='email' type='email' value={ formHelpers.priorityValues([form.get('email'), this.user.get('email')]) } onChange={ this.handleChange } />
         </div>
         <div>
           <label>Nombre de usuario</label>
-          <input name='username' type='text' value={ form.get('username') || this.user.get('username') || '' } onChange={ this.handleChange } />
+          <input name='username' type='text' value={ formHelpers.priorityValues([form.get('username'), this.user.get('username')]) } onChange={ this.handleChange } />
         </div>
         <div>
           <label>Nombres(s)</label>
-          <input name='firstname' type='text' value={ form.get('firstname') || this.user.get('firstname') || '' } onChange={ this.handleChange } />
+          <input name='firstname' type='text' value={ formHelpers.priorityValues([form.get('firstname'), this.user.get('firstname')]) } onChange={ this.handleChange } />
         </div>
         <div>
           <label>Apellido(s)</label>
-          <input name='lastname' type='text' value={ form.get('lastname') || this.user.get('lastname') || '' } onChange={ this.handleChange } />
+          <input name='lastname' type='text' value={ formHelpers.priorityValues([form.get('lastname'), this.user.get('lastname')]) } onChange={ this.handleChange } />
         </div>
         <div>
           <label>Contraseña</label>
-          <input name='password' type='password' value={ form.get('password') || '' } onChange={ this.handleChange } />
+          <input name='password' type='password' value={ formHelpers.priorityValues([form.get('password')]) } onChange={ this.handleChange } />
         </div>
         <div>
           <label>Role</label>
-          <select name='role' value={ form.get('role') || this.user.get('role') || '' } onChange={ this.handleChange }>
+          <select name='role' value={ formHelpers.priorityValues([form.get('role'), this.user.get('role')]) } onChange={ this.handleChange }>
             <option value="admin">Administrador</option>
             <option value="user">Usuario</option>
           </select>
