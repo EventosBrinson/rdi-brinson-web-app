@@ -79,6 +79,10 @@ class Edit extends React.Component {
           <input name='lastname' type='text' value={ form.get('lastname') || this.user.get('lastname') || '' } onChange={ this.handleChange } />
         </div>
         <div>
+          <label>Contraseña</label>
+          <input name='password' type='password' value={ form.get('password') || '' } onChange={ this.handleChange } />
+        </div>
+        <div>
           <label>Role</label>
           <select name='role' value={ form.get('role') || this.user.get('role') || '' } onChange={ this.handleChange }>
             <option value="admin">Administrador</option>
