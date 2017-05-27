@@ -20,6 +20,7 @@ class Edit extends React.Component {
   componentWillMount() {
     this.user_id = this.props.match.params.id
 
+    this.props.cleanForm('edit_user_form')
     this.setUpUser(this.props)
   }
 
@@ -42,7 +43,7 @@ class Edit extends React.Component {
   }
 
   handleChange(event) {
-    this.props.changeForm('user_form', event.target.name, event.target.value)
+    this.props.changeForm('edit_user_form', event.target.name, event.target.value)
   }
 
   processSubmit(event) {
@@ -50,13 +51,13 @@ class Edit extends React.Component {
       event.preventDefault()
     }
 
-    let data = (this.props.user_form || Immutable.Map()).toJS()
+    let data = (this.props.edit_user_form || Immutable.Map()).toJS()
 
     this.props.submitRequest('UPDATE_USER', { id: this.user_id, user: data })
   }
 
   render() {
-    let form = this.props.user_form || Immutable.Map()
+    let form = this.props.edit_user_form || Immutable.Map()
 
     return (
       <form onSubmit={ this.processSubmit }>
@@ -100,7 +101,7 @@ class Edit extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    user_form: state.getIn(['forms', 'user_form']),
+    edit_user_form: state.getIn(['forms', 'edit_user_form']),
     users: state.get('users'),
     user: state.get('user'),
     session_status: state.get('session_status')

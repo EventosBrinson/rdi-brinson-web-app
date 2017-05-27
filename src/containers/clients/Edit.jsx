@@ -20,6 +20,7 @@ class Edit extends React.Component {
   componentWillMount() {
     this.client_id = this.props.match.params.id
 
+    this.props.cleanForm('edit_client_form')
     this.setUpClient(this.props)
   }
 
@@ -40,7 +41,7 @@ class Edit extends React.Component {
   }
 
   handleChange(event) {
-    this.props.changeForm('client_form', event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value)
+    this.props.changeForm('edit_client_form', event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value)
   }
 
   processSubmit(event) {
@@ -48,13 +49,13 @@ class Edit extends React.Component {
       event.preventDefault()
     }
 
-    let data = (this.props.client_form || Immutable.Map()).toJS()
+    let data = (this.props.edit_client_form || Immutable.Map()).toJS()
 
     this.props.submitRequest('UPDATE_CLIENT', { id: this.client_id, client: data })
   }
 
   render() {
-    let form = this.props.client_form || Immutable.Map()
+    let form = this.props.edit_client_form || Immutable.Map()
 
 
     return (
@@ -125,7 +126,7 @@ class Edit extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    client_form: state.getIn(['forms', 'client_form']),
+    edit_client_form: state.getIn(['forms', 'edit_client_form']),
     clients: state.get('clients'),
     session_status: state.get('session_status')
   }
