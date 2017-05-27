@@ -7,6 +7,8 @@ export default function reducer(state = Immutable.Map(), action) {
     return core.initApp(state)
   case 'CHANGE_FORM':
     return core.changeForm(state, action.form, action.field, action.value)
+  case 'CLEAN_FORM':
+    return core.cleanForm(state, action.form)
   case 'SUBMIT_REQUEST':
     return core.submitRequest(state, action.request, action.data)
   case 'REQUEST_SUCCEEDED':

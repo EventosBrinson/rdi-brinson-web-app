@@ -16,6 +16,10 @@ export function changeForm(state, form, field, value) {
   return state.setIn(['forms', form , field], Immutable.fromJS(value))
 }
 
+export function cleanForm(state, form) {
+  return state.deleteIn(['forms', form])
+}
+
 export function submitRequest(state, request, data) {
   switch (request) {
     case 'SIGN_IN':
@@ -52,7 +56,8 @@ export function submitRequest(state, request, data) {
 
     case 'UPDATE_USER':
       Api.patch(request, `/users/${ data.id }`, { user: data.user }, sessionToken)
-      return state.setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
+      return state.deleteIn(['forms', 'user_form'])
+                  .setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
 
     case 'GET_CLIENTS':
       Api.get(request, '/clients', data, sessionToken)
@@ -68,7 +73,8 @@ export function submitRequest(state, request, data) {
 
     case 'UPDATE_CLIENT':
       Api.patch(request, `/clients/${ data.id }`, { client: data.client }, sessionToken)
-      return state.setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
+      return state.deleteIn(['forms', 'client_form'])
+                  .setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
 
     default:
       return state

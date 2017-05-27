@@ -7,6 +7,13 @@ export function changeForm(form, field, value) {
   }
 }
 
+export function cleanForm(form) {
+  return {
+    type: 'CLEAN_FORM',
+    form: form
+  }
+}
+
 export function submitRequest(request, data) {
   return {
     type: 'SUBMIT_REQUEST',
