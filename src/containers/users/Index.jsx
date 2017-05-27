@@ -14,7 +14,7 @@ class Index extends React.Component {
   }
 
   render() {
-    let users = this.props.hashed_users || Immutable.List()
+    let users = this.props.ordered || Immutable.List()
     let rendered_users = []
 
     users.forEach( user => {
@@ -60,7 +60,7 @@ class Index extends React.Component {
 function mapStateToProps(state) {
   return {
     users: state.get('users') || Immutable.Map(),
-    hashed_users: state.getIn(['users', 'ordered'])
+    ordered: state.getIn(['users', 'ordered'])
   }
 }
 
