@@ -39,7 +39,7 @@ export function submitRequest(state, request, data) {
       return state.deleteIn(['forms', 'accept_invitation_form']).set('confirmation_status', 'CONFIRMING')
 
     case 'GET_USERS':
-      Api.post(request, '/users', data, sessionToken)
+      Api.get(request, '/users', data, sessionToken)
       return state.setIn(['users', 'get_users_status'], 'GETTING')
 
     case 'CREATE_USER':
@@ -56,8 +56,12 @@ export function submitRequest(state, request, data) {
 
     case 'GET_CLIENTS':
     console.log(data)
-      Api.post(request, '/clients', data, sessionToken)
+      Api.get(request, '/clients', data, sessionToken)
       return state.setIn(['clients', 'get_clients_status'], 'GETTING')
+
+    case 'CREATE_CLIENT':
+      Api.post(request, '/clients', { client: data }, sessionToken)
+      return state.deleteIn(['forms', 'client_form']).setIn(['users', 'create_client_status' ], 'CREATING')
 
     default:
       return state
@@ -128,6 +132,13 @@ export function requestSucceeded(state, request, data) {
       return state.setIn(['clients', 'get_clients_status'], 'READY')
                   .setIn(['clients', 'hashed'], Immutable.fromJS(clients_hash))
                   .setIn(['clients', 'ordered'], Immutable.fromJS(data))
+
+    case 'CREATE_CLIENT':
+      return state.setIn(['clients', 'create_client_status'], 'CREATED')
+                  .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
+                  .updateIn(['clients', 'ordered'], ordered => (ordered || Immutable.List()).unshift(Immutable.fromJS(data)))
+                  .setIn(['router', 'action'], 'REDIRECT_TO')
+                  .setIn(['router', 'pathname'], '/clients')
     default:
       return state
   }
@@ -164,6 +175,9 @@ export function requestFailed(state, request, data) {
 
     case 'GET_CLIENTS':
       return state.setIn(['users', 'get_clients_status'], 'ERROR')
+
+    case 'CREATE_CLIENT':
+      return state.setIn(['users', 'create_client_status'], 'ERROR')
 
     default:
       return state
