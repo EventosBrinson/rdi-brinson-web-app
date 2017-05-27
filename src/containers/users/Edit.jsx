@@ -36,7 +36,7 @@ class Edit extends React.Component {
       } else if(props.user.get('id') === this.user_id) {
         this.user = props.user
       } else if(!props.users || props.users.getIn(['get_user_statuses', this.user_id]) !== 'GETTING'){
-        this.props.submitRequest('GET_USER', this.user_id)
+        this.props.submitRequest('GET_USER', { id: this.user_id })
       }
     }
   }
@@ -103,8 +103,7 @@ function mapStateToProps(state) {
     user_form: state.getIn(['forms', 'user_form']),
     users: state.get('users'),
     user: state.get('user'),
-    session_status: state.get('session_status'),
-    state: state
+    session_status: state.get('session_status')
   }
 }
 
