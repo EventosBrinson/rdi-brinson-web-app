@@ -16,6 +16,8 @@ class Layout extends React.Component {
         |
         <Link to="/users">Usuarios</Link>
         |
+        <Link to="/clients">Clientes</Link>
+        |
         <SignOutButton requestFunction={ this.props.submitRequest }>Sign Out</SignOutButton>
         |
         <Link to="/profile">Perfil de usuario</Link>
