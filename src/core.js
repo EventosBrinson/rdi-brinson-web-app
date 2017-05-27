@@ -47,21 +47,28 @@ export function submitRequest(state, request, data) {
       return state.deleteIn(['forms', 'user_form']).setIn(['users', 'create_user_status' ], 'CREATING')
 
     case 'GET_USER':
-      Api.get(request, `/users/${ data }`, undefined, sessionToken)
-      return state.setIn(['users', 'get_user_statuses', data ], 'GETTING')
+      Api.get(request, `/users/${ data.id }`, undefined, sessionToken)
+      return state.setIn(['users', 'get_user_statuses', data.id ], 'GETTING')
 
     case 'UPDATE_USER':
       Api.patch(request, `/users/${ data.id }`, { user: data.user }, sessionToken)
       return state.setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
 
     case 'GET_CLIENTS':
-    console.log(data)
       Api.get(request, '/clients', data, sessionToken)
       return state.setIn(['clients', 'get_clients_status'], 'GETTING')
 
     case 'CREATE_CLIENT':
       Api.post(request, '/clients', { client: data }, sessionToken)
       return state.deleteIn(['forms', 'client_form']).setIn(['users', 'create_client_status' ], 'CREATING')
+
+    case 'GET_CLIENT':
+      Api.get(request, `/clients/${ data.id }`, undefined, sessionToken)
+      return state.setIn(['clients', 'get_client_statuses', data.id ], 'GETTING')
+
+    case 'UPDATE_CLIENT':
+      Api.patch(request, `/clients/${ data.id }`, { client: data.client }, sessionToken)
+      return state.setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
 
     default:
       return state
@@ -139,6 +146,17 @@ export function requestSucceeded(state, request, data) {
                   .updateIn(['clients', 'ordered'], ordered => (ordered || Immutable.List()).unshift(Immutable.fromJS(data)))
                   .setIn(['router', 'action'], 'REDIRECT_TO')
                   .setIn(['router', 'pathname'], '/clients')
+
+    case 'GET_CLIENT':
+      return state.setIn(['clients', 'get_client_statuses', String(data.id)], 'READY')
+                  .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
+
+    case 'UPDATE_CLIENT':
+      return state.setIn(['clients', 'update_client_statuses', String(data.id)], 'UPDATED')
+                  .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
+                  .setIn(['router', 'action'], 'REDIRECT_TO')
+                  .setIn(['router', 'pathname'], '/clients')
+
     default:
       return state
   }
@@ -178,6 +196,12 @@ export function requestFailed(state, request, data) {
 
     case 'CREATE_CLIENT':
       return state.setIn(['users', 'create_client_status'], 'ERROR')
+
+    case 'GET_CLIENT':
+      return state.setIn(['users', 'get_client_statuses', data.request_data], 'ERROR')
+
+    case 'UPDATE_CLIENT':
+      return state.setIn(['users', 'update_client_statuses', data.request_data.user.id], 'ERROR')
 
     default:
       return state
