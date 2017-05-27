@@ -107,12 +107,14 @@ export function requestSucceeded(state, request, data) {
 
     case 'GET_USERS':
       var users_hash = {}
+      var users_order = []
       data.forEach( user => {
         users_hash[user.id] = user
+        users_order.push(String(user.id))
       })
       return state.setIn(['users', 'get_users_status'], 'READY')
                   .setIn(['users', 'hashed'], Immutable.fromJS(users_hash))
-                  .setIn(['users', 'ordered'], Immutable.fromJS(data))
+                  .setIn(['users', 'order'], Immutable.fromJS(users_order))
 
     case 'CREATE_USER':
       return state.setIn(['users', 'create_user_status'], 'CREATED')
@@ -133,12 +135,14 @@ export function requestSucceeded(state, request, data) {
 
     case 'GET_CLIENTS':
       var clients_hash = {}
+      var clients_order = []
       data.forEach( client => {
         clients_hash[client.id] = client
+        clients_order.push(String(client.id))
       })
       return state.setIn(['clients', 'get_clients_status'], 'READY')
                   .setIn(['clients', 'hashed'], Immutable.fromJS(clients_hash))
-                  .setIn(['clients', 'ordered'], Immutable.fromJS(data))
+                  .setIn(['clients', 'order'], Immutable.fromJS(clients_order))
 
     case 'CREATE_CLIENT':
       return state.setIn(['clients', 'create_client_status'], 'CREATED')
