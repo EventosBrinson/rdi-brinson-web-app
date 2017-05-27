@@ -7,7 +7,7 @@ const API_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000'
 export function get(request, path, data, auth_token = undefined) {
   superagent
    .get(API_URL + path)
-   .send(data)
+   .query(data)
    .set('Auth-Token', auth_token)
    .set('Accept', 'application/json')
    .end(function(error, response){
