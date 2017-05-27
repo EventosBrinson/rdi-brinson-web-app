@@ -14,6 +14,9 @@ import ProfilePage from './Profile'
 import UsersPage from './users/Index'
 import NewUserPage from './users/New'
 import EditUserPage from './users/Edit'
+import ClientsPage from './clients/Index'
+import NewClientPage from './clients/New'
+import EditClientPage from './clients/Edit'
 
 export default class App extends React.Component {
   render() {
@@ -31,6 +34,9 @@ export default class App extends React.Component {
                 <PrivateRoute exact path="/users" component={ UsersPage } />
                 <PrivateRoute exact path="/users/new" component={ NewUserPage } />
                 <PrivateRoute exact path="/users/:id/edit" component={ EditUserPage } />
+                <PrivateRoute exact path="/clients" component={ ClientsPage } />
+                <PrivateRoute exact path="/clients/new" component={ NewClientPage } />
+                <PrivateRoute exact path="/clients/:id/edit" component={ EditClientPage } />
               </Layout>
             </ScrollToTop>
           </ReduxRouter>
