@@ -39,7 +39,7 @@ export function submitRequest(state, request, data) {
       return state.deleteIn(['forms', 'accept_invitation_form']).set('confirmation_status', 'CONFIRMING')
 
     case 'GET_USERS':
-      Api.get(request, '/users', data, sessionToken)
+      Api.post(request, '/users', data, sessionToken)
       return state.setIn(['users', 'get_users_status'], 'GETTING')
 
     case 'CREATE_USER':
@@ -53,6 +53,11 @@ export function submitRequest(state, request, data) {
     case 'UPDATE_USER':
       Api.patch(request, `/users/${ data.id }`, { user: data.user }, sessionToken)
       return state.setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
+
+    case 'GET_CLIENTS':
+    console.log(data)
+      Api.post(request, '/clients', data, sessionToken)
+      return state.setIn(['clients', 'get_clients_status'], 'GETTING')
 
     default:
       return state
@@ -114,6 +119,15 @@ export function requestSucceeded(state, request, data) {
                   .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
                   .setIn(['router', 'action'], 'REDIRECT_TO')
                   .setIn(['router', 'pathname'], '/users')
+
+    case 'GET_CLIENTS':
+      var clients_hash = {}
+      data.forEach( client => {
+        clients_hash[client.id] = client
+      })
+      return state.setIn(['clients', 'get_clients_status'], 'READY')
+                  .setIn(['clients', 'hashed'], Immutable.fromJS(clients_hash))
+                  .setIn(['clients', 'ordered'], Immutable.fromJS(data))
     default:
       return state
   }
@@ -147,6 +161,9 @@ export function requestFailed(state, request, data) {
 
     case 'UPDATE_USER':
       return state.setIn(['users', 'update_user_statuses', data.request_data.user.id], 'ERROR')
+
+    case 'GET_CLIENTS':
+      return state.setIn(['users', 'get_clients_status'], 'ERROR')
 
     default:
       return state
