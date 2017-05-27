@@ -40,7 +40,7 @@ class Edit extends React.Component {
   }
 
   handleChange(event) {
-    this.props.changeForm('client_form', event.target.name, event.target.value)
+    this.props.changeForm('client_form', event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value)
   }
 
   processSubmit(event) {
@@ -55,6 +55,7 @@ class Edit extends React.Component {
 
   render() {
     let form = this.props.client_form || Immutable.Map()
+
 
     return (
       <form onSubmit={ this.processSubmit }>
@@ -112,7 +113,7 @@ class Edit extends React.Component {
         </div>
         <div>
           <label>Acitivo</label>
-          <input name='active' type='checkbox' value={ formHelpers.priorityValues([form.get('active'), this.client.get('active')]) } onChange={ this.handleChange } />
+          <input name='active' type='checkbox' checked={ formHelpers.priorityValues([form.get('active'), this.client.get('active')]) } onChange={ this.handleChange } />
         </div>
         <div>
           <button type="submit">Actializar</button>
