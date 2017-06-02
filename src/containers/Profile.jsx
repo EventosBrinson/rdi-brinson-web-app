@@ -14,7 +14,7 @@ class Profile extends React.Component {
       <div>
         <h3>{ user.get('firstname') + ' ' + user.get('lastname') } <small>{ user.get('role')  }</small></h3>
         <p>{ user.get('username') } - { user.get('email')  }</p>
-        <Link to={'users/' + user.get('id') + '/edit'}>Editar</Link>
+        <Link to={'/users/' + user.get('id') + '/edit'}>Editar</Link>
       </div>
     )
   }
