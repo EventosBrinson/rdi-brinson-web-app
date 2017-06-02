@@ -125,7 +125,7 @@ export function requestSucceeded(state, request, data) {
     case 'CREATE_USER':
       return state.setIn(['users', 'create_user_status'], 'CREATED')
                   .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .updateIn(['users', 'ordered'], ordered => (ordered || Immutable.List()).unshift(Immutable.fromJS(data)))
+                  .updateIn(['users', 'order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
                   .setIn(['router', 'action'], 'REDIRECT_TO')
                   .setIn(['router', 'pathname'], '/users')
 
@@ -153,7 +153,7 @@ export function requestSucceeded(state, request, data) {
     case 'CREATE_CLIENT':
       return state.setIn(['clients', 'create_client_status'], 'CREATED')
                   .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .updateIn(['clients', 'ordered'], ordered => (ordered || Immutable.List()).unshift(Immutable.fromJS(data)))
+                  .updateIn(['clients', 'order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
                   .setIn(['router', 'action'], 'REDIRECT_TO')
                   .setIn(['router', 'pathname'], '/clients')
 
