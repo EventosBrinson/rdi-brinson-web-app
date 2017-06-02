@@ -17,6 +17,7 @@ import EditUserPage from './users/Edit'
 import ClientsPage from './clients/Index'
 import NewClientPage from './clients/New'
 import EditClientPage from './clients/Edit'
+import ShowClientPage from './clients/Show'
 
 export default class App extends React.Component {
   render() {
@@ -37,6 +38,7 @@ export default class App extends React.Component {
                 <PrivateRoute exact path="/clients" component={ ClientsPage } />
                 <PrivateRoute exact path="/clients/new" component={ NewClientPage } />
                 <PrivateRoute exact path="/clients/:id/edit" component={ EditClientPage } />
+                <PrivateRoute exact path="/clients/:id" component={ ShowClientPage } />
               </Layout>
             </ScrollToTop>
           </ReduxRouter>
