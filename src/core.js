@@ -191,7 +191,8 @@ export function requestSucceeded(state, request, data) {
 
     case 'CREATE_DOCUMENT':
       return state.setIn(['documents', 'create_document_status'], 'CREATED')
-                  .updateIn(['clients', 'hashed', String(data.client_id), 'documents'], documents => (documents || Immutable.List()).push(Immutable.fromJS(data)))
+                  .setIn(['clients', 'hashed', String(data.client_id), 'documents', String(data.id)], Immutable.fromJS(data))
+                  .updateIn(['clients', 'hashed', String(data.client_id), 'documents_order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
 
     default:
       return state
