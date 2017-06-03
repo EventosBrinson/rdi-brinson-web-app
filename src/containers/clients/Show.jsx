@@ -4,11 +4,14 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
+import ReactFileReader from 'react-file-reader';
 
 class Show extends React.Component {
 
   constructor(props) {
     super(props)
+
+    this.handleFiles = this.handleFiles.bind(this)
 
     this.setUpClient = this.setUpClient.bind(this)
     this.client = Immutable.Map()
@@ -22,6 +25,8 @@ class Show extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(this.client.get('id') === undefined) {
       this.setUpClient(nextProps)
+    } else {
+      this.client = nextProps.clients.getIn(['hashed', this.client_id])
     }
   }
 
@@ -35,8 +40,29 @@ class Show extends React.Component {
     }
   }
 
+  handleFiles(files) {
+    if (event.preventDefault) {
+      event.preventDefault()
+    }
+
+    let data = { title: files.fileList[0].name, client_id: this.client_id, filename: files.fileList[0].name, data: files.base64 }
+
+    this.props.submitRequest('CREATE_DOCUMENT', data)
+  }
+
   render() {
     let client = this.client
+    let documents = this.client.get('documents') || Immutable.List()
+
+    var rendered_documents = []
+
+    documents.forEach(document => {
+      rendered_documents.push(
+        <div key={ document.get('id') }>
+          <a href={ 'http://localhost:3000/documents/' + document.get('id') } target="blank" >{ document.get('filename') }</a>
+        </div>
+      )
+    })
 
     return (
       <div>
@@ -45,6 +71,12 @@ class Show extends React.Component {
         <p>{ client.get('address_line_1') } { client.get('address_line_2')  }</p>
         <p>{ client.get('telephone_1') } { client.get('telephone_1')  }</p>
         <Link to={'/clients/' + client.get('id') + '/edit'}>Editar</Link>
+        <h3> Documentos </h3>
+        { rendered_documents }
+        <h4>Subir archivo</h4>
+        <ReactFileReader handleFiles={ this.handleFiles } base64={ true } multipleFiles={ false } fileTypes="file_extension|image/jpeg|application/pdf">
+          <button className='btn'>Seleccionar</button>
+        </ReactFileReader>
       </div>
     )
   }
