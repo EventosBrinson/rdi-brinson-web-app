@@ -73,7 +73,7 @@ export function submitRequest(state, request, data) {
 
     case 'UPDATE_CLIENT':
       Api.patch(request, `/clients/${ data.id }`, { client: data.client }, sessionToken)
-      return state.deleteIn(['forms', 'client_form'])
+      return state.deleteIn(['forms', 'edit_client_form'])
                   .setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
 
     case 'CREATE_DOCUMENT':
@@ -83,6 +83,11 @@ export function submitRequest(state, request, data) {
     case 'DELETE_DOCUMENT':
       Api.del(request, `/documents/${ data.id }`, data, sessionToken)
       return state.setIn(['documents', 'delete_document_status', data.id], 'DELETING')
+
+    case 'UPDATE_DOCUMENT':
+      Api.patch(request, `/clients/${ data.id }`, { document: data.document }, sessionToken)
+      return state.deleteIn(['forms', 'edit_document_form', data.id])
+                  .setIn(['documents', 'update_document_status', data.id], 'UPDATING')
 
     default:
       return state
@@ -205,6 +210,10 @@ export function requestSucceeded(state, request, result) {
                   .deleteIn(['clients', 'hashed', String(result.request_data.client_id), 'documents', String(result.request_data.id)])
                   .updateIn(['clients', 'hashed', String(result.request_data.client_id), 'documents_order'], order => (order || Immutable.List()).filterNot(value => value === result.request_data.id))
 
+    case 'UPDATE_DOCUMENT':
+      return state.setIn(['documents', 'update_document_status', String(data.id)], 'UPDATED')
+                  .setIn(['clients', 'hashed', String(data.client_id), 'documents', String(data.id)], Immutable.fromJS(data))
+
     default:
       return state
   }
@@ -256,6 +265,9 @@ export function requestFailed(state, request, result) {
 
     case 'DELETE_DOCUMENT':
       return state.setIn(['documents', 'delete_document_status', result.request_data.id], 'ERROR')
+
+    case 'UPDATE_DOCUMENT':
+      return state.setIn(['documents', 'update_document_status', result.request_data.id], 'ERROR')
 
     default:
       return state
