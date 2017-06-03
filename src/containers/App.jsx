@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from '../store'
 import ReduxRouter from './ReduxRouter'
@@ -35,10 +35,12 @@ export default class App extends React.Component {
                 <PrivateRoute exact path="/users" component={ UsersPage } />
                 <PrivateRoute exact path="/users/new" component={ NewUserPage } />
                 <PrivateRoute exact path="/users/:id/edit" component={ EditUserPage } />
-                <PrivateRoute exact path="/clients" component={ ClientsPage } />
-                <PrivateRoute exact path="/clients/new" component={ NewClientPage } />
-                <PrivateRoute exact path="/clients/:id/edit" component={ EditClientPage } />
-                <PrivateRoute exact path="/clients/:id" component={ ShowClientPage } />
+                <Switch>
+                  <PrivateRoute exact path="/clients" component={ ClientsPage } />
+                  <PrivateRoute exact path="/clients/new" component={ NewClientPage } />
+                  <PrivateRoute exact path="/clients/:id/edit" component={ EditClientPage } />
+                  <PrivateRoute exact path="/clients/:id" component={ ShowClientPage } />
+                </Switch>
               </Layout>
             </ScrollToTop>
           </ReduxRouter>
