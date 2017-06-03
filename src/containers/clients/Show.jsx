@@ -41,13 +41,17 @@ class Show extends React.Component {
   }
 
   handleFiles(files) {
+    let data = { title: files.fileList[0].name, client_id: this.client_id, filename: files.fileList[0].name, data: files.base64 }
+
+    this.props.submitRequest('CREATE_DOCUMENT', data)
+  }
+
+  deleteDocument(document, event) {
     if (event.preventDefault) {
       event.preventDefault()
     }
 
-    let data = { title: files.fileList[0].name, client_id: this.client_id, filename: files.fileList[0].name, data: files.base64 }
-
-    this.props.submitRequest('CREATE_DOCUMENT', data)
+    this.props.submitRequest('DELETE_DOCUMENT', document.toJS())
   }
 
   render() {
@@ -60,6 +64,7 @@ class Show extends React.Component {
       rendered_documents.push(
         <div key={ document.get('id') }>
           <a href={ 'http://localhost:3000/documents/' + document.get('id') } target="blank" >{ document.get('filename') }</a>
+          <button onClick={ this.deleteDocument.bind(this, document) }>Eliminar</button>
         </div>
       )
     })
