@@ -76,6 +76,10 @@ export function submitRequest(state, request, data) {
       return state.deleteIn(['forms', 'client_form'])
                   .setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
 
+    case 'CREATE_DOCUMENT':
+      Api.post(request, '/documents', { document: data }, sessionToken)
+      return state.setIn(['documents', 'create_document_status' ], 'CREATING')
+
     default:
       return state
   }
@@ -142,10 +146,19 @@ export function requestSucceeded(state, request, data) {
     case 'GET_CLIENTS':
       var clients_hash = {}
       var clients_order = []
-      data.forEach( client => {
+      var documents_hash = {}
+      var documents_order = []
+      data.forEach(client => {
         clients_hash[client.id] = client
         clients_order.push(String(client.id))
+        client.documents.forEach(document => {
+          documents_hash[document.id] = document
+          documents_order.push(String(document.id))
+        })
+        client.documents = documents_hash
+        client.documents_order = documents_order
       })
+
       return state.setIn(['clients', 'get_clients_status'], 'READY')
                   .setIn(['clients', 'hashed'], Immutable.fromJS(clients_hash))
                   .setIn(['clients', 'order'], Immutable.fromJS(clients_order))
@@ -158,6 +171,15 @@ export function requestSucceeded(state, request, data) {
                   .setIn(['router', 'pathname'], '/clients')
 
     case 'GET_CLIENT':
+      var client_documents_hash = {}
+      var client_documents_order = []
+      data.documents.forEach(document => {
+        client_documents_hash[document.id] = document
+        client_documents_order.push(String(document.id))
+      })
+      data.documents = client_documents_hash
+      data.documents_order = client_documents_order
+
       return state.setIn(['clients', 'get_client_statuses', String(data.id)], 'READY')
                   .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
 
@@ -166,6 +188,10 @@ export function requestSucceeded(state, request, data) {
                   .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
                   .setIn(['router', 'action'], 'REDIRECT_TO')
                   .setIn(['router', 'pathname'], '/clients')
+
+    case 'CREATE_DOCUMENT':
+      return state.setIn(['documents', 'create_document_status'], 'CREATED')
+                  .updateIn(['clients', 'hashed', String(data.client_id), 'documents'], documents => (documents || Immutable.List()).push(Immutable.fromJS(data)))
 
     default:
       return state
@@ -212,6 +238,9 @@ export function requestFailed(state, request, data) {
 
     case 'UPDATE_CLIENT':
       return state.setIn(['users', 'update_client_statuses', data.request_data.user.id], 'ERROR')
+
+    case 'CREATE_DOCUMENT':
+      return state.setIn(['documents', 'create_document_status'], 'ERROR')
 
     default:
       return state
