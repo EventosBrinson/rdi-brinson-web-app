@@ -80,12 +80,18 @@ export function submitRequest(state, request, data) {
       Api.post(request, '/documents', { document: data }, sessionToken)
       return state.setIn(['documents', 'create_document_status' ], 'CREATING')
 
+    case 'DELETE_DOCUMENT':
+      Api.del(request, `/documents/${ data.id }`, data, sessionToken)
+      return state.setIn(['documents', 'delete_document_status', data.id], 'DELETING')
+
     default:
       return state
   }
 }
 
-export function requestSucceeded(state, request, data) {
+export function requestSucceeded(state, request, result) {
+  let data = result.response.body
+
   switch (request) {
     case 'SIGN_IN':
     case 'RESET_PASSWORD':
@@ -194,12 +200,17 @@ export function requestSucceeded(state, request, data) {
                   .setIn(['clients', 'hashed', String(data.client_id), 'documents', String(data.id)], Immutable.fromJS(data))
                   .updateIn(['clients', 'hashed', String(data.client_id), 'documents_order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
 
+    case 'DELETE_DOCUMENT':
+      return state.setIn(['documents', 'delete_document_status', result.request_data.id], 'DELETED')
+                  .deleteIn(['clients', 'hashed', String(result.request_data.client_id), 'documents', String(result.request_data.id)])
+                  .updateIn(['clients', 'hashed', String(result.request_data.client_id), 'documents_order'], order => (order || Immutable.List()).filterNot(value => value === result.request_data.id))
+
     default:
       return state
   }
 }
 
-export function requestFailed(state, request, data) {
+export function requestFailed(state, request, result) {
   switch (request) {
     case 'SIGN_IN':
       return Immutable.Map({ 'session_status': 'SIGNING_IN_ERROR' })
@@ -223,10 +234,10 @@ export function requestFailed(state, request, data) {
       return state.setIn(['users', 'create_user_status'], 'ERROR')
 
     case 'GET_USER':
-      return state.setIn(['users', 'get_user_statuses', data.request_data], 'ERROR')
+      return state.setIn(['users', 'get_user_statuses', result.request_data], 'ERROR')
 
     case 'UPDATE_USER':
-      return state.setIn(['users', 'update_user_statuses', data.request_data.user.id], 'ERROR')
+      return state.setIn(['users', 'update_user_statuses', result.request_data.user.id], 'ERROR')
 
     case 'GET_CLIENTS':
       return state.setIn(['users', 'get_clients_status'], 'ERROR')
@@ -235,13 +246,16 @@ export function requestFailed(state, request, data) {
       return state.setIn(['users', 'create_client_status'], 'ERROR')
 
     case 'GET_CLIENT':
-      return state.setIn(['users', 'get_client_statuses', data.request_data], 'ERROR')
+      return state.setIn(['users', 'get_client_statuses', result.request_data], 'ERROR')
 
     case 'UPDATE_CLIENT':
-      return state.setIn(['users', 'update_client_statuses', data.request_data.user.id], 'ERROR')
+      return state.setIn(['users', 'update_client_statuses', result.request_data.user.id], 'ERROR')
 
     case 'CREATE_DOCUMENT':
       return state.setIn(['documents', 'create_document_status'], 'ERROR')
+
+    case 'DELETE_DOCUMENT':
+      return state.setIn(['documents', 'delete_document_status', result.request_data.id], 'ERROR')
 
     default:
       return state
