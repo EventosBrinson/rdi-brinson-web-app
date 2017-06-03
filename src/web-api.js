@@ -14,7 +14,7 @@ export function get(request, path, data, auth_token = undefined) {
      if (error || !response.ok) {
        store.dispatch(actionCreators.requestFailed(request, { request_data: data, response: response }))
      } else {
-       store.dispatch(actionCreators.requestSucceeded(request, response.body))
+       store.dispatch(actionCreators.requestSucceeded(request, { request_data: data, response: response }))
      }
    })
 }
@@ -29,7 +29,7 @@ export function post(request, path, data, auth_token = undefined) {
      if (error || !response.ok) {
        store.dispatch(actionCreators.requestFailed(request, { request_data: data, response: response }))
      } else {
-       store.dispatch(actionCreators.requestSucceeded(request, response.body))
+       store.dispatch(actionCreators.requestSucceeded(request, { request_data: data, response: response }))
      }
    })
 }
@@ -44,7 +44,7 @@ export function del(request, path, data, auth_token = undefined) {
      if (error || !response.ok) {
        store.dispatch(actionCreators.requestFailed(request, { request_data: data, response: response }))
      } else {
-       store.dispatch(actionCreators.requestSucceeded(request, response.body))
+       store.dispatch(actionCreators.requestSucceeded(request, { request_data: data, response: response }))
      }
    })
 }
@@ -59,7 +59,7 @@ export function patch(request, path, data, auth_token = undefined) {
      if (error || !response.ok) {
        store.dispatch(actionCreators.requestFailed(request, { request_data: data, response: response }))
      } else {
-       store.dispatch(actionCreators.requestSucceeded(request, response.body))
+       store.dispatch(actionCreators.requestSucceeded(request, { request_data: data, response: response }))
      }
    })
 }
