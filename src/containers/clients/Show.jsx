@@ -109,6 +109,7 @@ class Show extends React.Component {
               <th>Dirección Linea 1</th>
               <th>Dirección Linea 2</th>
               <th>Activo</th>
+              <th />
             </tr>
           </thead>
           <tbody>
