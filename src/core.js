@@ -158,22 +158,36 @@ export function requestSucceeded(state, request, result) {
       var clients_hash = {}
       var clients_order = []
       var documents_hash = {}
-      var documents_order = []
+      var places_hash = {}
+
       data.forEach(client => {
+        var documents_order = []
+        var places_order = []
+
         clients_hash[client.id] = client
         clients_order.push(String(client.id))
         client.documents.forEach(document => {
           documents_hash[document.id] = document
           documents_order.push(String(document.id))
         })
+
         delete client.documents
         client.documents_order = documents_order
+
+        client.places.forEach(place => {
+          documents_hash[place.id] = place
+          places_order.push(String(place.id))
+        })
+
+        delete client.places
+        client.places_order = places_order
       })
 
       return state.setIn(['clients', 'get_clients_status'], 'READY')
                   .setIn(['clients', 'hashed'], Immutable.fromJS(clients_hash))
                   .setIn(['clients', 'order'], Immutable.fromJS(clients_order))
                   .mergeIn(['documents', 'hashed'], documents_hash)
+                  .mergeIn(['places', 'hashed'], places_hash)
 
     case 'CREATE_CLIENT':
       return state.setIn(['clients', 'create_client_status'], 'CREATED')
@@ -185,16 +199,25 @@ export function requestSucceeded(state, request, result) {
     case 'GET_CLIENT':
       var client_documents_hash = {}
       var client_documents_order = []
+      var client_places_hash = {}
+      var client_places_order = []
       data.documents.forEach(document => {
         client_documents_hash[document.id] = document
         client_documents_order.push(String(document.id))
       })
       delete data.documents
       data.documents_order = client_documents_order
+      data.places.forEach(place => {
+        client_places_hash[place.id] = place
+        client_places_order.push(String(place.id))
+      })
+      delete data.places
+      data.places_order = client_places_order
 
       return state.setIn(['clients', 'get_client_statuses', String(data.id)], 'READY')
                   .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
                   .mergeIn(['documents', 'hashed'], client_documents_hash)
+                  .mergeIn(['places', 'hashed'], client_places_hash)
 
     case 'UPDATE_CLIENT':
       return state.setIn(['clients', 'update_client_statuses', String(data.id)], 'UPDATED')
@@ -204,17 +227,19 @@ export function requestSucceeded(state, request, result) {
 
     case 'CREATE_DOCUMENT':
       return state.setIn(['documents', 'create_document_status'], 'CREATED')
-                  .setIn(['clients', 'hashed', String(data.client_id), 'documents', String(data.id)], Immutable.fromJS(data))
-                  .updateIn(['clients', 'hashed', String(data.client_id), 'documents_order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
+                  .setIn(['documents', 'hashed', String(data.id)], Immutable.fromJS(data))
+                  .updateIn(['documents', 'order'], order => (order || Immutable.List()).push(String(data.id)))
+                  .updateIn(['clients', 'hashed', String(data.client_id), 'documents_order'], order => (order || Immutable.List()).push(String(data.id)))
 
     case 'DELETE_DOCUMENT':
       return state.setIn(['documents', 'delete_document_status', result.request_data.id], 'DELETED')
-                  .deleteIn(['clients', 'hashed', String(result.request_data.client_id), 'documents', String(result.request_data.id)])
-                  .updateIn(['clients', 'hashed', String(result.request_data.client_id), 'documents_order'], order => (order || Immutable.List()).filterNot(value => value === result.request_data.id))
+                  .deleteIn(['documents', 'hashed', String(result.request_data.id)])
+                  .updateIn(['documents', 'order'], order => (order || Immutable.List()).filterNot(value => value === String(result.request_data.id)))
+                  .updateIn(['clients', 'hashed', String(result.request_data.client_id), 'documents_order'], order => (order || Immutable.List()).filterNot(value => value === String(result.request_data.id)))
 
     case 'UPDATE_DOCUMENT':
       return state.setIn(['documents', 'update_document_status', String(data.id)], 'UPDATED')
-                  .setIn(['clients', 'hashed', String(data.client_id), 'documents', String(data.id)], Immutable.fromJS(data))
+                  .setIn(['documents', 'hashed', String(data.id)], Immutable.fromJS(data))
 
     default:
       return state
