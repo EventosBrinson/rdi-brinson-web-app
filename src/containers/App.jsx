@@ -19,6 +19,7 @@ import NewClientPage from './clients/New'
 import EditClientPage from './clients/Edit'
 import ShowClientPage from './clients/Show'
 import NewPlacePage from './places/New'
+import EditPlacePage from './places/Edit'
 
 export default class App extends React.Component {
   render() {
@@ -44,6 +45,7 @@ export default class App extends React.Component {
                 </Switch>
                 <Switch>
                   <PrivateRoute exact path="/places/new" component={ NewPlacePage } />
+                  <PrivateRoute exact path="/places/:id/edit" component={ EditPlacePage } />
                 </Switch>
               </Layout>
             </ScrollToTop>
