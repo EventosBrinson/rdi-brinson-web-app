@@ -4,7 +4,7 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
-import ReactFileReader from 'react-file-reader';
+import ReactFileReader from 'react-file-reader'
 
 class Show extends React.Component {
 
@@ -57,17 +57,34 @@ class Show extends React.Component {
   render() {
     let client = this.client
     let documents_order = this.client.get('documents_order') || Immutable.List()
+    let places_order = this.client.get('places_order') || Immutable.List()
 
     var rendered_documents = []
 
-    documents_order.forEach(index => {
-      let document = this.props.documents.get(index)
+    documents_order.forEach(document_id => {
+      let document = this.props.documents.get(document_id)
 
       rendered_documents.push(
         <div key={ document.get('id') }>
           <a href={ 'http://localhost:3000/documents/' + document.get('id') } target="blank" >{ document.get('filename') }</a>
           <button onClick={ this.deleteDocument.bind(this, document) }>Eliminar</button>
         </div>
+      )
+    })
+
+    var rendered_places = []
+
+    places_order.forEach( place_id => {
+      let place = this.props.places.get(place_id)
+
+      rendered_places.push(
+        <tr key={ place.get('id') }>
+          <td>{ place.get('name') }</td>
+          <td>{ place.get('address_line_1') }</td>
+          <td>{ place.get('address_line_2') }</td>
+          <td>{ place.get('active') ? 'Si' : 'No' }</td>
+          <td><Link to={ '/places/' + place.get('id') + '/edit'}>Edit</Link></td>
+        </tr>
       )
     })
 
@@ -84,6 +101,22 @@ class Show extends React.Component {
         <ReactFileReader handleFiles={ this.handleFiles } base64={ true } multipleFiles={ false } fileTypes="file_extension|image/jpeg|application/pdf">
           <button className='btn'>Seleccionar</button>
         </ReactFileReader>
+        <h3> Lugares </h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Dirección Linea 1</th>
+              <th>Dirección Linea 2</th>
+              <th>Activo</th>
+            </tr>
+          </thead>
+          <tbody>
+            { rendered_places }
+          </tbody>
+        </table>
+        <br />
+        <Link to={ '/places/new?client_id=' + this.client_id }>Crear nuevo lugar</Link>
       </div>
     )
   }
@@ -93,6 +126,7 @@ function mapStateToProps(state) {
   return {
     clients: state.get('clients'),
     documents: state.getIn(['documents', 'hashed']),
+    places: state.getIn(['places', 'hashed']),
     session_status: state.get('session_status')
   }
 }
