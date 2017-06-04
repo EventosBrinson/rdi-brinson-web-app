@@ -56,11 +56,13 @@ class Show extends React.Component {
 
   render() {
     let client = this.client
-    let documents = this.client.get('documents') || Immutable.List()
+    let documents_order = this.client.get('documents_order') || Immutable.List()
 
     var rendered_documents = []
 
-    documents.forEach(document => {
+    documents_order.forEach(index => {
+      let document = this.props.documents.get(index)
+
       rendered_documents.push(
         <div key={ document.get('id') }>
           <a href={ 'http://localhost:3000/documents/' + document.get('id') } target="blank" >{ document.get('filename') }</a>
@@ -90,6 +92,7 @@ class Show extends React.Component {
 function mapStateToProps(state) {
   return {
     clients: state.get('clients'),
+    documents: state.getIn(['documents', 'hashed']),
     session_status: state.get('session_status')
   }
 }

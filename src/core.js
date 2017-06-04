@@ -166,13 +166,14 @@ export function requestSucceeded(state, request, result) {
           documents_hash[document.id] = document
           documents_order.push(String(document.id))
         })
-        client.documents = documents_hash
+        delete client.documents
         client.documents_order = documents_order
       })
 
       return state.setIn(['clients', 'get_clients_status'], 'READY')
                   .setIn(['clients', 'hashed'], Immutable.fromJS(clients_hash))
                   .setIn(['clients', 'order'], Immutable.fromJS(clients_order))
+                  .mergeIn(['documents', 'hashed'], documents_hash)
 
     case 'CREATE_CLIENT':
       return state.setIn(['clients', 'create_client_status'], 'CREATED')
@@ -188,11 +189,12 @@ export function requestSucceeded(state, request, result) {
         client_documents_hash[document.id] = document
         client_documents_order.push(String(document.id))
       })
-      data.documents = client_documents_hash
+      delete data.documents
       data.documents_order = client_documents_order
 
       return state.setIn(['clients', 'get_client_statuses', String(data.id)], 'READY')
                   .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
+                  .mergeIn(['documents', 'hashed'], client_documents_hash)
 
     case 'UPDATE_CLIENT':
       return state.setIn(['clients', 'update_client_statuses', String(data.id)], 'UPDATED')
