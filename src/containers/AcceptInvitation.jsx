@@ -24,7 +24,7 @@ class AcceptInvitation extends React.Component {
     }
 
     let data = (this.props.accept_invitation_form || Immutable.Map()).toJS()
-    let params = queryString.parse(this.props.location.search);
+    let params = queryString.parse(this.props.location.search)
 
     data.token = params.token
 

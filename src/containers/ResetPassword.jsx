@@ -24,7 +24,7 @@ class ResetPassword extends React.Component {
     }
 
     let data = (this.props.reset_password_form || Immutable.Map()).toJS()
-    let params = queryString.parse(this.props.location.search);
+    let params = queryString.parse(this.props.location.search)
 
     data.token = params.token
 
