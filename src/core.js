@@ -179,7 +179,7 @@ export function requestSucceeded(state, request, result) {
         client.documents_order = documents_order
 
         client.places.forEach(place => {
-          documents_hash[place.id] = place
+          places_hash[place.id] = place
           places_order.push(String(place.id))
         })
 
