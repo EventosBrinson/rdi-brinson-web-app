@@ -74,7 +74,7 @@ export function submitRequest(state, request, data) {
     case 'UPDATE_CLIENT':
       Api.patch(request, `/clients/${ data.id }`, { client: data.client }, sessionToken)
       return state.deleteIn(['forms', 'edit_client_form'])
-                  .setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
+                  .setIn(['clients', 'update_client_statuses', data.id ], 'UPDATING')
 
     case 'CREATE_DOCUMENT':
       Api.post(request, '/documents', { document: data }, sessionToken)
@@ -92,6 +92,15 @@ export function submitRequest(state, request, data) {
     case 'CREATE_PLACE':
       Api.post(request, '/places', { place: data }, sessionToken)
       return state.deleteIn(['forms', 'place_form']).setIn(['places', 'create_place_status' ], 'CREATING')
+
+    case 'GET_PLACE':
+      Api.get(request, `/places/${ data.id }`, undefined, sessionToken)
+      return state.setIn(['places', 'get_place_statuses', data.id ], 'GETTING')
+
+    case 'UPDATE_PLACE':
+      Api.patch(request, `/places/${ data.id }`, { place: data.client }, sessionToken)
+      return state.deleteIn(['forms', 'edit_place_form'])
+                  .setIn(['places', 'update_place_statuses', data.id ], 'UPDATING')
 
     default:
       return state
@@ -253,6 +262,16 @@ export function requestSucceeded(state, request, result) {
                   .setIn(['router', 'action'], 'REDIRECT_TO')
                   .setIn(['router', 'pathname'], '/clients/' + data.client_id)
 
+    case 'GET_PLACE':
+      return state.setIn(['places', 'get_place_statuses', String(data.id)], 'READY')
+                  .setIn(['places', 'hashed', String(data.id)], Immutable.fromJS(data))
+
+    case 'UPDATE_PLACE':
+      return state.setIn(['places', 'update_place_statuses', String(data.id)], 'UPDATED')
+                  .setIn(['places', 'hashed', String(data.id)], Immutable.fromJS(data))
+                  .setIn(['router', 'action'], 'REDIRECT_TO')
+                  .setIn(['router', 'pathname'], '/clients/' + data.client_id)
+
     default:
       return state
   }
@@ -310,6 +329,9 @@ export function requestFailed(state, request, result) {
 
     case 'CREATE_PLACE':
       return state.setIn(['places', 'create_place_status'], 'ERROR')
+
+    case 'GET_PLACE':
+      return state.setIn(['places', 'get_place_statuses', result.request_data], 'ERROR')
 
     default:
       return state
