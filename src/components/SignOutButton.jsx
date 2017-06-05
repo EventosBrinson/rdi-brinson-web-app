@@ -20,9 +20,9 @@ export default class SignOutButton extends React.Component {
 
   render() {
     return (
-      <button onClick={ this.handleClick }>
+      <a onClick={ this.handleClick }>
         { this.props.children }
-      </button>
+      </a>
     )
   }
 }
