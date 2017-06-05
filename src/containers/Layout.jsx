@@ -4,10 +4,55 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom' 
 import * as actionCreators from '../action-creators'
 import SignOutButton from '../components/SignOutButton'
+import Immutable from 'immutable'
 
-class Layout extends React.Component {
+import MediaQuery from 'react-responsive'
+import { Row, Col, Menu, Icon, Dropdown } from 'antd'
+const SubMenu = Menu.SubMenu
+const MenuItemGroup = Menu.ItemGroup
+
+class MasterLayout extends React.Component {
 
   render() {
+    let user = this.props.user || Immutable.Map()
+
+    const menu = (
+      <Menu>
+        <Menu.Item>
+          <SignOutButton requestFunction={ this.props.submitRequest }>Cerrar sesión</SignOutButton>
+        </Menu.Item>
+      </Menu>
+    )
+
+    return (
+    <Row type="flex" justify="center" align="middle">
+      <Col xs={24} sm={20} md={16} lg={12} xl={12} >
+        <Menu mode="horizontal">
+          <Menu.Item>
+            <Link to="/"><Icon type="home" />Inicio</Link>
+          </Menu.Item>
+          <Menu.Item>
+            <Link to="/users"><Icon type="user" />Usuarios</Link>
+          </Menu.Item>
+          <Menu.Item>
+            <Link to="/clients"><Icon type="team" />Clientes</Link>
+          </Menu.Item>
+          <Menu.Item>
+            <Link to="/places"><Icon type="environment-o" />Lugares</Link>
+          </Menu.Item>
+          <div style={{ float: 'right', marginRight: '20px' }}>
+            <Dropdown overlay={menu} >
+              <Link to="/profile" className="ant-dropdown-link">
+                { user.get('username') }
+                <Icon type="down" />
+              </Link>
+            </Dropdown>
+          </div>
+        </Menu>
+        { this.props.children }
+      </Col>
+    </Row>
+    )
     return (
       <div>
         <Link to="/">Inicio</Link>
@@ -24,7 +69,7 @@ class Layout extends React.Component {
         |
         <Link to="/profile">Perfil de usuario</Link>
         |
-        { this.props.children }
+        
         <pre>
           { JSON.stringify(this.props.state, null, 2) }
         </pre>
@@ -35,8 +80,10 @@ class Layout extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    user: state.get('user'),
+    session_status: state.get('session_status'),
     state: state
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Layout))
+export default withRouter(connect(mapStateToProps, actionCreators)(MasterLayout))
