@@ -8,8 +8,16 @@ import Immutable from 'immutable'
 class Index extends React.Component {
 
   componentDidMount() {
-    if(this.props.places.get('get_places_status') !== 'READY') {
-      this.props.submitRequest('GET_PLACES') 
+    this.getPlaces(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.getPlaces(nextProps)
+  }
+
+  getPlaces(props) {
+    if(props.session_status === 'SIGNED_IN' && props.clients.get('get_places_status') !== 'READY') {
+      props.submitRequest('GET_PLACES') 
     }
   }
 
@@ -24,8 +32,11 @@ class Index extends React.Component {
       rendered_places.push(
         <tr key={ place.get('id') }>
           <td>{ place.get('name') }</td>
-          <td>{ place.get('address_line_1') }</td>
-          <td>{ place.get('address_line_2') }</td>
+          <td>{ place.get('street') }</td>
+          <td>{ place.get('inner_number') }</td>
+          <td>{ place.get('outer_number') }</td>
+          <td>{ place.get('neighborhood') }</td>
+          <td>{ place.get('postal_code') }</td>
           <td>{ place.get('active') ? 'Si' : 'No' }</td>
           <td><Link to={ '/places/' + place.get('id') + '/edit'}>Edit</Link></td>
         </tr>
@@ -39,8 +50,11 @@ class Index extends React.Component {
           <thead>
             <tr>
               <th>Nombre</th>
-              <th>Dirección Linea 1</th>
-              <th>Dirección Linea 2</th>
+              <th>Calle</th>
+              <th>Numero interior</th>
+              <th>Numero exterior</th>
+              <th>Fraccionamiento</th>
+              <th>CP</th>
               <th>Activo</th>
               <th />
             </tr>

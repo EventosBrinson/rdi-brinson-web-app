@@ -67,12 +67,24 @@ class Edit extends React.Component {
           <input name='name' type='text' value={ formHelpers.priorityValues([form.get('name'), this.place.get('name')]) } onChange={ this.handleChange } />
         </div>
         <div>
-          <label>Dirección Liena 1</label>
-          <input name='address_line_1' type='text' value={ formHelpers.priorityValues([form.get('address_line_1'), this.place.get('address_line_1')]) } onChange={ this.handleChange } />
+          <label>Calle</label>
+          <input name='street' type='text' value={ formHelpers.priorityValues([form.get('street'), this.place.get('street')]) } onChange={ this.handleChange } />
         </div>
         <div>
-          <label>Dirección Liena 2</label>
-          <input name='address_line_2' type='text' value={ formHelpers.priorityValues([form.get('address_line_2'), this.place.get('address_line_2'), '']) } onChange={ this.handleChange } />
+          <label>Numero interior</label>
+          <input name='inner_number' type='text' value={ formHelpers.priorityValues([form.get('inner_number'), this.place.get('inner_number')]) } onChange={ this.handleChange } />
+        </div>
+        <div>
+          <label>Numero exterior</label>
+          <input name='outer_number' type='text' value={ formHelpers.priorityValues([form.get('outer_number'), this.place.get('outer_number')]) } onChange={ this.handleChange } />
+        </div>
+        <div>
+          <label>Fraccionamiento</label>
+          <input name='neighborhood' type='text' value={ formHelpers.priorityValues([form.get('neighborhood'), this.place.get('neighborhood')]) } onChange={ this.handleChange } />
+        </div>
+        <div>
+          <label>CP</label>
+          <input name='postal_code' type='text' value={ formHelpers.priorityValues([form.get('postal_code'), this.place.get('postal_code')]) } onChange={ this.handleChange } />
         </div>
         <div>
           <label>Acitivo</label>
