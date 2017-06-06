@@ -40,14 +40,12 @@ class MasterLayout extends React.Component {
           <Menu.Item>
             <Link to="/places"><Icon type="environment-o" />Lugares</Link>
           </Menu.Item>
-          <div style={{ float: 'right', marginRight: '20px' }}>
-            <Dropdown overlay={menu} >
-              <Link to="/profile" className="ant-dropdown-link">
-                { user.get('username') }
-                <Icon type="down" />
-              </Link>
-            </Dropdown>
-          </div>
+          <Dropdown overlay={menu} >
+            <Link to="/profile" className="ant-dropdown-link" style={{ float: 'right', marginRight: '20px' }}>
+              { user.get('username') }
+              <Icon type="down" />
+            </Link>
+          </Dropdown>
         </Menu>
         { this.props.children }
       </Col>
@@ -70,9 +68,7 @@ class MasterLayout extends React.Component {
         <Link to="/profile">Perfil de usuario</Link>
         |
         
-        <pre>
-          { JSON.stringify(this.props.state, null, 2) }
-        </pre>
+
       </div>
     )
   }
