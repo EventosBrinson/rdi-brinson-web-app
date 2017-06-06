@@ -129,6 +129,14 @@ class Edit extends React.Component {
           </select>
         </div>
         <div>
+          <label>Tipo de cliente</label>
+          <select name='rent_type' value={ formHelpers.priorityValues([form.get('rent_type'), this.client.get('rent_type')]) } onChange={ this.handleChange }>
+            <option value="primera_renta">Primera renta</option>
+            <option value="frecuente">Frecuente</option>
+            <option value="empresa">Empresa</option>
+          </select>
+        </div>
+        <div>
           <label>Acitivo</label>
           <input name='active' type='checkbox' checked={ formHelpers.priorityValues([form.get('active'), this.client.get('active')]) } onChange={ this.handleChange } />
         </div>

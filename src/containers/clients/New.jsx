@@ -101,6 +101,14 @@ class New extends React.Component {
           </select>
         </div>
         <div>
+          <label>Tipo de cliente</label>
+          <select name='rent_type' value={ form.get('rent_type') || '' } onChange={ this.handleChange }>
+            <option value="primera_renta">Primera renta</option>
+            <option value="frecuente">Frecuente</option>
+            <option value="empresa">Empresa</option>
+          </select>
+        </div>
+        <div>
           <button type="submit">Crear</button>
         </div>
       </form>

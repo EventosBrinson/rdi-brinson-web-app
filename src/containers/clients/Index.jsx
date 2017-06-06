@@ -43,6 +43,7 @@ class Index extends React.Component {
           <td>{ client.get('email') }</td>
           <td>{ client.get('id_name') }</td>
           <td>{ client.get('trust_level') }</td>
+          <td>{ client.get('rent_type') }</td>
           <td>{ client.get('active') ? 'Si' : 'No' }</td>
           <td><Link to={ '/clients/' + client.get('id') }>Ver</Link></td>
           <td><Link to={ '/clients/' + client.get('id') + '/edit'}>Edit</Link></td>
@@ -68,6 +69,7 @@ class Index extends React.Component {
               <th>Email</th>
               <th>Identificación</th>
               <th>Nivel de confianza</th>
+              <th>Tipo de cliente</th>
               <th>Activo</th>
               <th />
               <th />

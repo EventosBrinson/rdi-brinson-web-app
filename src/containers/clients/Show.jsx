@@ -93,7 +93,7 @@ class Show extends React.Component {
 
     return (
       <div>
-        <h3>{ client.get('firstname') + ' ' + client.get('lastname') } <small>{ client.get('trust_level') }</small></h3>
+        <h3>{ client.get('firstname') + ' ' + client.get('lastname') } <small>{ client.get('rent_type') + ' ' + client.get('trust_level') }</small></h3>
         <p>{ client.get('id_name') }</p>
         <p>{ client.get('address_line_1') } { client.get('address_line_2')  }</p>
         <p>{ client.get('telephone_1') } { client.get('telephone_1')  }</p>
