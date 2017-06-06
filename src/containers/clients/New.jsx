@@ -44,12 +44,24 @@ class New extends React.Component {
           <input name='lastname' type='text' value={ form.get('lastname') || '' } onChange={ this.handleChange } />
         </div>
         <div>
-          <label>Dirección Liena 1</label>
-          <input name='address_line_1' type='text' value={ form.get('address_line_1') || '' } onChange={ this.handleChange } />
+          <label>Calle</label>
+          <input name='street' type='text' value={ form.get('street') || '' } onChange={ this.handleChange } />
         </div>
         <div>
-          <label>Dirección Liena 2</label>
-          <input name='address_line_2' type='text' value={ form.get('address_line_2') || '' } onChange={ this.handleChange } />
+          <label>Numero interior</label>
+          <input name='inner_number' type='text' value={ form.get('inner_number') || '' } onChange={ this.handleChange } />
+        </div>
+        <div>
+          <label>Numero exterior</label>
+          <input name='outer_number' type='text' value={ form.get('outer_number') || '' } onChange={ this.handleChange } />
+        </div>
+        <div>
+          <label>Fraccionamiento</label>
+          <input name='neighborhood' type='text' value={ form.get('neighborhood') || '' } onChange={ this.handleChange } />
+        </div>
+        <div>
+          <label>CP</label>
+          <input name='postal_code' type='text' value={ form.get('postal_code') || '' } onChange={ this.handleChange } />
         </div>
         <div>
           <label>Teléfono 1</label>
@@ -58,6 +70,10 @@ class New extends React.Component {
         <div>
           <label>Teléfono 2</label>
           <input name='telephone_2' type='text' value={ form.get('telephone_2') || '' } onChange={ this.handleChange } />
+        </div>
+        <div>
+          <label>Email</label>
+          <input name='email' type='text' value={ form.get('email') || '' } onChange={ this.handleChange } />
         </div>
         <div>
           <label>Identificación</label>

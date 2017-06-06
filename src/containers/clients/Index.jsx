@@ -8,8 +8,16 @@ import Immutable from 'immutable'
 class Index extends React.Component {
 
   componentDidMount() {
-    if(this.props.clients.get('get_clients_status') === undefined) {
-      this.props.submitRequest('GET_CLIENTS') 
+    this.getClients(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.getClients(nextProps)
+  }
+
+  getClients(props) {
+    if(props.session_status === 'SIGNED_IN' && props.clients.get('get_clients_status') !== 'READY') {
+      props.submitRequest('GET_CLIENTS') 
     }
   }
 
@@ -25,10 +33,14 @@ class Index extends React.Component {
         <tr key={ client.get('id') }>
           <td>{ client.get('firstname') }</td>
           <td>{ client.get('lastname') }</td>
-          <td>{ client.get('address_line_1') }</td>
-          <td>{ client.get('address_line_2') }</td>
+          <td>{ client.get('street') }</td>
+          <td>{ client.get('inner_number') }</td>
+          <td>{ client.get('outer_number') }</td>
+          <td>{ client.get('neighborhood') }</td>
+          <td>{ client.get('postal_code') }</td>
           <td>{ client.get('telephone_1') }</td>
           <td>{ client.get('telephone_2') }</td>
+          <td>{ client.get('email') }</td>
           <td>{ client.get('id_name') }</td>
           <td>{ client.get('trust_level') }</td>
           <td>{ client.get('active') ? 'Si' : 'No' }</td>
@@ -46,10 +58,14 @@ class Index extends React.Component {
             <tr>
               <th>Nombres</th>
               <th>Apellidos</th>
-              <th>Dirección Linea 1</th>
-              <th>Dirección Linea 2</th>
+              <th>Calle</th>
+              <th>Numero interior</th>
+              <th>Numero exterior</th>
+              <th>Fraccionamiento</th>
+              <th>CP</th>
               <th>Teléfono 1</th>
               <th>Teléfono 2</th>
+              <th>Email</th>
               <th>Identificación</th>
               <th>Nivel de confianza</th>
               <th>Activo</th>
@@ -72,7 +88,8 @@ function mapStateToProps(state) {
   return {
     clients: state.get('clients') || Immutable.Map(),
     hashed: state.getIn(['clients', 'hashed']),
-    order: state.getIn(['clients', 'order'])
+    order: state.getIn(['clients', 'order']),
+    session_status: state.get('session_status')
   }
 }
 

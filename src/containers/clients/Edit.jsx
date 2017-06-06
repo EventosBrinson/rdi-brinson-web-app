@@ -72,12 +72,24 @@ class Edit extends React.Component {
           <input name='lastname' type='text' value={ formHelpers.priorityValues([form.get('lastname'), this.client.get('lastname')]) } onChange={ this.handleChange } />
         </div>
         <div>
-          <label>Dirección Liena 1</label>
-          <input name='address_line_1' type='text' value={ formHelpers.priorityValues([form.get('address_line_1'), this.client.get('address_line_1')]) } onChange={ this.handleChange } />
+          <label>Calle</label>
+          <input name='street' type='text' value={ formHelpers.priorityValues([form.get('street'), this.client.get('street')]) } onChange={ this.handleChange } />
         </div>
         <div>
-          <label>Dirección Liena 2</label>
-          <input name='address_line_2' type='text' value={ formHelpers.priorityValues([form.get('address_line_2'), this.client.get('address_line_2'), '']) } onChange={ this.handleChange } />
+          <label>Numero interior</label>
+          <input name='inner_number' type='text' value={ formHelpers.priorityValues([form.get('inner_number'), this.client.get('inner_number')]) } onChange={ this.handleChange } />
+        </div>
+        <div>
+          <label>Numero exterior</label>
+          <input name='outer_number' type='text' value={ formHelpers.priorityValues([form.get('outer_number'), this.client.get('outer_number')]) } onChange={ this.handleChange } />
+        </div>
+        <div>
+          <label>Fraccionamiento</label>
+          <input name='neighborhood' type='text' value={ formHelpers.priorityValues([form.get('neighborhood'), this.client.get('neighborhood')]) } onChange={ this.handleChange } />
+        </div>
+        <div>
+          <label>CP</label>
+          <input name='postal_code' type='text' value={ formHelpers.priorityValues([form.get('postal_code'), this.client.get('postal_code')]) } onChange={ this.handleChange } />
         </div>
         <div>
           <label>Teléfono 1</label>
@@ -86,6 +98,10 @@ class Edit extends React.Component {
         <div>
           <label>Teléfono 2</label>
           <input name='telephone_2' type='text' value={ formHelpers.priorityValues([form.get('telephone_2'), this.client.get('telephone_2'), '']) } onChange={ this.handleChange } />
+        </div>
+        <div>
+          <label>Email</label>
+          <input name='email' type='text' value={ formHelpers.priorityValues([form.get('email'), this.client.get('email'), '']) } onChange={ this.handleChange } />
         </div>
         <div>
           <label>Identificación</label>
