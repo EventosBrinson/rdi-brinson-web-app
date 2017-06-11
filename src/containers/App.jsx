@@ -22,6 +22,7 @@ import ShowClientPage from './clients/Show'
 import PlacesPage from './places/Index'
 import NewPlacePage from './places/New'
 import EditPlacePage from './places/Edit'
+import RentsPage from './rents/Index'
 
 export default class App extends React.Component {
   render() {
@@ -31,10 +32,11 @@ export default class App extends React.Component {
           <ReduxRouter>
             <ScrollToTop>
               <Layout>
-                <Route path="/sign_in" component={ SignInPage } />
-                <Route path="/recover" component={ RecoverPasswordPage } />
-                <Route path="/reset" component={ ResetPasswordPage } />
-                <Route path="/confirmation" component={ AcceptInvitationPage } />
+                <Route exact path="/" component={ RentsPage } />
+                <Route exact path="/sign_in" component={ SignInPage } />
+                <Route exact path="/recover" component={ RecoverPasswordPage } />
+                <Route exact path="/reset" component={ ResetPasswordPage } />
+                <Route exact path="/confirmation" component={ AcceptInvitationPage } />
                 <PrivateRoute exact path="/profile" component={ ProfilePage } />
                 <PrivateRoute exact path="/users" component={ UsersPage } />
                 <PrivateRoute exact path="/users/new" component={ NewUserPage } />

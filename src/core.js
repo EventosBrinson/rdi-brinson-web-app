@@ -106,6 +106,10 @@ export function submitRequest(state, request, data) {
       return state.deleteIn(['forms', 'edit_place_form'])
                   .setIn(['places', 'update_place_statuses', data.id ], 'UPDATING')
 
+    case 'GET_RENTS':
+      Api.get(request, '/rents', data, sessionToken)
+      return state.setIn(['rents', 'get_rents_status'], 'GETTING')
+
     default:
       return state
   }
@@ -317,6 +321,19 @@ export function requestSucceeded(state, request, result) {
                   .setIn(['router', 'action'], 'REDIRECT_TO')
                   .setIn(['router', 'pathname'], '/clients/' + data.client_id)
 
+    case 'GET_RENTS':
+      var get_rents_hash = {}
+      var get_rents_order = []
+
+      data.forEach(rent => {
+        get_rents_hash[rent.id] = rent
+        get_rents_order.push(String(rent.id))
+      })
+
+      return state.setIn(['rents', 'get_rents_status'], 'READY')
+                  .setIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
+                  .setIn(['rents', 'order'], Immutable.fromJS(get_rents_order))
+
     default:
       return state
   }
@@ -352,16 +369,16 @@ export function requestFailed(state, request, result) {
       return state.setIn(['users', 'update_user_statuses', result.request_data.user.id], 'ERROR')
 
     case 'GET_CLIENTS':
-      return state.setIn(['users', 'get_clients_status'], 'ERROR')
+      return state.setIn(['clients', 'get_clients_status'], 'ERROR')
 
     case 'CREATE_CLIENT':
-      return state.setIn(['users', 'create_client_status'], 'ERROR')
+      return state.setIn(['clients', 'create_client_status'], 'ERROR')
 
     case 'GET_CLIENT':
-      return state.setIn(['users', 'get_client_statuses', result.request_data], 'ERROR')
+      return state.setIn(['clients', 'get_client_statuses', result.request_data], 'ERROR')
 
     case 'UPDATE_CLIENT':
-      return state.setIn(['users', 'update_client_statuses', result.request_data.user.id], 'ERROR')
+      return state.setIn(['clients', 'update_client_statuses', result.request_data.user.id], 'ERROR')
 
     case 'CREATE_DOCUMENT':
       return state.setIn(['documents', 'create_document_status'], 'ERROR')
@@ -373,7 +390,7 @@ export function requestFailed(state, request, result) {
       return state.setIn(['documents', 'update_document_status', result.request_data.id], 'ERROR')
 
     case 'GET_PLACES':
-      return state.setIn(['users', 'get_places_status'], 'ERROR')
+      return state.setIn(['places', 'get_places_status'], 'ERROR')
 
     case 'CREATE_PLACE':
       return state.setIn(['places', 'create_place_status'], 'ERROR')
@@ -382,7 +399,10 @@ export function requestFailed(state, request, result) {
       return state.setIn(['places', 'get_place_statuses', result.request_data], 'ERROR')
 
     case 'UPDATE_PLACE':
-      return state.setIn(['users', 'update_place_statuses', result.request_data.user.id], 'ERROR')
+      return state.setIn(['places', 'update_place_statuses', result.request_data.user.id], 'ERROR')
+
+    case 'GET_RENTS':
+      return state.setIn(['rents', 'get_rents_status'], 'ERROR')
 
     default:
       return state
