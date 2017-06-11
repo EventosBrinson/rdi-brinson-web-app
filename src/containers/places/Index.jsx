@@ -16,7 +16,7 @@ class Index extends React.Component {
   }
 
   getPlaces(props) {
-    if(props.session_status === 'SIGNED_IN' && props.clients.get('get_places_status') !== 'READY') {
+    if(props.session_status === 'SIGNED_IN' && props.places.get('get_places_status') !== 'READY') {
       props.submitRequest('GET_PLACES') 
     }
   }
@@ -74,7 +74,8 @@ function mapStateToProps(state) {
   return {
     places: state.get('places') || Immutable.Map(),
     hashed: state.getIn(['places', 'hashed']),
-    order: state.getIn(['places', 'order'])
+    order: state.getIn(['places', 'order']),
+    session_status: state.get('session_status')
   }
 }
 
