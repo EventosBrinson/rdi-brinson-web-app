@@ -24,7 +24,7 @@ class New extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.session_status === 'SIGNED_IN') {
+    if(nextProps.session_status === 'SIGNED_IN' && nextProps.get_clients_status === 'READY') {
       let form = nextProps.place_form || Immutable.Map()
 
       if(form.get('client_id') === undefined) {
