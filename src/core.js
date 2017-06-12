@@ -110,9 +110,18 @@ export function submitRequest(state, request, data) {
       Api.get(request, '/rents', data, sessionToken)
       return state.setIn(['rents', 'get_rents_status'], 'GETTING')
 
+    case 'GET_RENT':
+      Api.get(request, `/rents/${ data.id }`, undefined, sessionToken)
+      return state.setIn(['rents', 'get_rent_statuses', data.id ], 'GETTING')
+
     case 'CREATE_RENT':
       Api.post(request, '/rents', { rent: data }, sessionToken)
       return state.deleteIn(['forms', 'rent_form']).setIn(['rents', 'create_rent_status' ], 'CREATING')
+
+    case 'UPDATE_RENT':
+      Api.patch(request, `/rents/${ data.id }`, { rent: data.rent }, sessionToken)
+      return state.deleteIn(['forms', 'edit_rent_form'])
+                  .setIn(['rents', 'update_rent_statuses', data.id ], 'UPDATING')
 
     default:
       return state
@@ -338,10 +347,20 @@ export function requestSucceeded(state, request, result) {
                   .setIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
                   .setIn(['rents', 'order'], Immutable.fromJS(get_rents_order))
 
+    case 'GET_RENT':
+      return state.setIn(['rents', 'get_rent_statuses', String(data.id)], 'READY')
+                  .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
+
     case 'CREATE_RENT':
       return state.setIn(['rents', 'create_rent_status'], 'CREATED')
                   .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
                   .updateIn(['rents', 'order'], order => (order || Immutable.List()).push(String(data.id)))
+                  .setIn(['router', 'action'], 'REDIRECT_TO')
+                  .setIn(['router', 'pathname'], '/rents')
+
+    case 'UPDATE_RENT':
+      return state.setIn(['rents', 'update_rent_statuses', String(data.id)], 'UPDATED')
+                  .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
                   .setIn(['router', 'action'], 'REDIRECT_TO')
                   .setIn(['router', 'pathname'], '/rents')
 
@@ -389,7 +408,7 @@ export function requestFailed(state, request, result) {
       return state.setIn(['clients', 'get_client_statuses', result.request_data], 'ERROR')
 
     case 'UPDATE_CLIENT':
-      return state.setIn(['clients', 'update_client_statuses', result.request_data.user.id], 'ERROR')
+      return state.setIn(['clients', 'update_client_statuses', result.request_data.client.id], 'ERROR')
 
     case 'CREATE_DOCUMENT':
       return state.setIn(['documents', 'create_document_status'], 'ERROR')
@@ -398,25 +417,31 @@ export function requestFailed(state, request, result) {
       return state.setIn(['documents', 'delete_document_status', result.request_data.id], 'ERROR')
 
     case 'UPDATE_DOCUMENT':
-      return state.setIn(['documents', 'update_document_status', result.request_data.id], 'ERROR')
+      return state.setIn(['documents', 'update_document_status', result.request_data.document.id], 'ERROR')
 
     case 'GET_PLACES':
       return state.setIn(['places', 'get_places_status'], 'ERROR')
 
-    case 'CREATE_PLACE':
-      return state.setIn(['places', 'create_place_status'], 'ERROR')
-
     case 'GET_PLACE':
       return state.setIn(['places', 'get_place_statuses', result.request_data], 'ERROR')
 
+    case 'CREATE_PLACE':
+      return state.setIn(['places', 'create_place_status'], 'ERROR')
+
     case 'UPDATE_PLACE':
-      return state.setIn(['places', 'update_place_statuses', result.request_data.user.id], 'ERROR')
+      return state.setIn(['places', 'update_place_statuses', result.request_data.place.id], 'ERROR')
 
     case 'GET_RENTS':
       return state.setIn(['rents', 'get_rents_status'], 'ERROR')
 
+    case 'GET_RENT':
+      return state.setIn(['rents', 'get_rent_statuses', result.request_data], 'ERROR')
+
     case 'CREATE_RENT':
       return state.setIn(['rents', 'create_rent_status'], 'ERROR')
+
+    case 'UPDATE_RENT':
+      return state.setIn(['rents', 'update_rent_statuses', result.request_data.rent.id], 'ERROR')
 
     default:
       return state
