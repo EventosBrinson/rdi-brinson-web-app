@@ -131,9 +131,9 @@ class Edit extends React.Component {
         <div>
           <label>Tipo de cliente</label>
           <select name='rent_type' value={ formHelpers.priorityValues([form.get('rent_type'), this.client.get('rent_type')]) } onChange={ this.handleChange }>
-            <option value="primera_renta">Primera renta</option>
-            <option value="frecuente">Frecuente</option>
-            <option value="empresa">Empresa</option>
+            <option value="first_rent">Primera renta</option>
+            <option value="frecuent">Frecuente</option>
+            <option value="business">Empresa</option>
           </select>
         </div>
         <div>
