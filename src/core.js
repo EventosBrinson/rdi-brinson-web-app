@@ -110,6 +110,10 @@ export function submitRequest(state, request, data) {
       Api.get(request, '/rents', data, sessionToken)
       return state.setIn(['rents', 'get_rents_status'], 'GETTING')
 
+    case 'CREATE_RENT':
+      Api.post(request, '/rents', { rent: data }, sessionToken)
+      return state.deleteIn(['forms', 'rent_form']).setIn(['rents', 'create_rent_status' ], 'CREATING')
+
     default:
       return state
   }
@@ -334,6 +338,13 @@ export function requestSucceeded(state, request, result) {
                   .setIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
                   .setIn(['rents', 'order'], Immutable.fromJS(get_rents_order))
 
+    case 'CREATE_RENT':
+      return state.setIn(['rents', 'create_rent_status'], 'CREATED')
+                  .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
+                  .updateIn(['rents', 'order'], order => (order || Immutable.List()).push(String(data.id)))
+                  .setIn(['router', 'action'], 'REDIRECT_TO')
+                  .setIn(['router', 'pathname'], '/rents')
+
     default:
       return state
   }
@@ -403,6 +414,9 @@ export function requestFailed(state, request, result) {
 
     case 'GET_RENTS':
       return state.setIn(['rents', 'get_rents_status'], 'ERROR')
+
+    case 'CREATE_RENT':
+      return state.setIn(['rents', 'create_rent_status'], 'ERROR')
 
     default:
       return state

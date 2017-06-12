@@ -23,6 +23,7 @@ import PlacesPage from './places/Index'
 import NewPlacePage from './places/New'
 import EditPlacePage from './places/Edit'
 import RentsPage from './rents/Index'
+import NewRentPage from './rents/New'
 
 export default class App extends React.Component {
   render() {
@@ -51,6 +52,10 @@ export default class App extends React.Component {
                   <PrivateRoute exact path="/places" component={ PlacesPage } />
                   <PrivateRoute exact path="/places/new" component={ NewPlacePage } />
                   <PrivateRoute exact path="/places/:id/edit" component={ EditPlacePage } />
+                </Switch>
+                  <PrivateRoute exact path="/rents" component={ RentsPage } />
+                  <PrivateRoute exact path="/rents/new" component={ NewRentPage } />
+                <Switch>
                 </Switch>
               </Layout>
             </ScrollToTop>
