@@ -21,6 +21,14 @@ class Index extends React.Component {
     }
   }
 
+  deleteRent(rent, event) {
+    if (event.preventDefault) {
+      event.preventDefault()
+    }
+
+    this.props.submitRequest('DELETE_RENT', rent.toJS())
+  }
+
   render() {
     let rents_order = this.props.order || Immutable.List()
     let rents = this.props.hashed || Immutable.Map()
@@ -43,6 +51,7 @@ class Index extends React.Component {
           <td>{ rent.get('client_id') }</td>
           <td>{ rent.get('place_id') }</td>
           <td><Link to={ '/rents/' + rent.get('id') + '/edit'}>Edit</Link></td>
+          <td><button onClick={ this.deleteRent.bind(this, rent) }>Eliminar</button></td>
         </tr>
       )
     })
@@ -64,6 +73,7 @@ class Index extends React.Component {
               <th>Estado</th>
               <th>Cliente</th>
               <th>Lugar</th>
+              <th />
               <th />
             </tr>
           </thead>

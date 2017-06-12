@@ -78,7 +78,7 @@ class New extends React.Component {
           <input name='pick_up_time' type='text' value={ form.get('pick_up_time') || '' } onChange={ this.handleChange } />
         </div>
         <div>
-          <label>Producto rentado</label>
+          <label>Producto rentad</label>
           <input name='product' type='text' value={ form.get('product') || '' } onChange={ this.handleChange } />
         </div>
         <div>
