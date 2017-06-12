@@ -48,6 +48,11 @@ class MasterLayout extends React.Component {
           </Dropdown>
         </Menu>
         { this.props.children }
+        <Row>
+          <pre>
+            { JSON.stringify(this.props.state, null, 2) }
+          </pre>
+        </Row>
       </Col>
     </Row>
     )
