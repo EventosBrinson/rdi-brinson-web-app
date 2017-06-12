@@ -21,17 +21,23 @@ class New extends React.Component {
     if(this.props.get_clients_status !== 'READY') {
       this.props.submitRequest('GET_CLIENTS')
     }
+
+    this.setDefaults(this.props)
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.session_status === 'SIGNED_IN' && nextProps.get_clients_status === 'READY') {
-      let form = nextProps.place_form || Immutable.Map()
+    this.setDefaults(nextProps)
+  }
+
+  setDefaults(props) {
+    if(props.session_status === 'SIGNED_IN' && props.get_clients_status === 'READY') {
+      let form = props.place_form || Immutable.Map()
 
       if(form.get('client_id') === undefined) {
-        let clientsOrder = nextProps.clients_order || Immutable.List()
+        let clientsOrder = props.clients_order || Immutable.List()
 
         if(clientsOrder.size > 0) {
-          nextProps.mergeForm('place_form', {
+          props.mergeForm('place_form', {
             client_id: form.get('client_id') || this.client_id || clientsOrder.get(0)
           })
         }
