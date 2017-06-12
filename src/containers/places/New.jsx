@@ -23,6 +23,20 @@ class New extends React.Component {
     }
   }
 
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.session_status === 'SIGNED_IN') {
+      let form = nextProps.place_form || Immutable.Map()
+      let clientsOrder = nextProps.clients_order || Immutable.List()
+
+      if(clientsOrder.size > 0) {
+        this.props.mergeForm('place_form', {
+          client_id: form.get('client_id') || clientsOrder.get(0)
+        })
+      }
+    }
+  }
+
   handleChange(event) {
     this.props.changeForm('place_form', event.target.name, event.target.value)
   }
