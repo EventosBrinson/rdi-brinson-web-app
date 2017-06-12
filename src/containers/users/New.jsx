@@ -13,6 +13,18 @@ class New extends React.Component {
     this.processSubmit = this.processSubmit.bind(this)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.session_status === 'SIGNED_IN') {
+      let form = nextProps.user_form || Immutable.Map()
+
+      if(form.get('role') === undefined) {
+        nextProps.mergeForm('user_form', {
+          role: form.get('role') || 'admin'
+        })
+      }
+    }
+  }
+
   handleChange(event) {
     this.props.changeForm('user_form', event.target.name, event.target.value)
   }
