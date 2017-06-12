@@ -15,13 +15,15 @@ class New extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.session_status === 'SIGNED_IN') {
-      let form = this.props.client_form || Immutable.Map()
+      let form = nextProps.client_form || Immutable.Map()
 
-      this.props.mergeForm('client_form', {
-        id_name: form.get('id_name') || 'ine',
-        trust_level: form.get('trust_level') || '1',
-        rent_type: form.get('rent_type') || 'first_rent'
-      })
+      if(form.get('id_name') === undefined || form.get('trust_level') === undefined || form.get('rent_type') === undefined) {
+        nextProps.mergeForm('client_form', {
+          id_name: form.get('id_name') || 'ine',
+          trust_level: form.get('trust_level') || '1',
+          rent_type: form.get('rent_type') || 'first_rent'
+        })
+      }
     }
   }
 
