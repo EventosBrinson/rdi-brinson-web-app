@@ -20,6 +20,10 @@ export function cleanForm(state, form) {
   return state.deleteIn(['forms', form])
 }
 
+export function mergeForm(state, form, values) {
+  return state.mergeIn(['forms', form], values)
+}
+
 export function submitRequest(state, request, data) {
   switch (request) {
     case 'SIGN_IN':

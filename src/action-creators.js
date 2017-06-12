@@ -14,6 +14,14 @@ export function cleanForm(form) {
   }
 }
 
+export function mergeForm(form, values) {
+  return {
+    type: 'MERGE_FORM',
+    form: form,
+    values: values
+  }
+}
+
 export function submitRequest(request, data) {
   return {
     type: 'SUBMIT_REQUEST',
