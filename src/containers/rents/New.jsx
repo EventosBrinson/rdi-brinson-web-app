@@ -23,6 +23,24 @@ class New extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.session_status === 'SIGNED_IN' && nextProps.get_clients_status === 'READY') {
+      let form = nextProps.rent_form || Immutable.Map()
+
+      if(form.get('client_id') === undefined) {
+        let clientsOrder = nextProps.clients_order
+        let places_order = nextProps.clients.get(this.client_id || clientsOrder.get(0)).get('places_order') || Immutable.List()
+
+        if(clientsOrder.size > 0 && places_order.size > 0) {
+          nextProps.mergeForm('rent_form', {
+            client_id: this.client_id || clientsOrder.get(0),
+            place_id: form.get('place_id') || places_order.get(0)
+          })
+        }
+      }
+    }
+  }
+
   handleChange(event) {
     this.props.changeForm('rent_form', event.target.name, event.target.value)
   }
