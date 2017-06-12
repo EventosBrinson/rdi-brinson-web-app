@@ -11,6 +11,7 @@ class New extends React.Component {
     super(props)
 
     this.handleChange = this.handleChange.bind(this)
+    this.handleClientChange = this.handleClientChange.bind(this)
     this.processSubmit = this.processSubmit.bind(this)
   }
 
@@ -43,6 +44,16 @@ class New extends React.Component {
 
   handleChange(event) {
     this.props.changeForm('rent_form', event.target.name, event.target.value)
+  }
+
+  handleClientChange(event) {
+    let client_id = event.target.value
+    let places_order = this.props.clients.get(client_id).get('places_order') || Immutable.List()
+
+    this.props.mergeForm('rent_form', {
+      client_id: client_id,
+      place_id: places_order.get(0)
+    })
   }
 
   processSubmit(event) {
@@ -117,7 +128,7 @@ class New extends React.Component {
         </div>
         <div>
           <label>Cliente</label>
-          <select name='client_id' value={ form.get('client_id') || this.client_id || '' } onChange={ this.handleChange }>
+          <select name='client_id' value={ form.get('client_id') || this.client_id || '' } onChange={ this.handleClientChange }>
             { clientOptions }
           </select>
         </div>
