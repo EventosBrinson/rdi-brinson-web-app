@@ -32,7 +32,7 @@ class New extends React.Component {
 
         if(clientsOrder.size > 0) {
           nextProps.mergeForm('place_form', {
-            client_id: form.get('client_id') || clientsOrder.get(0)
+            client_id: form.get('client_id') || this.client_id || clientsOrder.get(0)
           })
         }
       }
