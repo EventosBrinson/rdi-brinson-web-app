@@ -5,7 +5,19 @@ import { Link } from 'react-router-dom'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 
+import { Tabs, Button } from 'antd'
+const TabPane = Tabs.TabPane
+
+import { Collapse } from 'antd';
+const Panel = Collapse.Panel;
+
 class Index extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.renderClients = this.renderClients.bind(this)
+  }
 
   componentDidMount() {
     this.getClients(this.props)
@@ -21,67 +33,90 @@ class Index extends React.Component {
     }
   }
 
+  deactivate(client, event) {
+    if(event.preventDefault) {
+      event.preventDefault()
+    }
+
+    this.props.submitRequest('UPDATE_CLIENT', { id: client.get('id'), client: { active: 0 } })
+  }
+
+  activate(client, event) {
+    if(event.preventDefault) {
+      event.preventDefault()
+    }
+
+    this.props.submitRequest('UPDATE_CLIENT', { id: client.get('id'), client: { active: 1 } })
+  }
+
   render() {
+    return (
+      <div style={ { marginTop: '20px'} }>
+        <Button>
+          <Link to="/clients/new">
+            Crear nuevo
+          </Link>
+        </Button>
+        <Tabs>
+          <TabPane tab="Activos" key="1">
+            { this.renderClients(true) }
+          </TabPane>
+          <TabPane tab="Inactivos" key="2">
+            { this.renderClients(false) }
+          </TabPane>
+        </Tabs>
+      </div>
+    )
+  }
+
+  renderClients(active) {
     let clients_order = this.props.order || Immutable.List()
     let clients = this.props.hashed || Immutable.Map()
     let rendered_clients = []
+    let user = this.props.user || Immutable.Map()
 
     clients_order.forEach( client_id => {
       let client = clients.get(client_id)
+      var activationButton = ""
 
-      rendered_clients.push(
-        <tr key={ client.get('id') }>
-          <td>{ client.get('firstname') }</td>
-          <td>{ client.get('lastname') }</td>
-          <td>{ client.get('street') }</td>
-          <td>{ client.get('inner_number') }</td>
-          <td>{ client.get('outer_number') }</td>
-          <td>{ client.get('neighborhood') }</td>
-          <td>{ client.get('postal_code') }</td>
-          <td>{ client.get('telephone_1') }</td>
-          <td>{ client.get('telephone_2') }</td>
-          <td>{ client.get('email') }</td>
-          <td>{ client.get('id_name') }</td>
-          <td>{ client.get('trust_level') }</td>
-          <td>{ client.get('rent_type') }</td>
-          <td>{ client.get('active') ? 'Si' : 'No' }</td>
-          <td><Link to={ '/clients/' + client.get('id') }>Ver</Link></td>
-          <td><Link to={ '/clients/' + client.get('id') + '/edit'}>Edit</Link></td>
-        </tr>
+      if(user.get('role') === 'admin' || user.get('role') === 'staff') {
+        if(active) {
+          activationButton = (
+            <Button type="danger" style={ { float: 'right', marginTop: '5px'} } onClick={ this.deactivate.bind(this, client) }>
+              Desactivar
+            </Button>
+          )
+        } else {
+          activationButton = (
+            <Button type="primary" style={ { float: 'right', marginTop: '5px'} } onClick={ this.activate.bind(this, client) }>
+              Activar
+            </Button>
+          )
+        }
+      }
+
+      let header = (
+        <Link to={ '/clients/' + client.get('id') }>
+          { client.get('lastname') + ' ' + client.get('firstname') }
+        </Link>
       )
+
+      if(client.get('active') === active) {
+        rendered_clients.push(
+          <Panel header={ header } key={ 'cl-' + client.get('id') }>
+            { activationButton }
+            <Button style={ { float: 'right', marginTop: '5px', marginRight: '10px'} }>
+              <Link to={ '/clients/' + client.get('id') + '/edit'}>Editar</Link>
+            </Button>
+          </Panel>
+        )
+      }
     })
 
     return (
-      <div>
-        <h3>Clientes</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Nombres</th>
-              <th>Apellidos</th>
-              <th>Calle</th>
-              <th>Numero interior</th>
-              <th>Numero exterior</th>
-              <th>Fraccionamiento</th>
-              <th>CP</th>
-              <th>Teléfono 1</th>
-              <th>Teléfono 2</th>
-              <th>Email</th>
-              <th>Identificación</th>
-              <th>Nivel de confianza</th>
-              <th>Tipo de cliente</th>
-              <th>Activo</th>
-              <th />
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            { rendered_clients }
-          </tbody>
-        </table>
-        <br />
-        <Link to="/clients/new">Crear nuevo</Link>
-      </div>
+      <Collapse bordered={false}>
+       { rendered_clients }
+      </Collapse>
     )
   }
 }
@@ -91,7 +126,8 @@ function mapStateToProps(state) {
     clients: state.get('clients') || Immutable.Map(),
     hashed: state.getIn(['clients', 'hashed']),
     order: state.getIn(['clients', 'order']),
-    session_status: state.get('session_status')
+    session_status: state.get('session_status'),
+    user: state.get('user')
   }
 }
 
