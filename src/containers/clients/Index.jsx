@@ -4,12 +4,15 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
+import * as enumsHelpers from '../../modules/enums-helpers'
 
 import { Tabs, Button } from 'antd'
 const TabPane = Tabs.TabPane
 
 import { Collapse } from 'antd';
 const Panel = Collapse.Panel;
+
+import { Tag } from 'antd';
 
 class Index extends React.Component {
 
@@ -82,13 +85,13 @@ class Index extends React.Component {
       if(user.get('role') === 'admin' || user.get('role') === 'staff') {
         if(active) {
           activationButton = (
-            <Button type="danger" style={ { float: 'right', marginTop: '5px'} } onClick={ this.deactivate.bind(this, client) }>
+            <Button type="danger" style={ { float: 'right'} } onClick={ this.deactivate.bind(this, client) }>
               Desactivar
             </Button>
           )
         } else {
           activationButton = (
-            <Button type="primary" style={ { float: 'right', marginTop: '5px'} } onClick={ this.activate.bind(this, client) }>
+            <Button type="primary" style={ { float: 'right'} } onClick={ this.activate.bind(this, client) }>
               Activar
             </Button>
           )
@@ -98,6 +101,7 @@ class Index extends React.Component {
       let header = (
         <Link to={ '/clients/' + client.get('id') }>
           { client.get('lastname') + ' ' + client.get('firstname') }
+          <Tag style={ { marginLeft: '5px'} }>{ enumsHelpers.rentType(client.get('rent_type')) }</Tag>
         </Link>
       )
 
@@ -105,7 +109,7 @@ class Index extends React.Component {
         rendered_clients.push(
           <Panel header={ header } key={ 'cl-' + client.get('id') }>
             { activationButton }
-            <Button style={ { float: 'right', marginTop: '5px', marginRight: '10px'} }>
+            <Button style={ { float: 'right', marginRight: '10px'} }>
               <Link to={ '/clients/' + client.get('id') + '/edit'}>Editar</Link>
             </Button>
           </Panel>
