@@ -3,8 +3,10 @@ export function rentType(value) {
     case 'first_rent':
       return 'Primera renta'
     case 'frecuent':
-     return 'Frecuente'
+      return 'Frecuente'
     case 'business':
-     return 'Empresa'
+      return 'Empresa'
+    default:
+      return ''
   }
 }

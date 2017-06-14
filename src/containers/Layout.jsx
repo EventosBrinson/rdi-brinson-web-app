@@ -8,8 +8,6 @@ import Immutable from 'immutable'
 
 import MediaQuery from 'react-responsive'
 import { Row, Col, Menu, Icon, Dropdown } from 'antd'
-const SubMenu = Menu.SubMenu
-const MenuItemGroup = Menu.ItemGroup
 
 class MasterLayout extends React.Component {
 
@@ -55,26 +53,6 @@ class MasterLayout extends React.Component {
         </Row>
       </Col>
     </Row>
-    )
-    return (
-      <div>
-        <Link to="/">Inicio</Link>
-        |
-        <Link to="/sign_in">Iniciar sesión</Link>
-        |
-        <Link to="/users">Usuarios</Link>
-        |
-        <Link to="/clients">Clientes</Link>
-        |
-        <Link to="/places">Lugares</Link>
-        |
-        <SignOutButton requestFunction={ this.props.submitRequest }>Sign Out</SignOutButton>
-        |
-        <Link to="/profile">Perfil de usuario</Link>
-        |
-        
-
-      </div>
     )
   }
 }
