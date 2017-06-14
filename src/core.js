@@ -1,6 +1,7 @@
 import * as Api from './web-api'
 import { Cookies } from 'react-cookie'
 import Immutable from 'immutable'
+import * as abilitiesHelper from './modules/abilities-helpers'
 
 const cookies = new Cookies()
 var sessionToken = undefined
@@ -148,6 +149,8 @@ export function requestSucceeded(state, request, result) {
         sessionToken = data.token
 
         var newState = Immutable.Map({ 'session_status': 'SIGNED_IN', 'user': Immutable.fromJS(data.user) })
+
+        abilitiesHelper.setUser(data.user)
 
         if(state.get('session_status') === 'SIGNING_IN') {
           return newState.setIn(['router', 'action'], 'REDIRECT_TO')
