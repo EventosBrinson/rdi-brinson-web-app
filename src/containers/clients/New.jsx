@@ -4,7 +4,6 @@ import { withRouter } from 'react-router'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 
-
 import { Form, Input, Rate, Radio, Tooltip, Icon, Select, Button } from 'antd'
 
 const formItemLayout = {
@@ -148,7 +147,11 @@ class New extends React.Component {
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Numero interior" hasFeedback>
-          <Input name='inner_number' placeholder="Numero interior" onChange={ this.handleChange } />
+          { getFieldDecorator('inner_number', {
+            initialValue: form.get('inner_number')
+          })(
+            <Input name='inner_number' placeholder="Numero interior" onChange={ this.handleChange } />
+          )}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Fraccionamiento" hasFeedback>
