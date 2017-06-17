@@ -48,7 +48,7 @@ class MasterLayout extends React.Component {
         { this.props.children }
         <Row>
           <pre>
-            { false ? JSON.stringify(this.props.state, null, 2) : '' }
+            { true ? JSON.stringify(this.props.state, null, 2) : '' }
           </pre>
         </Row>
       </Col>

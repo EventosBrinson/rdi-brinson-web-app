@@ -4,7 +4,32 @@ import { withRouter } from 'react-router'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 
-import { Input, Select, Button } from 'antd';
+
+import { Form, Input, Rate, Radio, Tooltip, Icon, Select, Button } from 'antd'
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 6 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 14 },
+  },
+};
+
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
+    },
+    sm: {
+      span: 14,
+      offset: 6,
+    },
+  },
+};
 
 class New extends React.Component {
 
@@ -25,7 +50,7 @@ class New extends React.Component {
       if(form.get('id_name') === undefined || form.get('trust_level') === undefined || form.get('rent_type') === undefined) {
         nextProps.mergeForm('client_form', {
           id_name: form.get('id_name') || 'ine',
-          trust_level: form.get('trust_level') || '1',
+          trust_level: form.get('trust_level') || 10,
           rent_type: form.get('rent_type') || 'first_rent'
         })
       }
@@ -44,8 +69,8 @@ class New extends React.Component {
     this.props.changeForm('client_form', 'trust_level', value)
   }
 
-  handleRentTypeChange(value) {
-    this.props.changeForm('client_form', 'rent_type', value)
+  handleRentTypeChange(object) {
+    this.props.changeForm('client_form', 'rent_type', object.target.value)
   }
 
   processSubmit(event) {
@@ -53,173 +78,191 @@ class New extends React.Component {
       event.preventDefault()
     }
 
-    let data = (this.props.client_form || Immutable.Map()).toJS()
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        let data = (this.props.client_form || Immutable.Map()).toJS()
 
-    this.props.submitRequest('CREATE_CLIENT', data)
-  }
-
-  formComplete(form) {
-    var required = ['firstname',
-      'lastname',
-      'street',
-      'outer_number',
-      'neighborhood',
-      'postal_code',
-      'telephone_1',
-      'email']
-
-    for(var i = 0; i < required.length; i++) {
-      let value = form.get(required[i])
-
-      if(value === undefined || value === '') return false
-    }
-
-    return true
+        this.props.submitRequest('CREATE_CLIENT', data)
+      }
+    });
   }
 
   render() {
     let form = this.props.client_form || Immutable.Map()
+    const { getFieldDecorator } = this.props.form;
 
     return (
-      <form className="ant-form ant-form-horizontal" onSubmit={ this.processSubmit }>
-        <h2>
-          Nuevo Cliente
-        </h2>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label className="ant-form-item-required">Nombres(s)</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Input name='firstname' placeholder="Nombres(s)" value={ form.get('firstname') || '' } onChange={ this.handleChange }/>
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label className="ant-form-item-required">Apellido(s)</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Input name='lastname' placeholder="Apellido(s)" value={ form.get('lastname') || '' } onChange={ this.handleChange } />
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label className="ant-form-item-required">Calle</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Input name='street' placeholder="Calle" value={ form.get('street') || '' } onChange={ this.handleChange } />
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label className="ant-form-item-required">Numero exterior</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Input name='outer_number' placeholder="Numero exterior" value={ form.get('outer_number') || '' } onChange={ this.handleChange } />
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label>Numero interior</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Input name='inner_number' placeholder="Numero interior" value={ form.get('inner_number') || '' } onChange={ this.handleChange } />
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label className="ant-form-item-required">Fraccionamiento</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Input name='neighborhood' placeholder="Fraccionamiento" value={ form.get('neighborhood') || '' } onChange={ this.handleChange } />
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label className="ant-form-item-required">CP</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Input name='postal_code' placeholder="CP" value={ form.get('postal_code') || '' } onChange={ this.handleChange } />
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label className="ant-form-item-required">Teléfono 1</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Input name='telephone_1' placeholder="Teléfono 1" value={ form.get('telephone_1') || '' } onChange={ this.handleChange } />
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label>Teléfono 2</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Input name='telephone_2' placeholder="Teléfono 2" value={ form.get('telephone_2') || '' } onChange={ this.handleChange } />
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label className="ant-form-item-required">Email</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Input name='email' placeholder="Email" value={ form.get('email') || '' } onChange={ this.handleChange } />
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label>Identificación</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Select name='id_name' value={ form.get('id_name') || '' } onChange={ this.handleIDNameChange }>
+      <Form onSubmit={ this.processSubmit }>
+        <Form.Item {...tailFormItemLayout}>
+          <h2>
+            Nuevo Cliente
+          </h2>
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Nombre" hasFeedback>
+          { getFieldDecorator('firstname', {
+            rules: [{
+              required: true, message: 'Introduce el o los nombres del cliente',
+              whitespace: true
+            }],
+            initialValue: form.get('firstname')
+          })(
+            <Input name='firstname' placeholder="Nombre" onChange={ this.handleChange }/>
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Apellido" hasFeedback>
+          { getFieldDecorator('lastname', {
+            rules: [{
+              required: true, message: 'Introduce el o los apellidos del cliente',
+              whitespace: true
+            }],
+            initialValue: form.get('lastname')
+          })(
+            <Input name='lastname' placeholder="Apellido" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Calle" hasFeedback>
+          { getFieldDecorator('street', {
+            rules: [{
+              required: true, message: 'Introduce el nombre de la calle',
+              whitespace: true
+            }],
+            initialValue: form.get('street')
+          })(
+            <Input name='street' placeholder="Calle" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Numero exterior" hasFeedback>
+          { getFieldDecorator('outer_number', {
+            rules: [{
+              required: true, message: 'Introduce el numero exterior del lugar',
+              whitespace: true
+            }],
+            initialValue: form.get('outer_number')
+          })(
+            <Input name='outer_number' placeholder="Numero exterior" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Numero interior" hasFeedback>
+          <Input name='inner_number' placeholder="Numero interior" onChange={ this.handleChange } />
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Fraccionamiento" hasFeedback>
+          { getFieldDecorator('neighborhood', {
+            rules: [{
+              required: true, message: 'Introduce el nombre del fraccionamiento del lugar',
+              whitespace: true
+            }],
+            initialValue: form.get('neighborhood')
+          })(
+            <Input name='neighborhood' placeholder="Fraccionamiento" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Codigo Postal" hasFeedback>
+          { getFieldDecorator('postal_code', {
+            rules: [{
+              pattern: /^\d+$/,
+              message: 'El codigo postal debe ser un número'}, {
+              required: true,
+              message: 'Introduce el codigo postal del lugar',
+              whitespace: true
+            }],
+            initialValue: form.get('postal_code')
+          })(
+            <Input name='postal_code' placeholder="Codigo Postal" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Teléfono 1" hasFeedback>
+          { getFieldDecorator('telephone_1', {
+            rules: [{
+              pattern: /^\+?(\d+|\s)+$/,
+              message: 'El teléfono tiene un formato inválido'}, {
+              required: true,
+              message: 'Introduce al menos un teléfono para el cliente'
+            }],
+            initialValue: form.get('telephone_1')
+          })(
+            <Input name='telephone_1' placeholder="Teléfono 1" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Teléfono 2" hasFeedback>
+          { getFieldDecorator('telephone_2', {
+            rules: [{
+              pattern: /^\+?(\d+|\s)+$/,
+              message: 'El teléfono tiene un formato inválido'
+            }],
+            initialValue: form.get('telephone_2')
+          })(
+            <Input name='telephone_2' placeholder="Teléfono 2" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Email" hasFeedback>
+          { getFieldDecorator('email', {
+            rules: [{
+              type: 'email',
+              message: 'El email tiene un formato inválido'}, {
+              required: true,
+              message: 'Introduce el correo electrónico de contacto'
+            }],
+            initialValue: form.get('email')
+          })(
+            <Input name='email' placeholder="Email" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout}
+          label={
+            <span>
+              Identificación&nbsp;
+              <Tooltip title="¿Con que documento se identifica el cliente?">
+                <Icon type="question-circle-o" />
+              </Tooltip>
+            </span> }>
+          { getFieldDecorator('id_name', {
+            initialValue: form.get('id_name')
+          })(
+            <Select name='id_name' onChange={ this.handleIDNameChange }>
               <Select.Option value="ine">INE</Select.Option>
               <Select.Option value="licencia">Licencia</Select.Option>
               <Select.Option value="cartilla">Cartilla militar</Select.Option>
               <Select.Option value="pasaporte">Pasaporte</Select.Option>
               <Select.Option value="otra">Otra</Select.Option>
             </Select>
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label>Nivel de confianza</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Select name='trust_level' value={ form.get('trust_level') || '' } onChange={ this.handleTrustLevelChange }>
-              <Select.Option value="1">1</Select.Option>
-              <Select.Option value="2">2</Select.Option>
-              <Select.Option value="3">3</Select.Option>
-              <Select.Option value="4">4</Select.Option>
-              <Select.Option value="5">5</Select.Option>
-              <Select.Option value="6">6</Select.Option>
-              <Select.Option value="7">7</Select.Option>
-              <Select.Option value="8">8</Select.Option>
-              <Select.Option value="9">9</Select.Option>
-              <Select.Option value="10">10</Select.Option>
-            </Select>
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-            <label>Tipo de cliente</label>
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <Select name='rent_type' value={ form.get('rent_type') || '' } onChange={ this.handleRentTypeChange }>
-              <Select.Option value="first_rent">Primera renta</Select.Option>
-              <Select.Option value="frecuent">Frecuente</Select.Option>
-              <Select.Option value="business">Empresa</Select.Option>
-            </Select>
-          </div>
-        </div>
-        <div className="ant-row ant-form-item">
-          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
-          </div>
-          <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
-            <button type="submit" className="ant-btn ant-btn-submit" disabled={ !this.formComplete(form) }>
-              <span>Crear</span>
-            </button>
-          </div>
-        </div>
-      </form>
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Nivel de confianza">
+          { getFieldDecorator('trust_level', {
+            initialValue: form.get('trust_level')
+          })(
+            <Rate count={ 10 } onChange={ this.handleTrustLevelChange }/>
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Tipo de cliente">
+          { getFieldDecorator('rent_type', {
+            initialValue: form.get('rent_type')
+          })(
+            <Radio.Group onChange={this.handleRentTypeChange}>
+              <Radio.Button value="first_rent">Primera renta</Radio.Button>
+              <Radio.Button value="frecuent">Frecuente</Radio.Button>
+              <Radio.Button value="business">Empresa</Radio.Button>
+            </Radio.Group>
+          )}
+        </Form.Item>
+
+        <Form.Item {...tailFormItemLayout}>
+          <Button type="primary" htmlType="submit" size="large">Crear</Button>
+        </Form.Item>
+      </Form>
     )
   }
 }
@@ -231,4 +274,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(New))
+export default withRouter(connect(mapStateToProps, actionCreators)(Form.create()(New)))
