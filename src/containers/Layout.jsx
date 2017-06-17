@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import * as actionCreators from '../action-creators'
 import SignOutButton from '../components/SignOutButton'
 import Immutable from 'immutable'
+import * as abilitiesHelper from '../modules/abilities-helpers'
 
 import MediaQuery from 'react-responsive'
 import { Row, Col, Menu, Icon, Dropdown } from 'antd'
@@ -48,7 +49,7 @@ class MasterLayout extends React.Component {
         { this.props.children }
         <Row>
           <pre>
-            { true ? JSON.stringify(this.props.state, null, 2) : '' }
+            { abilitiesHelper.isStaff() && false ? JSON.stringify(this.props.state, null, 2) : '' }
           </pre>
         </Row>
       </Col>
