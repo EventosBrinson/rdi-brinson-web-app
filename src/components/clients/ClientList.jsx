@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import * as abilitiesHelper from '../../modules/abilities-helpers'
 import * as enumsHelpers from '../../modules/enums-helpers'
 
-import { Collapse, Button, Tag } from 'antd';
+import { Collapse, Button, Tag, Popconfirm, Row, Col, Card } from 'antd';
 
 export default class ClientList extends React.Component {
 
@@ -30,45 +30,66 @@ export default class ClientList extends React.Component {
       let client = this.props.hashed.get(client_id)
       var activationButton = ""
 
-      if(abilitiesHelper.isAdmin()) {
+      if(abilitiesHelper.isMain() || (abilitiesHelper.isAdmin() && !abilitiesHelper.isAdmin(client))) {
         if(this.props.active) {
           activationButton = (
-            <Button type="danger" style={ { float: 'right'} } onClick={ this.deactivate.bind(this, client) }>
-              Desactivar
-            </Button>
+            <Popconfirm title="¿Seguro que quiere desactivar este cliente?" onConfirm={ this.deactivate.bind(this, client) } okText="Sí" cancelText="No">
+              <Button type="danger">
+                Desactivar
+              </Button>
+            </Popconfirm>
           )
         } else {
           activationButton = (
-            <Button type="primary" style={ { float: 'right'} } onClick={ this.activate.bind(this, client) }>
-              Activar
-            </Button>
+            <Popconfirm title="¿Seguro que quiere reactivar este cliente?" onConfirm={ this.activate.bind(this, client) } okText="Sí" cancelText="No">
+              <Button type="primary">
+                Activar
+              </Button>
+            </Popconfirm>
           )
         }
       }
 
-      let header = (
-        <Link to={ '/clients/' + client.get('id') }>
-          { client.get('lastname') + ' ' + client.get('firstname') }
-          <Tag style={ { marginLeft: '5px'} }>{ enumsHelpers.rentType(client.get('rent_type')) }</Tag>
-        </Link>
-      )
-
       if(client.get('active') === this.props.active) {
         rendered_clients.push(
-          <Collapse.Panel header={ header } key={ 'cl-' + client.get('id') }>
-            { activationButton }
-            <Button style={ { float: 'right', marginRight: '10px'} }>
-              <Link to={ '/clients/' + client.get('id') + '/edit'}>Editar</Link>
-            </Button>
-          </Collapse.Panel>
+          <tr className="ant-table-row  ant-table-row-level-0" key={ 'cl-' + client.get('id') }>
+            <td>
+              <span className="ant-table-row-indent indent-level-0" style={{ paddingLeft: '0px'}}>
+                <Link to={ '/clients/' + client.get('id') }>
+                  { client.get('lastname') + ' ' + client.get('firstname') }
+                  <Tag style={ { marginLeft: '5px'} }>{ enumsHelpers.rentType(client.get('rent_type')) }</Tag>
+                </Link>
+              </span>
+            </td>
+            <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+              <Button>
+                <Link to={ '/clients/' + client.get('id') + '/edit'}>Editar</Link>
+              </Button>
+            </td>
+            <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+              { activationButton }
+            </td>
+          </tr>
         )
       }
     })
 
     return (
-      <Collapse bordered={false}>
-       { rendered_clients }
-      </Collapse>
+      <div className="ant-spin-nested-loading">
+        <div className="ant-spin-container">
+           <div className="ant-table ant-table-scroll-position-left">
+              <div className="ant-table-content">
+                 <div className="ant-table-body">
+                    <table className="">
+                       <tbody className="ant-table-tbody">
+                          { rendered_clients }
+                       </tbody>
+                    </table>
+                 </div>
+              </div>
+           </div>
+        </div>
+      </div>
     )
   }
 }

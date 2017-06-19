@@ -19,7 +19,7 @@ class Index extends React.Component {
   }
 
   getClients(props) {
-    if(props.session_status === 'SIGNED_IN' && props.clients.get('get_clients_status') !== 'READY') {
+    if(props.session_status === 'SIGNED_IN' && props.clients.get('get_clients_status') === undefined) {
       props.submitRequest('GET_CLIENTS') 
     }
   }
@@ -37,13 +37,13 @@ class Index extends React.Component {
             <ClientList active={ true } 
                         order={ this.props.order || Immutable.List() }
                         hashed={ this.props.hashed || Immutable.Map() }
-                        submitRequest={ this.props.submitReques }/>
+                        submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Inactivos" key="2">
             <ClientList active={ false } 
                         order={ this.props.order || Immutable.List() }
                         hashed={ this.props.hashed || Immutable.Map()}
-                        submitRequest={ this.props.submitReques }/>
+                        submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
         </Tabs>
       </div>
