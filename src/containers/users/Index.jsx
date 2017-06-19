@@ -4,57 +4,49 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
+import UserList from '../../components/users/UserList'
+
+import { Tabs, Button } from 'antd'
+
 
 class Index extends React.Component {
 
   componentDidMount() {
-    if(this.props.users.get('get_users_status') === undefined) {
-      this.props.submitRequest('GET_USERS') 
+    this.getUsers(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.getUsers(nextProps)
+  }
+
+  getUsers(props) {
+    if(props.session_status === 'SIGNED_IN' && props.users.get('get_users_status') === undefined) {
+      props.submitRequest('GET_USERS') 
     }
   }
 
   render() {
-    let users_order = this.props.order || Immutable.List()
-    let users = this.props.hashed || Immutable.Map()
-    let rendered_users = []
-
-    users_order.forEach( user_id => {
-      let user = users.get(user_id)
-
-      rendered_users.push(
-        <tr key={ user.get('id') }>
-          <td>{ user.get('username') }</td>
-          <td>{ user.get('firstname') }</td>
-          <td>{ user.get('lastname') }</td>
-          <td>{ user.get('email') }</td>
-          <td>{ user.get('active') ? 'Si' : 'No' }</td>
-          <td>{ user.get('active_since') }</td>
-          <td><Link to={'/users/' + user.get('id')+ '/edit'}>Edit</Link></td>
-        </tr>
-      )
-    })
-
     return (
-      <div>
-        <h3>Usuarios</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre de usuario</th>
-              <th>Nombres</th>
-              <th>Apellidos</th>
-              <th>Email</th>
-              <th>Activo</th>
-              <th>Activo desde</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            { rendered_users }
-          </tbody>
-        </table>
-        <br />
-        <Link to="/users/new">Crear nuevo</Link>
+      <div style={ { marginTop: '20px'} }>
+        <Button>
+          <Link to="/users/new">
+            Crear nuevo
+          </Link>
+        </Button>
+        <Tabs>
+          <Tabs.TabPane tab="Activos" key="1">
+            <UserList active={ true } 
+                      order={ this.props.order || Immutable.List() }
+                      hashed={ this.props.hashed || Immutable.Map() }
+                      submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Inactivos" key="2">
+            <UserList active={ false } 
+                      order={ this.props.order || Immutable.List() }
+                      hashed={ this.props.hashed || Immutable.Map()}
+                      submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+        </Tabs>
       </div>
     )
   }
@@ -64,7 +56,8 @@ function mapStateToProps(state) {
   return {
     users: state.get('users') || Immutable.Map(),
     hashed: state.getIn(['users', 'hashed']),
-    order: state.getIn(['users', 'order'])
+    order: state.getIn(['users', 'order']),
+    session_status: state.get('session_status')
   }
 }
 
