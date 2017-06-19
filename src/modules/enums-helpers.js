@@ -10,3 +10,16 @@ export function rentType(value) {
       return ''
   }
 }
+
+export function role(value) {
+  switch(value) {
+    case 'admin':
+      return 'Administrador'
+    case 'staff':
+      return 'Staff'
+    case 'user':
+      return 'Usuario'
+    default:
+      return ''
+  }
+}
