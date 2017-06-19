@@ -4,8 +4,11 @@ export function setUser(user) {
   current_user = user
 }
 
-export function isAdmin() {
-  switch(current_user.role) {
+export function isAdmin(other = undefined) {
+  let toTest = other || current_user
+  var role = toTest.get ? toTest.get('role') : toTest.role
+
+  switch(role) {
     case 'admin':
     case 'staff':
       return true
@@ -23,4 +26,8 @@ export function isStaff() {
         return false
     }
   }
+}
+
+export function isMain() {
+  return current_user.main
 }
