@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import * as abilitiesHelper from '../../modules/abilities-helpers'
 import * as enumsHelpers from '../../modules/enums-helpers'
 
-import { Collapse, Button, Tag, Popconfirm, Row, Col, Card } from 'antd';
+import { Button, Tag, Popconfirm } from 'antd';
 
 export default class ClientList extends React.Component {
 

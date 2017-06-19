@@ -4,7 +4,7 @@ import { withRouter } from 'react-router'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 
-import { Form, Input, Rate, Radio, Tooltip, Icon, Select, Button } from 'antd'
+import { Form, Input, Radio, Button } from 'antd'
 
 const formItemLayout = {
   labelCol: {
@@ -83,7 +83,6 @@ class New extends React.Component {
   }
 
   checkEmail(rule, value, callback) {
-    const form = this.props.form;
     const users = this.props.users.get('hashed')
 
     var found = users.find((user, key) => {
@@ -98,7 +97,6 @@ class New extends React.Component {
   }
 
   checkUsername(rule, value, callback) {
-    const form = this.props.form;
     const users = this.props.users.get('hashed')
 
     var found = users.find((user, key) => {
@@ -142,7 +140,7 @@ class New extends React.Component {
         <Form.Item {...formItemLayout} label="Nombre de usuario" hasFeedback>
           { getFieldDecorator('username', {
             rules: [{
-              pattern: /^[a-zA-Z\.0-9\_\-\&]+$/,
+              pattern: /^[a-zA-Z0-9\-._&]+$/,
               message: 'El nombre de usuario no debe de contener espacios ni caracteres especiales.'}, {
               required: true,
               message: 'Introduce el nombre de usuario'}, {
@@ -193,40 +191,6 @@ class New extends React.Component {
           <Button type="primary" htmlType="submit" size="large">Crear</Button>
         </Form.Item>
       </Form>
-    )
-
-    return (
-      <form onSubmit={ this.processSubmit }>
-        <h2>
-          Nuevo usuario
-        </h2>
-        <div>
-          <label>Email</label>
-          <input name='email' type='email' value={ form.get('email') || '' } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Nombre de usuario</label>
-          <input name='username' type='text' value={ form.get('username') || '' } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Nombres(s)</label>
-          <input name='firstname' type='text' value={ form.get('firstname') || '' } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Apellido(s)</label>
-          <input name='lastname' type='text' value={ form.get('lastname') || '' } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Role</label>
-          <select name='role' value={ form.get('role') || '' } onChange={ this.handleChange }>
-            <option value="admin">Administrador</option>
-            <option value="user">Usuario</option>
-          </select>
-        </div>
-        <div>
-          <button type="submit">Crear</button>
-        </div>
-      </form>
     )
   }
 }
