@@ -251,44 +251,6 @@ class Edit extends React.Component {
         </Form.Item>
       </Form>
     )
-
-    return (
-      <form onSubmit={ this.processSubmit }>
-        <h2>
-          Ediar usuario
-        </h2>
-        <div>
-          <label>Email</label>
-          <input name='email' type='email' value={ formHelpers.priorityValues([form.get('email'), this.user.get('email')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Nombre de usuario</label>
-          <input name='username' type='text' value={ formHelpers.priorityValues([form.get('username'), this.user.get('username')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Nombres(s)</label>
-          <input name='firstname' type='text' value={ formHelpers.priorityValues([form.get('firstname'), this.user.get('firstname')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Apellido(s)</label>
-          <input name='lastname' type='text' value={ formHelpers.priorityValues([form.get('lastname'), this.user.get('lastname')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Contraseña</label>
-          <input name='password' type='password' value={ formHelpers.priorityValues([form.get('password')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Role</label>
-          <select name='role' value={ formHelpers.priorityValues([form.get('role'), this.user.get('role')]) } onChange={ this.handleChange }>
-            <option value="admin">Administrador</option>
-            <option value="user">Usuario</option>
-          </select>
-        </div>
-        <div>
-          <button type="submit">Actializar</button>
-        </div>
-      </form>
-    )
   }
 }
 

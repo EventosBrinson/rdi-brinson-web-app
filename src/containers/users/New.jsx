@@ -15,7 +15,7 @@ const formItemLayout = {
     xs: { span: 24 },
     sm: { span: 14 },
   },
-};
+}
 
 const tailFormItemLayout = {
   wrapperCol: {
@@ -28,7 +28,7 @@ const tailFormItemLayout = {
       offset: 6,
     },
   },
-};
+}
 
 class New extends React.Component {
 
@@ -72,14 +72,13 @@ class New extends React.Component {
       event.preventDefault()
     }
 
-
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         let data = (this.props.user_form || Immutable.Map()).toJS()
 
         this.props.submitRequest('CREATE_USER', data)
       }
-    });
+    })
   }
 
   checkEmail(rule, value, callback) {
@@ -112,7 +111,7 @@ class New extends React.Component {
 
   render() {
     let form = this.props.user_form || Immutable.Map()
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator } = this.props.form
 
     return (
       <Form onSubmit={ this.processSubmit }>

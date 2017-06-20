@@ -15,7 +15,7 @@ const formItemLayout = {
     xs: { span: 24 },
     sm: { span: 14 },
   },
-};
+}
 
 const tailFormItemLayout = {
   wrapperCol: {
@@ -28,7 +28,7 @@ const tailFormItemLayout = {
       offset: 6,
     },
   },
-};
+}
 
 class Edit extends React.Component {
 
@@ -95,12 +95,12 @@ class Edit extends React.Component {
 
         this.props.submitRequest('UPDATE_CLIENT', { id: this.client_id, client: data })
       }
-    });
+    })
   }
 
   render() {
     let form = this.props.edit_client_form || Immutable.Map()
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator } = this.props.form
 
     return (
       <Form onSubmit={ this.processSubmit }>

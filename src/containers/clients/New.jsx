@@ -15,7 +15,7 @@ const formItemLayout = {
     xs: { span: 24 },
     sm: { span: 14 },
   },
-};
+}
 
 const tailFormItemLayout = {
   wrapperCol: {
@@ -28,7 +28,7 @@ const tailFormItemLayout = {
       offset: 6,
     },
   },
-};
+}
 
 class New extends React.Component {
 
@@ -83,12 +83,12 @@ class New extends React.Component {
 
         this.props.submitRequest('CREATE_CLIENT', data)
       }
-    });
+    })
   }
 
   render() {
     let form = this.props.client_form || Immutable.Map()
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator } = this.props.form
 
     return (
       <Form onSubmit={ this.processSubmit }>
