@@ -183,6 +183,8 @@ export function requestSucceeded(state, request, result) {
                   .setIn(['users', 'order'], Immutable.fromJS(users_order))
 
     case 'CREATE_USER':
+
+
       return state.setIn(['users', 'create_user_status'], 'CREATED')
                   .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
                   .updateIn(['users', 'order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
@@ -194,10 +196,16 @@ export function requestSucceeded(state, request, result) {
                   .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
 
     case 'UPDATE_USER':
-      return state.setIn(['users', 'update_user_statuses', String(data.id)], 'UPDATED')
-                  .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .setIn(['router', 'action'], 'REDIRECT_TO')
-                  .setIn(['router', 'pathname'], '/users')
+      if(!data.id) {
+        return state.setIn(['users', 'update_errors'], Immutable.fromJS(data))
+      } else {
+        return state.setIn(['users', 'update_user_statuses', String(data.id)], 'UPDATED')
+                    .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
+                    .setIn(['router', 'action'], 'REDIRECT_TO')
+                    .setIn(['router', 'pathname'], '/users')
+                    .deleteIn(['users', 'update_errors'])
+      }
+
 
     case 'GET_CLIENTS':
       var get_clients_hash = {}
