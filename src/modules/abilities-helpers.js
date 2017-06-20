@@ -31,3 +31,9 @@ export function isStaff() {
 export function isMain() {
   return current_user.main
 }
+
+export function itsMe(user) {
+  var id = user.get ? user.get('id') : user.id
+
+  return current_user.id === id
+}
