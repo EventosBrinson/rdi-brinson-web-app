@@ -12,7 +12,7 @@ export default class UserList extends React.Component {
       event.preventDefault()
     }
 
-    this.props.submitRequest('UPDATE_USER', { id: user.get('id'), user: { active: 0 } })
+    this.props.submitRequest('UPDATE_USER', { user: { active: 0 }}, { id: user.get('id') })
   }
 
   activate(user, event) {
@@ -20,7 +20,7 @@ export default class UserList extends React.Component {
       event.preventDefault()
     }
 
-    this.props.submitRequest('UPDATE_USER', { id: user.get('id'), user: { active: 1 } })
+    this.props.submitRequest('UPDATE_USER', { user: { active: 1 }}, { id: user.get('id') })
   }
 
   render() {

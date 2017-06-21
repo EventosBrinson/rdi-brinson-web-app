@@ -108,7 +108,7 @@ class Edit extends React.Component {
       if (!err) {
         let data = (this.props.edit_user_form || Immutable.Map()).toJS()
 
-        this.props.submitRequest('UPDATE_USER', { id: this.user_id, user: data })
+        this.props.submitRequest('UPDATE_USER', { user: data }, { id: this.user_id })
 
         this.submited = true
       }

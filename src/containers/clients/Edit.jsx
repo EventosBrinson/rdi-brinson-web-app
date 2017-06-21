@@ -63,7 +63,7 @@ class Edit extends React.Component {
       if(props.clients && (props.clients.getIn(['get_client_statuses', this.client_id]) === 'READY' || props.clients.get('get_clients_status') === 'READY')) {
         this.client = props.clients.getIn(['hashed', this.client_id])
       } else if(!props.clients || props.clients.getIn(['get_client_statuses', this.client_id]) !== 'GETTING'){
-        this.props.submitRequest('GET_CLIENT', { id: this.client_id })
+        this.props.submitRequest('GET_CLIENT', {}, { id: this.client_id })
       }
     }
   }
@@ -93,7 +93,7 @@ class Edit extends React.Component {
       if (!err) {
         let data = (this.props.edit_client_form || Immutable.Map()).toJS()
 
-        this.props.submitRequest('UPDATE_CLIENT', { id: this.client_id, client: data })
+        this.props.submitRequest('UPDATE_CLIENT', { client: data }, { id: this.client_id })
       }
     })
   }

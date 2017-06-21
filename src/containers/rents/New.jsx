@@ -63,7 +63,7 @@ class New extends React.Component {
 
     let data = (this.props.rent_form || Immutable.Map()).toJS()
 
-    this.props.submitRequest('CREATE_RENT', data)
+    this.props.submitRequest('CREATE_RENT', { rent: data })
   }
 
   render() {

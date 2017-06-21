@@ -81,7 +81,7 @@ class New extends React.Component {
       if (!err) {
         let data = (this.props.client_form || Immutable.Map()).toJS()
 
-        this.props.submitRequest('CREATE_CLIENT', data)
+        this.props.submitRequest('CREATE_CLIENT', { client: data })
       }
     })
   }

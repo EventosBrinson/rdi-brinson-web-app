@@ -56,7 +56,7 @@ class New extends React.Component {
 
     let data = (this.props.place_form || Immutable.Map()).toJS()
 
-    this.props.submitRequest('CREATE_PLACE', data)
+    this.props.submitRequest('CREATE_PLACE', { place: data })
   }
 
   render() {

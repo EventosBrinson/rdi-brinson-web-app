@@ -12,7 +12,7 @@ export default class ClientList extends React.Component {
       event.preventDefault()
     }
 
-    this.props.submitRequest('UPDATE_CLIENT', { id: client.get('id'), client: { active: 0 } })
+    this.props.submitRequest('UPDATE_CLIENT', { client: { active: 0 }}, { id: client.get('id') })
   }
 
   activate(client, event) {
@@ -20,7 +20,7 @@ export default class ClientList extends React.Component {
       event.preventDefault()
     }
 
-    this.props.submitRequest('UPDATE_CLIENT', { id: client.get('id'), client: { active: 1 } })
+    this.props.submitRequest('UPDATE_CLIENT', { client: { active: 1 }}, { id: client.get('id') })
   }
 
   render() {

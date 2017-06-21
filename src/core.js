@@ -8,7 +8,7 @@ var sessionToken = undefined
 
 export function initApp(state) {
   sessionToken = cookies.get('ssid')
-  Api.post('SIGN_IN', '/sign_in', {}, sessionToken)
+  Api.post('SIGN_IN', '/sign_in', {}, {}, undefined, sessionToken)
 
   return state.set('session_status', 'FIRST_SIGNING_IN')
 }
@@ -25,120 +25,125 @@ export function mergeForm(state, form, values) {
   return state.mergeIn(['forms', form], values)
 }
 
-export function submitRequest(state, request, data) {
+export function submitRequest(state, request, data, payload, callback) {
   switch (request) {
     case 'SIGN_IN':
-      Api.post(request, '/sign_in', data)
+      Api.post(request, '/sign_in', data, payload, callback)
       return state.deleteIn(['forms', 'sign_in_form']).set('session_status', 'SIGNING_IN')
 
     case 'SIGN_OUT':
-      Api.del(request, '/sign_out', data, sessionToken)
+      Api.del(request, '/sign_out', data, payload, callback, sessionToken)
       return state.set('session_status', 'SIGNING_OUT')
 
     case 'REQUEST_RESET_PASSWORD':
-      Api.post(request, '/reset_password', data)
+      Api.post(request, '/reset_password', data, payload, callback)
       return state.deleteIn(['forms', 'recover_password_form']).set('recover_password_status', 'SENDING')
     
     case 'RESET_PASSWORD':
-      Api.patch(request, '/reset_password', data)
+      Api.patch(request, '/reset_password', data, payload, callback)
       return state.deleteIn(['forms', 'reset_password_form']).set('reset_password_status', 'RESETING')
 
     case 'CONFIRM_ACCOUNT':
-      Api.patch(request, '/confirm', data)
+      Api.patch(request, '/confirm', data, payload, callback)
       return state.deleteIn(['forms', 'accept_invitation_form']).set('confirmation_status', 'CONFIRMING')
 
     case 'GET_USERS':
-      Api.get(request, '/users', data, sessionToken)
+      Api.get(request, '/users', data, payload, callback, sessionToken)
       return state.setIn(['users', 'get_users_status'], 'GETTING')
 
     case 'CREATE_USER':
-      Api.post(request, '/users', { user: data }, sessionToken)
+      Api.post(request, '/users', data, payload, callback, sessionToken)
       return state.deleteIn(['forms', 'user_form']).setIn(['users', 'create_user_status' ], 'CREATING')
 
     case 'GET_USER':
-      Api.get(request, `/users/${ data.id }`, undefined, sessionToken)
-      return state.setIn(['users', 'get_user_statuses', data.id ], 'GETTING')
+      Api.get(request, `/users/${ payload.id }`, data, payload, callback, sessionToken)
+      return state.setIn(['users', 'get_user_statuses', payload.id ], 'GETTING')
 
     case 'UPDATE_USER':
-      Api.patch(request, `/users/${ data.id }`, { user: data.user }, sessionToken)
+      Api.patch(request, `/users/${ payload.id }`, data, payload, callback, sessionToken)
       return state.deleteIn(['forms', 'user_form'])
-                  .setIn(['users', 'update_user_statuses', data.id ], 'UPDATING')
+                  .setIn(['users', 'update_user_statuses', payload.id ], 'UPDATING')
 
     case 'GET_CLIENTS':
-      Api.get(request, '/clients', data, sessionToken)
+      Api.get(request, '/clients', data, payload, callback, sessionToken)
       return state.setIn(['clients', 'get_clients_status'], 'GETTING')
 
     case 'CREATE_CLIENT':
-      Api.post(request, '/clients', { client: data }, sessionToken)
-      return state.deleteIn(['forms', 'client_form']).setIn(['users', 'create_client_status' ], 'CREATING')
+      Api.post(request, '/clients', data, payload, callback, sessionToken)
+      return state.deleteIn(['forms', 'client_form'])
+                  .setIn(['clients', 'create_client_status' ], 'CREATING')
 
     case 'GET_CLIENT':
-      Api.get(request, `/clients/${ data.id }`, undefined, sessionToken)
-      return state.setIn(['clients', 'get_client_statuses', data.id ], 'GETTING')
+      Api.get(request, `/clients/${ payload.id }`, data, payload, callback, sessionToken)
+      return state.setIn(['clients', 'get_client_statuses', payload.id ], 'GETTING')
 
     case 'UPDATE_CLIENT':
-      Api.patch(request, `/clients/${ data.id }`, { client: data.client }, sessionToken)
+      Api.patch(request, `/clients/${ payload.id }`, data, payload, callback, sessionToken)
       return state.deleteIn(['forms', 'edit_client_form'])
-                  .setIn(['clients', 'update_client_statuses', data.id ], 'UPDATING')
+                  .setIn(['clients', 'update_client_statuses', payload.id ], 'UPDATING')
 
     case 'CREATE_DOCUMENT':
-      Api.post(request, '/documents', { document: data }, sessionToken)
+      Api.post(request, '/documents',data, payload, callback, sessionToken)
       return state.setIn(['documents', 'create_document_status' ], 'CREATING')
 
     case 'DELETE_DOCUMENT':
-      Api.del(request, `/documents/${ data.id }`, data, sessionToken)
-      return state.setIn(['documents', 'delete_document_status', data.id], 'DELETING')
+      Api.del(request, `/documents/${ payload.id }`, data, payload, callback, sessionToken)
+      return state.setIn(['documents', 'delete_document_status', payload.id], 'DELETING')
 
     case 'UPDATE_DOCUMENT':
-      Api.patch(request, `/clients/${ data.id }`, { document: data.document }, sessionToken)
-      return state.deleteIn(['forms', 'edit_document_form', data.id])
-                  .setIn(['documents', 'update_document_status', data.id], 'UPDATING')
+      Api.patch(request, `/clients/${ payload.id }`, data, payload, callback, sessionToken)
+      return state.deleteIn(['forms', 'edit_document_form', payload.id])
+                  .setIn(['documents', 'update_document_status', payload.id], 'UPDATING')
 
     case 'GET_PLACES':
-      Api.get(request, '/places', data, sessionToken)
+      Api.get(request, '/places', data, payload, callback, sessionToken)
       return state.setIn(['places', 'get_places_status'], 'GETTING')
 
     case 'CREATE_PLACE':
-      Api.post(request, '/places', { place: data }, sessionToken)
-      return state.deleteIn(['forms', 'place_form']).setIn(['places', 'create_place_status' ], 'CREATING')
+      Api.post(request, '/places', data, payload, callback, sessionToken)
+      return state.deleteIn(['forms', 'place_form'])
+                  .setIn(['places', 'create_place_status' ], 'CREATING')
 
     case 'GET_PLACE':
-      Api.get(request, `/places/${ data.id }`, undefined, sessionToken)
-      return state.setIn(['places', 'get_place_statuses', data.id ], 'GETTING')
+      Api.get(request, `/places/${ payload.id }`, data, payload, callback, sessionToken)
+      return state.setIn(['places', 'get_place_statuses', payload.id ], 'GETTING')
 
     case 'UPDATE_PLACE':
-      Api.patch(request, `/places/${ data.id }`, { place: data.client }, sessionToken)
+      Api.patch(request, `/places/${ payload.id }`, data, payload, callback, sessionToken)
       return state.deleteIn(['forms', 'edit_place_form'])
-                  .setIn(['places', 'update_place_statuses', data.id ], 'UPDATING')
+                  .setIn(['places', 'update_place_statuses', payload.id ], 'UPDATING')
 
     case 'GET_RENTS':
-      Api.get(request, '/rents', data, sessionToken)
+      Api.get(request, '/rents', data, payload, callback, sessionToken)
       return state.setIn(['rents', 'get_rents_status'], 'GETTING')
 
     case 'GET_RENT':
-      Api.get(request, `/rents/${ data.id }`, undefined, sessionToken)
-      return state.setIn(['rents', 'get_rent_statuses', data.id ], 'GETTING')
+      Api.get(request, `/rents/${ payload.id }`, data, payload, callback, sessionToken)
+      return state.setIn(['rents', 'get_rent_statuses', payload.id ], 'GETTING')
 
     case 'CREATE_RENT':
-      Api.post(request, '/rents', { rent: data }, sessionToken)
-      return state.deleteIn(['forms', 'rent_form']).setIn(['rents', 'create_rent_status' ], 'CREATING')
+      Api.post(request, '/rents', data, payload, callback, sessionToken)
+      return state.deleteIn(['forms', 'rent_form'])
+                  .setIn(['rents', 'create_rent_status' ], 'CREATING')
 
     case 'UPDATE_RENT':
-      Api.patch(request, `/rents/${ data.id }`, { rent: data.rent }, sessionToken)
+      Api.patch(request, `/rents/${ payload.id }`, data.rent, payload, callback, sessionToken)
       return state.deleteIn(['forms', 'edit_rent_form'])
-                  .setIn(['rents', 'update_rent_statuses', data.id ], 'UPDATING')
+                  .setIn(['rents', 'update_rent_statuses', payload.id ], 'UPDATING')
 
     case 'DELETE_RENT':
-      Api.del(request, `/rents/${ data.id }`, data, sessionToken)
-      return state.setIn(['rents', 'delete_rent_statuses', data.id], 'DELETING')
+      Api.del(request, `/rents/${ payload.id }`, data, payload, callback, sessionToken)
+      return state.setIn(['rents', 'delete_rent_statuses', payload.id], 'DELETING')
 
     default:
       return state
   }
 }
 
-export function requestSucceeded(state, request, result) {
+export function requestSucceeded(state, request, result, payload, callback) {
   let data = result.response.body
+
+  console.log(result, payload, callback)
 
   switch (request) {
     case 'SIGN_IN':
@@ -183,8 +188,6 @@ export function requestSucceeded(state, request, result) {
                   .setIn(['users', 'order'], Immutable.fromJS(users_order))
 
     case 'CREATE_USER':
-
-
       return state.setIn(['users', 'create_user_status'], 'CREATED')
                   .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
                   .updateIn(['users', 'order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
@@ -393,7 +396,7 @@ export function requestSucceeded(state, request, result) {
   }
 }
 
-export function requestFailed(state, request, result) {
+export function requestFailed(state, request, result, payload, callback) {
   switch (request) {
     case 'SIGN_IN':
       return Immutable.Map({ 'session_status': 'SIGNING_IN_ERROR' })
@@ -417,10 +420,10 @@ export function requestFailed(state, request, result) {
       return state.setIn(['users', 'create_user_status'], 'ERROR')
 
     case 'GET_USER':
-      return state.setIn(['users', 'get_user_statuses', result.request_data], 'ERROR')
+      return state.setIn(['users', 'get_user_statuses', payload.id], 'ERROR')
 
     case 'UPDATE_USER':
-      return state.setIn(['users', 'update_user_statuses', result.request_data.user.id], 'ERROR')
+      return state.setIn(['users', 'update_user_statuses', payload.id], 'ERROR')
 
     case 'GET_CLIENTS':
       return state.setIn(['clients', 'get_clients_status'], 'ERROR')
@@ -429,43 +432,43 @@ export function requestFailed(state, request, result) {
       return state.setIn(['clients', 'create_client_status'], 'ERROR')
 
     case 'GET_CLIENT':
-      return state.setIn(['clients', 'get_client_statuses', result.request_data], 'ERROR')
+      return state.setIn(['clients', 'get_client_statuses', payload.id], 'ERROR')
 
     case 'UPDATE_CLIENT':
-      return state.setIn(['clients', 'update_client_statuses', result.request_data.client.id], 'ERROR')
+      return state.setIn(['clients', 'update_client_statuses', payload.id], 'ERROR')
 
     case 'CREATE_DOCUMENT':
       return state.setIn(['documents', 'create_document_status'], 'ERROR')
 
     case 'DELETE_DOCUMENT':
-      return state.setIn(['documents', 'delete_document_status', result.request_data.id], 'ERROR')
+      return state.setIn(['documents', 'delete_document_status', payload.id], 'ERROR')
 
     case 'UPDATE_DOCUMENT':
-      return state.setIn(['documents', 'update_document_status', result.request_data.document.id], 'ERROR')
+      return state.setIn(['documents', 'update_document_status', payload.id], 'ERROR')
 
     case 'GET_PLACES':
       return state.setIn(['places', 'get_places_status'], 'ERROR')
 
     case 'GET_PLACE':
-      return state.setIn(['places', 'get_place_statuses', result.request_data], 'ERROR')
+      return state.setIn(['places', 'get_place_statuses', payload.id], 'ERROR')
 
     case 'CREATE_PLACE':
       return state.setIn(['places', 'create_place_status'], 'ERROR')
 
     case 'UPDATE_PLACE':
-      return state.setIn(['places', 'update_place_statuses', result.request_data.place.id], 'ERROR')
+      return state.setIn(['places', 'update_place_statuses', payload.id], 'ERROR')
 
     case 'GET_RENTS':
       return state.setIn(['rents', 'get_rents_status'], 'ERROR')
 
     case 'GET_RENT':
-      return state.setIn(['rents', 'get_rent_statuses', result.request_data], 'ERROR')
+      return state.setIn(['rents', 'get_rent_statuses', payload.id], 'ERROR')
 
     case 'CREATE_RENT':
       return state.setIn(['rents', 'create_rent_status'], 'ERROR')
 
     case 'UPDATE_RENT':
-      return state.setIn(['rents', 'update_rent_statuses', result.request_data.rent.id], 'ERROR')
+      return state.setIn(['rents', 'update_rent_statuses', payload.id], 'ERROR')
 
     default:
       return state

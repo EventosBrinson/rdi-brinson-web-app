@@ -76,7 +76,7 @@ class New extends React.Component {
       if (!err) {
         let data = (this.props.user_form || Immutable.Map()).toJS()
 
-        this.props.submitRequest('CREATE_USER', data)
+        this.props.submitRequest('CREATE_USER', { user: data })
       }
     })
   }

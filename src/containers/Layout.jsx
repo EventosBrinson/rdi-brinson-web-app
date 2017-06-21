@@ -49,7 +49,7 @@ class MasterLayout extends React.Component {
         { this.props.children }
         <Row>
           <pre>
-            { abilitiesHelper.isStaff() && false ? JSON.stringify(this.props.state, null, 2) : '' }
+            { abilitiesHelper.isStaff() || true ? JSON.stringify(this.props.state, null, 2) : '' }
           </pre>
         </Row>
       </Col>

@@ -35,7 +35,7 @@ class Show extends React.Component {
       if(props.clients && (props.clients.getIn(['get_client_statuses', this.client_id]) === 'READY' || props.clients.get('get_clients_status') === 'READY')) {
         this.client = props.clients.getIn(['hashed', this.client_id])
       } else if(!props.clients || props.clients.getIn(['get_client_statuses', this.client_id]) !== 'GETTING'){
-        this.props.submitRequest('GET_CLIENT', { id: this.client_id })
+        this.props.submitRequest('GET_CLIENT', {}, { id: this.client_id })
       }
     }
   }
@@ -43,7 +43,7 @@ class Show extends React.Component {
   handleFiles(files) {
     let data = { title: files.fileList[0].name, client_id: this.client_id, filename: files.fileList[0].name, data: files.base64 }
 
-    this.props.submitRequest('CREATE_DOCUMENT', data)
+    this.props.submitRequest('CREATE_DOCUMENT', { document: data })
   }
 
   deleteDocument(document, event) {
@@ -51,7 +51,7 @@ class Show extends React.Component {
       event.preventDefault()
     }
 
-    this.props.submitRequest('DELETE_DOCUMENT', document.toJS())
+    this.props.submitRequest('DELETE_DOCUMENT', {}, { id: document.get('id') })
   }
 
   render() {

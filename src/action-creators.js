@@ -22,27 +22,33 @@ export function mergeForm(form, values) {
   }
 }
 
-export function submitRequest(request, data) {
+export function submitRequest(request, data, payload, callback) {
   return {
     type: 'SUBMIT_REQUEST',
     request: request,
-    data: data
+    data: data,
+    payload: payload,
+    callback: callback
   }
 }
 
-export function requestSucceeded(request, data) {
+export function requestSucceeded(request, result, payload, callback) {
   return {
     type: 'REQUEST_SUCCEEDED',
     request: request,
-    data: data
+    result: result,
+    payload: payload,
+    callback: callback
   }
 }
 
-export function requestFailed(request, data) {
+export function requestFailed(request, result, payload, callback) {
   return {
     type: 'REQUEST_FAILED',
     request: request,
-    data: data
+    result: result,
+    payload: payload,
+    callback: callback
   }
 }
 

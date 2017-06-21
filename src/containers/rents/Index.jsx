@@ -16,7 +16,7 @@ class Index extends React.Component {
   }
 
   getRents(props) {
-    if(props.session_status === 'SIGNED_IN' && props.rents.get('get_rents_status') !== 'READY') {
+    if(props.session_status === 'SIGNED_IN' && props.rents.get('get_rents_status') === undefined) {
       props.submitRequest('GET_RENTS') 
     }
   }
@@ -26,7 +26,7 @@ class Index extends React.Component {
       event.preventDefault()
     }
 
-    this.props.submitRequest('DELETE_RENT', rent.toJS())
+    this.props.submitRequest('DELETE_RENT', {}, { id: rent.get('id') })
   }
 
   render() {

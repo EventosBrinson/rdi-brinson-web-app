@@ -12,11 +12,11 @@ export default function reducer(state = Immutable.Map(), action) {
   case 'MERGE_FORM':
     return core.mergeForm(state, action.form, action.values)
   case 'SUBMIT_REQUEST':
-    return core.submitRequest(state, action.request, action.data)
+    return core.submitRequest(state, action.request, action.data, action.payload, action.callback)
   case 'REQUEST_SUCCEEDED':
-    return core.requestSucceeded(state, action.request, action.data)
+    return core.requestSucceeded(state, action.request, action.result, action.payload, action.callback)
   case 'REQUEST_FAILED':
-    return core.requestFailed(state, action.request, action.data)
+    return core.requestFailed(state, action.request, action.result, action.payload, action.callback)
   case 'CLEAN_ROUTER':
     return core.cleanRouter(state)
   default:

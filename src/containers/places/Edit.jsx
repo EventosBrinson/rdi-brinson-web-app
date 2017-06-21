@@ -35,7 +35,7 @@ class Edit extends React.Component {
       if(props.places && (props.places.getIn(['get_place_statuses', this.place_id]) === 'READY' || props.places.get('get_places_status') === 'READY')) {
         this.place = props.places.getIn(['hashed', this.place_id])
       } else if(!props.places || props.places.getIn(['get_place_statuses', this.place_id]) !== 'GETTING'){
-        this.props.submitRequest('GET_PLACE', { id: this.place_id })
+        this.props.submitRequest('GET_PLACE', {}, { id: this.place_id })
       }
     }
   }
@@ -51,7 +51,7 @@ class Edit extends React.Component {
 
     let data = (this.props.edit_place_form || Immutable.Map()).toJS()
 
-    this.props.submitRequest('UPDATE_PLACE', { id: this.place_id, client: data })
+    this.props.submitRequest('UPDATE_PLACE', { client: data }, { id: this.place_id })
   }
 
   render() {

@@ -35,7 +35,7 @@ class Edit extends React.Component {
       if(props.rents && (props.rents.getIn(['get_rent_statuses', this.rent_id]) === 'READY' || props.rents.get('get_rents_status') === 'READY')) {
         this.rent = props.rents.getIn(['hashed', this.rent_id])
       } else if(!props.rents || props.rents.getIn(['get_rent_statuses', this.rent_id]) !== 'GETTING'){
-        this.props.submitRequest('GET_RENT', { id: this.rent_id })
+        this.props.submitRequest('GET_RENT', {}, { id: this.rent_id })
       }
     }
   }
@@ -51,7 +51,7 @@ class Edit extends React.Component {
 
     let data = (this.props.edit_rent_form || Immutable.Map()).toJS()
 
-    this.props.submitRequest('UPDATE_RENT', { id: this.rent_id, rent: data })
+    this.props.submitRequest('UPDATE_RENT', { rent: data }, { id: this.rent_id })
   }
 
   render() {
