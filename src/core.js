@@ -131,10 +131,6 @@ export function submitRequest(state, request, data, payload, callback) {
       return state.deleteIn(['forms', 'edit_rent_form'])
                   .setIn(['rents', 'update_rent_statuses', payload.id ], 'UPDATING')
 
-    case 'DELETE_RENT':
-      Api.del(request, `/rents/${ payload.id }`, data, payload, callback, sessionToken)
-      return state.setIn(['rents', 'delete_rent_statuses', payload.id], 'DELETING')
-
     default:
       return state
   }
@@ -385,11 +381,6 @@ export function requestSucceeded(state, request, result, payload, callback) {
                   .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
                   .setIn(['router', 'action'], 'REDIRECT_TO')
                   .setIn(['router', 'pathname'], '/rents')
-
-    case 'DELETE_RENT':
-      return state.setIn(['rents', 'delete_rent_statuses', result.request_data.id], 'DELETED')
-                  .deleteIn(['rents', 'hashed', String(result.request_data.id)])
-                  .updateIn(['rents', 'order'], order => (order || Immutable.List()).filterNot(value => value === String(result.request_data.id)))
 
     default:
       return state
