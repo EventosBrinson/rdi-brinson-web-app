@@ -34,7 +34,7 @@ export default class App extends React.Component {
           <ReduxRouter>
             <ScrollToTop>
               <Layout>
-                <Route exact path="/" component={ RentsPage } />
+                <PrivateRoute exact path="/" component={ RentsPage } />
                 <Route exact path="/sign_in" component={ SignInPage } />
                 <Route exact path="/recover" component={ RecoverPasswordPage } />
                 <Route exact path="/reset" component={ ResetPasswordPage } />
