@@ -397,10 +397,10 @@ export function requestFailed(state, request, result, payload, callback) {
       return state.set('recover_password_status', 'RECOVER_ERROR')
 
     case 'RESET_PASSWORD':
-      return Immutable.Map({ 'reset_password_status': 'RESET_ERROR' })
+      return state.set('reset_password_status', 'RESET_ERROR')
 
     case 'CONFIRM_ACCOUNT':
-      return Immutable.Map({ 'confirmation_status': 'CONFIRMATION_ERROR' })
+      return state.set('confirmation_status', 'CONFIRMATION_ERROR')
 
     case 'GET_USERS':
       return state.setIn(['users', 'get_users_status'], 'ERROR')
