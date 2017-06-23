@@ -144,7 +144,7 @@ export function requestSucceeded(state, request, result, payload, callback) {
     case 'RESET_PASSWORD':
     case 'CONFIRM_ACCOUNT':
       if(data) {
-        cookies.set('ssid', data.token)
+        cookies.set('ssid', data.token, { path: '/' })
         sessionToken = data.token
 
         var newState = Immutable.Map({ 'session_status': 'SIGNED_IN', 'user': Immutable.fromJS(data.user) })
