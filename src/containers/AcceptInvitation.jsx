@@ -5,6 +5,8 @@ import * as actionCreators from '../action-creators'
 import Immutable from 'immutable'
 import queryString from 'query-string'
 
+import { Form, Input, Icon, Button } from 'antd'
+
 class AcceptInvitation extends React.Component {
 
   constructor(props) {
@@ -23,30 +25,43 @@ class AcceptInvitation extends React.Component {
       event.preventDefault()
     }
 
-    let data = (this.props.accept_invitation_form || Immutable.Map()).toJS()
-    let params = queryString.parse(this.props.location.search)
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        let data = (this.props.accept_invitation_form || Immutable.Map()).toJS()
+        let params = queryString.parse(this.props.location.search)
 
-    data.token = params.token
+        data.token = params.token
 
-    this.props.submitRequest('CONFIRM_ACCOUNT', data)
+        this.props.submitRequest('CONFIRM_ACCOUNT', data)
+      }
+    })
   }
 
   render() {
     let form = this.props.accept_invitation_form || Immutable.Map()
+    const { getFieldDecorator } = this.props.form
 
     return (
-      <form onSubmit={ this.processSubmit }>
-        <h2>
-          Accept Invitation
-        </h2>
-        <div>
-          <label>Your Password</label>
-          <input name='password' type='password' value={ form.get('password') || '' } onChange={ this.handleChange }/>
-        </div>
-        <div>
-          <button type="submit">Accept</button>
-        </div>
-      </form>
+      <div style={ { position: 'absolute', maxWidth: '300px', maxHeight: '177px', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto' } }>
+        <h1 style={ { textAlign: 'center', marginTop: '-36px', marginBottom: '15px' } }>
+          Activar cuenta
+        </h1>
+        <Form onSubmit={ this.processSubmit } style={ { maxWidth: '300px' } }>
+          <Form.Item style={ { marginBottom: '10px' } }>
+            {getFieldDecorator('password', {
+              rules: [{ required: true, message: 'Introduce tu contraseña' },
+                      { min: 8, message: 'La contraseña debe tener al menos 8 caracteres' }],
+            })(
+              <Input name="password" prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Nueva contraseña" onChange={ this.handleChange } />
+            )}
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" style={ { width: '100%' } }>
+              Establecer contraseña
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
     )
   }
 }
@@ -58,4 +73,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(AcceptInvitation))
+export default withRouter(connect(mapStateToProps, actionCreators)(Form.create()(AcceptInvitation)))
