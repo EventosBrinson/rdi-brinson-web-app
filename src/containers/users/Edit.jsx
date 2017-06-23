@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import * as actionCreators from '../../action-creators'
-import * as formHelpers from '../../modules/form-helpers'
 import * as abilitiesHelper from '../../modules/abilities-helpers'
 import Immutable from 'immutable'
 
@@ -60,7 +59,6 @@ class Edit extends React.Component {
       this.setUpUser(nextProps)
     }
 
-    let form = this.props.edit_user_form || Immutable.Map()
     let update_errors = nextProps.users.get('update_errors')
 
     if(update_errors && this.submited) {
@@ -118,8 +116,10 @@ class Edit extends React.Component {
   checkEmail(rule, value, callback) {
     const users = this.props.users.get('hashed') || Immutable.Map()
 
+
+
     var found = users.find((user, key) => {
-      return user.get('email') === value
+      return user.get('email') === value && String(user.get('id')) !== this.user_id
     })
 
     if(found) {
@@ -133,7 +133,7 @@ class Edit extends React.Component {
     const users = this.props.users.get('hashed') || Immutable.Map()
 
     var found = users.find((user, key) => {
-      return user.get('username') === value
+      return user.get('username') === value && String(user.get('id')) !== this.user_id
     })
 
     if(found) {

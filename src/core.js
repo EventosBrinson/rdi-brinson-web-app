@@ -139,8 +139,6 @@ export function submitRequest(state, request, data, payload, callback) {
 export function requestSucceeded(state, request, result, payload, callback) {
   let data = result.response.body
 
-  console.log(result, payload, callback)
-
   switch (request) {
     case 'SIGN_IN':
     case 'RESET_PASSWORD':
