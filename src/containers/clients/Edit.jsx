@@ -100,7 +100,7 @@ class Edit extends React.Component {
 
   render() {
     let form = this.props.edit_client_form || Immutable.Map()
-    const { getFieldDecorator } = this.props.form
+    const { getFieldDecorator, isFieldsTouched } = this.props.form
 
     return (
       <Form onSubmit={ this.processSubmit }>
@@ -275,7 +275,7 @@ class Edit extends React.Component {
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit" size="large">Actializar</Button>
+          <Button type="primary" htmlType="submit" size="large" disabled={ !isFieldsTouched() }>Actializar</Button>
         </Form.Item>
       </Form>
     )

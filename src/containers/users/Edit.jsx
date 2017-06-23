@@ -145,7 +145,7 @@ class Edit extends React.Component {
 
   render() {
     let form = this.props.edit_user_form || Immutable.Map()
-    const { getFieldDecorator } = this.props.form
+    const { getFieldDecorator, isFieldsTouched } = this.props.form
 
     var passwordField = ""
 
@@ -247,7 +247,7 @@ class Edit extends React.Component {
         { passwordField }
 
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit" size="large">Actializar</Button>
+          <Button type="primary" htmlType="submit" size="large" disabled={ !isFieldsTouched() }>Actializar</Button>
         </Form.Item>
       </Form>
     )
