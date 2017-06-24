@@ -4,6 +4,9 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
+import PlaceList from '../../components/places/PlaceList'
+
+import { Tabs, Button } from 'antd'
 
 class Index extends React.Component {
 
@@ -16,55 +19,33 @@ class Index extends React.Component {
   }
 
   getPlaces(props) {
-    if(props.session_status === 'SIGNED_IN' && props.places.get('get_places_status') !== 'READY') {
+    if(props.session_status === 'SIGNED_IN' && props.places.get('get_places_status') === undefined) {
       props.submitRequest('GET_PLACES') 
     }
   }
 
   render() {
-    let places_order = this.props.order || Immutable.List()
-    let places = this.props.hashed || Immutable.Map()
-    let rendered_places = []
-
-    places_order.forEach( place_id => {
-      let place = places.get(place_id)
-
-      rendered_places.push(
-        <tr key={ place.get('id') }>
-          <td>{ place.get('name') }</td>
-          <td>{ place.get('street') }</td>
-          <td>{ place.get('inner_number') }</td>
-          <td>{ place.get('outer_number') }</td>
-          <td>{ place.get('neighborhood') }</td>
-          <td>{ place.get('postal_code') }</td>
-          <td>{ place.get('active') ? 'Si' : 'No' }</td>
-          <td><Link to={ '/places/' + place.get('id') + '/edit'}>Edit</Link></td>
-        </tr>
-      )
-    })
-
     return (
-      <div>
-        <h3>Places</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Calle</th>
-              <th>Numero interior</th>
-              <th>Numero exterior</th>
-              <th>Fraccionamiento</th>
-              <th>CP</th>
-              <th>Activo</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            { rendered_places }
-          </tbody>
-        </table>
-        <br />
-        <Link to="/places/new">Crear nuevo</Link>
+      <div style={ { marginTop: '20px'} }>
+        <Button>
+          <Link to="/places/new">
+            Crear nuevo
+          </Link>
+        </Button>
+        <Tabs>
+          <Tabs.TabPane tab="Activos" key="1">
+            <PlaceList active={ true } 
+                        order={ this.props.order || Immutable.List() }
+                        hashed={ this.props.hashed || Immutable.Map() }
+                        submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Inactivos" key="2">
+            <PlaceList active={ false } 
+                        order={ this.props.order || Immutable.List() }
+                        hashed={ this.props.hashed || Immutable.Map()}
+                        submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+        </Tabs>
       </div>
     )
   }
