@@ -58,30 +58,31 @@ export default class UserList extends React.Component {
         )
       }
 
-
-      if(user.get('active') === this.props.active) {
-        rendered_users.push(
-          <tr className="ant-table-row  ant-table-row-level-0" key={ 'cl-' + user.get('id') }>
-            <td>
-              <span className="ant-table-row-indent indent-level-0" style={{ paddingLeft: '0px'}}>
-                <h4>
-                  { user.get('lastname') + ' ' + user.get('firstname') }
-                  <small>
-                    { tag }
-                  </small>
-                </h4>
-              </span>
-            </td>
-            <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
-              <Button>
-                <Link to={ '/users/' + user.get('id') + '/edit'}>Editar</Link>
-              </Button>
-            </td>
-            <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
-              { activationButton }
-            </td>
-          </tr>
-        )
+      if (abilitiesHelper.isMain() || (abilitiesHelper.isAdmin() && !abilitiesHelper.isAdmin(user)) || abilitiesHelper.itsMe(user)) {
+        if(user.get('active') === this.props.active) {
+          rendered_users.push(
+            <tr className="ant-table-row  ant-table-row-level-0" key={ 'cl-' + user.get('id') }>
+              <td>
+                <span className="ant-table-row-indent indent-level-0" style={{ paddingLeft: '0px'}}>
+                  <h4>
+                    { user.get('lastname') + ' ' + user.get('firstname') }
+                    <small>
+                      { tag }
+                    </small>
+                  </h4>
+                </span>
+              </td>
+              <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+                <Button>
+                  <Link to={ '/users/' + user.get('id') + '/edit'}>Editar</Link>
+                </Button>
+              </td>
+              <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+                { activationButton }
+              </td>
+            </tr>
+          )
+        }
       }
     })
 
