@@ -7,8 +7,9 @@ import Immutable from 'immutable'
 import ReactFileReader from 'react-file-reader'
 import * as enumsHelpers from '../../modules/enums-helpers'
 import { API_URL } from '../../web-api'
+import PlaceList from '../../components/places/PlaceList'
 
-import { Form, Input, Rate, Radio, Tooltip, Icon, Select, Button, Row, Col, Card, Popconfirm } from 'antd'
+import { Form, Input, Rate, Radio, Tooltip, Icon, Select, Button, Row, Col, Card, Popconfirm, Tabs } from 'antd'
 
 class Show extends React.Component {
 
@@ -196,6 +197,33 @@ class Show extends React.Component {
               </Button>
             </ReactFileReader>
           </Col>
+        </Row>
+        <Row>
+          <Col style={{ marginTop: '20px' }}>
+            <h4 style={{ marginBottom: '15px' }}>
+              Lugares de entrega
+            </h4>
+            <Button>
+              <Link to="/places/new">
+                Crear nuevo
+              </Link>
+            </Button>
+            <Tabs>
+              <Tabs.TabPane tab="Activos" key="1">
+                <PlaceList active={ true } 
+                            order={ places_order }
+                            hashed={ this.props.places || Immutable.Map() }
+                            submitRequest={ this.props.submitRequest }/>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Inactivos" key="2">
+                <PlaceList active={ false } 
+                            order={ places_order }
+                            hashed={ this.props.places || Immutable.Map()}
+                            submitRequest={ this.props.submitRequest }/>
+              </Tabs.TabPane>
+            </Tabs>
+          </Col>
+
         </Row>
       </div>
     )
