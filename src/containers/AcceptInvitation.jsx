@@ -38,7 +38,6 @@ class AcceptInvitation extends React.Component {
   }
 
   render() {
-    let form = this.props.accept_invitation_form || Immutable.Map()
     const { getFieldDecorator } = this.props.form
 
     return (
