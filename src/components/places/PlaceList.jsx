@@ -1,9 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import * as abilitiesHelper from '../../modules/abilities-helpers'
-import * as enumsHelpers from '../../modules/enums-helpers'
 
-import { Button, Tag, Popconfirm } from 'antd'
+import { Button, Popconfirm } from 'antd'
 
 export default class PlaceList extends React.Component {
 

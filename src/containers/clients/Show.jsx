@@ -9,7 +9,7 @@ import * as enumsHelpers from '../../modules/enums-helpers'
 import { API_URL } from '../../web-api'
 import PlaceList from '../../components/places/PlaceList'
 
-import { Form, Input, Rate, Radio, Tooltip, Icon, Select, Button, Row, Col, Card, Popconfirm, Tabs } from 'antd'
+import { Icon, Button, Row, Col, Popconfirm, Tabs } from 'antd'
 
 class Show extends React.Component {
 
@@ -81,25 +81,6 @@ class Show extends React.Component {
       )
     })
 
-    var rendered_places = []
-
-    places_order.forEach( place_id => {
-      let place = this.props.places.get(place_id)
-
-      rendered_places.push(
-        <tr key={ place.get('id') }>
-          <td>{ place.get('name') }</td>
-          <td>{ place.get('street') }</td>
-          <td>{ place.get('inner_number') }</td>
-          <td>{ place.get('outer_number') }</td>
-          <td>{ place.get('neighborhood') }</td>
-          <td>{ place.get('postal_code') }</td>
-          <td>{ place.get('active') ? 'Si' : 'No' }</td>
-          <td><Link to={ '/places/' + place.get('id') + '/edit'}>Edit</Link></td>
-        </tr>
-      )
-    })
-
     var optionalTelephone = undefined
 
     if(client.get('telephone_2')) {
@@ -114,7 +95,6 @@ class Show extends React.Component {
         </tr>
       )
     }
-
 
     return (
       <div>
@@ -225,42 +205,6 @@ class Show extends React.Component {
           </Col>
 
         </Row>
-      </div>
-    )
-
-    return (
-      <div>
-        <h3>{ client.get('firstname') + ' ' + client.get('lastname') } <small>{ client.get('rent_type') + ' ' + client.get('trust_level') }</small></h3>
-        <p>{ client.get('id_name') }</p>
-        <p>{ client.get('address_line_1') } { client.get('address_line_2')  }</p>
-        <p>{ client.get('telephone_1') } { client.get('telephone_1')  }</p>
-        <Link to={'/clients/' + client.get('id') + '/edit'}>Editar</Link>
-        <h3> Documentos </h3>
-        { rendered_documents }
-        <h4>Subir archivo</h4>
-        <ReactFileReader handleFiles={ this.handleFiles } base64={ true } multipleFiles={ false } fileTypes="file_extension|image/jpeg|application/pdf">
-          <button className='btn'>Seleccionar</button>
-        </ReactFileReader>
-        <h3> Lugares </h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Calle</th>
-              <th>Numero interior</th>
-              <th>Numero exterior</th>
-              <th>Fraccionamiento</th>
-              <th>CP</th>
-              <th>Activo</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            { rendered_places }
-          </tbody>
-        </table>
-        <br />
-        <Link to={ '/places/new?client_id=' + this.client_id }>Crear nuevo lugar</Link>
       </div>
     )
   }
