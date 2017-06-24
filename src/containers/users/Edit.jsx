@@ -177,7 +177,7 @@ class Edit extends React.Component {
       roleInput = (
         <Form.Item {...formItemLayout} label="Tipo">
           { getFieldDecorator('role', {
-            initialValue: form.get('role')
+            initialValue: form.get('role') || this.user.get('role')
           })(
             <Radio.Group onChange={this.handleRoleChange}>
               <Radio.Button value="user">Usuario</Radio.Button>
