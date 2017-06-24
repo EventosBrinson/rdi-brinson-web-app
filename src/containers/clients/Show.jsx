@@ -184,7 +184,7 @@ class Show extends React.Component {
               Lugares de entrega
             </h4>
             <Button>
-              <Link to="/places/new">
+              <Link to={ '/places/new?client_id=' + this.client_id }>
                 Crear nuevo
               </Link>
             </Button>
