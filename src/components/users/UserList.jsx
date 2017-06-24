@@ -56,6 +56,10 @@ export default class UserList extends React.Component {
         tag = (
           <Tag style={{ marginRight: '10px', marginLeft: '5px'} }>{ enumsHelpers.role(user.get('role')) }</Tag>
         )
+      } else if(!user.get('confirmed_at')) {
+        tag = (
+          <Tag color="yellow" style={{ marginRight: '10px', marginLeft: '5px'} }>Sin confirmar</Tag>
+        )
       }
 
       if (abilitiesHelper.isMain() || (abilitiesHelper.isAdmin() && !abilitiesHelper.isAdmin(user)) || abilitiesHelper.itsMe(user)) {
