@@ -199,11 +199,17 @@ export function requestSucceeded(state, request, result, payload, callback) {
       if(!data.id) {
         return state.setIn(['users', 'update_errors'], Immutable.fromJS(data))
       } else {
-        return state.setIn(['users', 'update_user_statuses', String(data.id)], 'UPDATED')
-                    .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
-                    .setIn(['router', 'action'], 'REDIRECT_TO')
-                    .setIn(['router', 'pathname'], '/users')
-                    .deleteIn(['users', 'update_errors'])
+        var updateUserState = state
+
+        if(payload.id === String(data.id)) {
+          updateUserState = state.set('user', Immutable.fromJS(data))
+        }
+
+        return updateUserState.setIn(['users', 'update_user_statuses', String(data.id)], 'UPDATED')
+                              .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
+                              .setIn(['router', 'action'], 'REDIRECT_TO')
+                              .setIn(['router', 'pathname'], '/users')
+                              .deleteIn(['users', 'update_errors'])
       }
 
 
