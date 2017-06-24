@@ -152,11 +152,14 @@ export function requestSucceeded(state, request, result, payload, callback) {
         abilitiesHelper.setUser(data.user)
 
         if(state.get('session_status') === 'SIGNING_IN') {
-          return newState.setIn(['router', 'action'], 'REDIRECT_TO')
-                         .setIn(['router', 'pathname'], '/')
-        } else {
-          return newState
+          newState = newState.setIn(['router', 'action'], 'REDIRECT_TO')
+          if(payload.from) {
+            newState = newState.setIn(['router', 'pathname'], payload.from)
+          } else {
+            newState = newState.setIn(['router', 'pathname'], '/')
+          }
         }
+        return newState
       } else {
         return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
       }

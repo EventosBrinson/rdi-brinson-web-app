@@ -29,7 +29,7 @@ class SignIn extends React.Component {
       if (!err) {
         let data = (this.props.sign_in_form || Immutable.Map()).toJS()
 
-        this.props.submitRequest('SIGN_IN', data)
+        this.props.submitRequest('SIGN_IN', data, { from: this.props.location.state.from.pathname })
       }
     })
   }
