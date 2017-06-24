@@ -171,6 +171,23 @@ class Edit extends React.Component {
       )
     }
 
+    var roleInput = ""
+
+    if(abilitiesHelper.isMain()) {
+      roleInput = (
+        <Form.Item {...formItemLayout} label="Tipo">
+          { getFieldDecorator('role', {
+            initialValue: form.get('role')
+          })(
+            <Radio.Group onChange={this.handleRoleChange}>
+              <Radio.Button value="user">Usuario</Radio.Button>
+              <Radio.Button value="admin">Administrador</Radio.Button>
+            </Radio.Group>
+          )}
+        </Form.Item>
+      )
+    }
+
     return (
       <Form onSubmit={ this.processSubmit }>
         <Form.Item {...tailFormItemLayout}>
@@ -233,16 +250,7 @@ class Edit extends React.Component {
           )}
         </Form.Item>
 
-        <Form.Item {...formItemLayout} label="Tipo">
-          { getFieldDecorator('role', {
-            initialValue: form.get('role') || this.user.get('role')
-          })(
-            <Radio.Group onChange={this.handleRentTypeChange}>
-              <Radio.Button value="user">Usuario</Radio.Button>
-              <Radio.Button value="admin">Administrador</Radio.Button>
-            </Radio.Group>
-          )}
-        </Form.Item>
+        { roleInput }
 
         { passwordField }
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import * as actionCreators from '../../action-creators'
+import * as abilitiesHelper from '../../modules/abilities-helpers'
 import Immutable from 'immutable'
 
 import { Form, Input, Radio, Button } from 'antd'
@@ -42,20 +43,23 @@ class New extends React.Component {
     this.processSubmit = this.processSubmit.bind(this)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.session_status === 'SIGNED_IN') {
-      if(nextProps.get_users_status === undefined) {
-        nextProps.submitRequest('GET_USERS') 
+  componentDidMount() {
+    if(this.props.session_status === 'SIGNED_IN') {
+      if(this.props.get_users_status === undefined) {
+        this.props.submitRequest('GET_USERS') 
       }
 
-      let form = nextProps.user_form || Immutable.Map()
+      let form = this.props.user_form || Immutable.Map()
 
       if(form.get('role') === undefined) {
-        nextProps.mergeForm('user_form', {
-          role: form.get('role') || 'user'
+        this.props.mergeForm('user_form', {
+          role: 'user'
         })
       }
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
   }
 
   handleChange(event) {
@@ -112,6 +116,23 @@ class New extends React.Component {
   render() {
     let form = this.props.user_form || Immutable.Map()
     const { getFieldDecorator } = this.props.form
+
+    var roleInput = ""
+
+    if(abilitiesHelper.isMain()) {
+      roleInput = (
+        <Form.Item {...formItemLayout} label="Tipo">
+          { getFieldDecorator('role', {
+            initialValue: form.get('role')
+          })(
+            <Radio.Group onChange={this.handleRoleChange}>
+              <Radio.Button value="user">Usuario</Radio.Button>
+              <Radio.Button value="admin">Administrador</Radio.Button>
+            </Radio.Group>
+          )}
+        </Form.Item>
+      )
+    }
 
     return (
       <Form onSubmit={ this.processSubmit }>
@@ -175,16 +196,7 @@ class New extends React.Component {
           )}
         </Form.Item>
 
-        <Form.Item {...formItemLayout} label="Tipo">
-          { getFieldDecorator('role', {
-            initialValue: form.get('role')
-          })(
-            <Radio.Group onChange={this.handleRentTypeChange}>
-              <Radio.Button value="user">Usuario</Radio.Button>
-              <Radio.Button value="admin">Administrador</Radio.Button>
-            </Radio.Group>
-          )}
-        </Form.Item>
+        { roleInput }
 
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit" size="large">Crear</Button>
