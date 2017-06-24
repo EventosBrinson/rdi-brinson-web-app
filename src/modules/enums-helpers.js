@@ -23,3 +23,21 @@ export function role(value) {
       return ''
   }
 }
+
+export function idName(value) {
+  switch(value) {
+    case 'ine':
+      return 'INE'
+    case 'licencia':
+      return 'Licencia de conducir'
+    case 'cartilla':
+      return 'Cartilla militar'
+    case 'pasaporte':
+      return 'Pasaporte'
+    case 'otra':
+      return 'Otra'
+    default:
+      return ''
+  }
+}
+

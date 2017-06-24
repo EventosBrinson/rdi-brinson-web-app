@@ -5,6 +5,10 @@ import { Link } from 'react-router-dom'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 import ReactFileReader from 'react-file-reader'
+import * as enumsHelpers from '../../modules/enums-helpers'
+import { API_URL } from '../../web-api'
+
+import { Form, Input, Rate, Radio, Tooltip, Icon, Select, Button, Row, Col, Card, Popconfirm } from 'antd'
 
 class Show extends React.Component {
 
@@ -51,7 +55,7 @@ class Show extends React.Component {
       event.preventDefault()
     }
 
-    this.props.submitRequest('DELETE_DOCUMENT', {}, { id: document.get('id') })
+    this.props.submitRequest('DELETE_DOCUMENT', {}, { id: document.get('id'), client_id: this.client_id })
   }
 
   render() {
@@ -65,9 +69,13 @@ class Show extends React.Component {
       let document = this.props.documents.get(document_id)
 
       rendered_documents.push(
-        <div key={ document.get('id') }>
-          <a href={ 'http://localhost:3000/documents/' + document.get('id') } target="blank" >{ document.get('filename') }</a>
-          <button onClick={ this.deleteDocument.bind(this, document) }>Eliminar</button>
+        <div key={ document.get('id') } className="ant-card ant-card-bordered">
+          <div className="ant-card-body" style={{ padding: '5px 5px 5px 5px' }}>
+            <Popconfirm title="¿Seguro que decea eliminar este documento?" onConfirm={ this.deleteDocument.bind(this, document) } okText="Sí" cancelText="No">
+              <Button type="danger" shape="circle" icon="delete" style={{ float: 'right', marginBottom: '5px' }}></Button>
+            </Popconfirm>
+            <a href={ API_URL + '/documents/' + document.get('id') } target="blank" style={{ float: 'left', marginTop: '6px' }} >{ document.get('filename') }</a>
+          </div>
         </div>
       )
     })
@@ -90,6 +98,107 @@ class Show extends React.Component {
         </tr>
       )
     })
+
+    var optionalTelephone = undefined
+
+    if(client.get('telephone_2')) {
+      optionalTelephone = (
+        <tr>
+          <td>
+            <Icon type="phone" />
+          </td>
+          <td>
+            { client.get('telephone_2') }
+          </td>
+        </tr>
+      )
+    }
+
+
+    return (
+      <div>
+        <Row>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <h2>
+                    { client.get('firstname') + ' ' + client.get('lastname') }
+                  </h2>
+                  <h3>
+                    { enumsHelpers.rentType(client.get('rent_type'))  }
+                  </h3>
+                  <h2>
+                    { client.get('folio') }
+                  </h2>
+                </td>
+                <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+                  <span style={{ fontSize: 20 }}>
+                    <Icon type="star" style={{ color: '#F5A623' }}/>
+                    { client.get('trust_level') } / 10
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </Row>
+        <Row>
+          <Col xs={24} sm={12} style={{ marginTop: '20px' }}>
+            <h4>
+              Información general
+            </h4>
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <Icon type="credit-card" />
+                  </td>
+                  <td>
+                    { enumsHelpers.idName(client.get('id_name')) }
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <Icon type="environment-o" />
+                  </td>
+                  <td>
+                    { client.get('street') } #{ client.get('outer_number') }{ client.get('inner_number') ? (' Int. ' + client.get('inner_number')) : '' }, { client.get('neighborhood') } CP { client.get('postal_code') }
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <Icon type="phone" />
+                  </td>
+                  <td>
+                    { client.get('telephone_1') }
+                  </td>
+                </tr>
+                { optionalTelephone }
+                <tr>
+                  <td>
+                    <Icon type="mail" />
+                  </td>
+                  <td>
+                    { client.get('email') }
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </Col>
+          <Col xs={24} sm={12} style={{ marginTop: '20px' }}>
+            <h4>
+              Documentos
+            </h4>
+            { rendered_documents }
+            <ReactFileReader handleFiles={ this.handleFiles } base64={ true } multipleFiles={ false } fileTypes="file_extension|image/jpeg|application/pdf">
+              <Button style={{ marginTop: '10px' }}>
+                <Icon type="upload" /> Agregar archivo
+              </Button>
+            </ReactFileReader>
+          </Col>
+        </Row>
+      </div>
+    )
 
     return (
       <div>

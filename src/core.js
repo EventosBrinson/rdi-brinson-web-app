@@ -248,7 +248,7 @@ export function requestSucceeded(state, request, result, payload, callback) {
                   .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
                   .updateIn(['clients', 'order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
                   .setIn(['router', 'action'], 'REDIRECT_TO')
-                  .setIn(['router', 'pathname'], '/clients')
+                  .setIn(['router', 'pathname'], '/clients/' + data.id)
 
     case 'GET_CLIENT':
       var get_client_documents_hash = {}
@@ -313,10 +313,10 @@ export function requestSucceeded(state, request, result, payload, callback) {
                   .updateIn(['clients', 'hashed', String(data.client_id), 'documents_order'], order => (order || Immutable.List()).push(String(data.id)))
 
     case 'DELETE_DOCUMENT':
-      return state.setIn(['documents', 'delete_document_status', result.request_data.id], 'DELETED')
-                  .deleteIn(['documents', 'hashed', String(result.request_data.id)])
-                  .updateIn(['documents', 'order'], order => (order || Immutable.List()).filterNot(value => value === String(result.request_data.id)))
-                  .updateIn(['clients', 'hashed', String(result.request_data.client_id), 'documents_order'], order => (order || Immutable.List()).filterNot(value => value === String(result.request_data.id)))
+      return state.setIn(['documents', 'delete_document_status', payload.id], 'DELETED')
+                  .deleteIn(['documents', 'hashed', String(payload.id)])
+                  .updateIn(['documents', 'order'], order => (order || Immutable.List()).filterNot(value => value === String(payload.id)))
+                  .updateIn(['clients', 'hashed', String(payload.client_id), 'documents_order'], order => (order || Immutable.List()).filterNot(value => value === String(payload.id)))
 
     case 'UPDATE_DOCUMENT':
       return state.setIn(['documents', 'update_document_status', String(data.id)], 'UPDATED')

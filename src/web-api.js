@@ -2,7 +2,7 @@ import superagent from 'superagent'
 import store from './store'
 import * as actionCreators from './action-creators'
 
-const API_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'http://rdiapi.eventosbrinson.com'
+export const API_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'http://rdiapi.eventosbrinson.com'
 
 export function get(request, path, data, payload, callback, auth_token = undefined) {
   superagent
