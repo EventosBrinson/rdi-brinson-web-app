@@ -94,7 +94,7 @@ class Edit extends React.Component {
   }
 
   handleRoleChange(object) {
-    this.props.changeForm('user_form', 'role', object.target.value)
+    this.props.changeForm('edit_user_form', 'role', object.target.value)
   }
 
   processSubmit(event) {
