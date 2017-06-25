@@ -2,10 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import * as actionCreators from '../../action-creators'
-import * as formHelpers from '../../modules/form-helpers'
 import Immutable from 'immutable'
 
-import { Form, Input, Rate, Radio, Tooltip, Icon, Select, Button } from 'antd'
+import { Form, Input, Button } from 'antd'
 
 const formItemLayout = {
   labelCol: {
