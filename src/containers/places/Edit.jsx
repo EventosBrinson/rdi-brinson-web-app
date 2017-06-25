@@ -5,6 +5,32 @@ import * as actionCreators from '../../action-creators'
 import * as formHelpers from '../../modules/form-helpers'
 import Immutable from 'immutable'
 
+import { Form, Input, Rate, Radio, Tooltip, Icon, Select, Button } from 'antd'
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 6 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 14 },
+  },
+}
+
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
+    },
+    sm: {
+      span: 14,
+      offset: 6,
+    },
+  },
+}
+
 class Edit extends React.Component {
 
   constructor(props) {
@@ -49,51 +75,102 @@ class Edit extends React.Component {
       event.preventDefault()
     }
 
-    let data = (this.props.edit_place_form || Immutable.Map()).toJS()
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        let data = (this.props.edit_place_form || Immutable.Map()).toJS()
 
-    this.props.submitRequest('UPDATE_PLACE', { client: data }, { id: this.place_id })
+        this.props.submitRequest('UPDATE_PLACE', { place: data }, { id: this.place_id })
+      }
+    })
   }
 
   render() {
     let form = this.props.edit_place_form || Immutable.Map()
+    const { getFieldDecorator, isFieldsTouched } = this.props.form
 
     return (
-      <form onSubmit={ this.processSubmit }>
-        <h2>
-          Ediar Lugar
-        </h2>
-        <div>
-          <label>Nombre</label>
-          <input name='name' type='text' value={ formHelpers.priorityValues([form.get('name'), this.place.get('name')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Calle</label>
-          <input name='street' type='text' value={ formHelpers.priorityValues([form.get('street'), this.place.get('street')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Numero interior</label>
-          <input name='inner_number' type='text' value={ formHelpers.priorityValues([form.get('inner_number'), this.place.get('inner_number')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Numero exterior</label>
-          <input name='outer_number' type='text' value={ formHelpers.priorityValues([form.get('outer_number'), this.place.get('outer_number')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Fraccionamiento</label>
-          <input name='neighborhood' type='text' value={ formHelpers.priorityValues([form.get('neighborhood'), this.place.get('neighborhood')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>CP</label>
-          <input name='postal_code' type='text' value={ formHelpers.priorityValues([form.get('postal_code'), this.place.get('postal_code')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <label>Acitivo</label>
-          <input name='active' type='checkbox' checked={ formHelpers.priorityValues([form.get('active'), this.place.get('active')]) } onChange={ this.handleChange } />
-        </div>
-        <div>
-          <button type="submit">Actializar</button>
-        </div>
-      </form>
+      <Form onSubmit={ this.processSubmit }>
+        <Form.Item {...tailFormItemLayout}>
+          <h2>
+            Editar lugar
+          </h2>
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Nombre" hasFeedback>
+          { getFieldDecorator('name', {
+            rules: [{
+              required: true, message: 'Introduce un nombre para el lugar',
+              whitespace: true
+            }],
+            initialValue: form.get('name') || this.place.get('name')
+          })(
+            <Input name='name' placeholder="Nombre" onChange={ this.handleChange }/>
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Calle" hasFeedback>
+          { getFieldDecorator('street', {
+            rules: [{
+              required: true, message: 'Introduce el nombre de la calle',
+              whitespace: true
+            }],
+            initialValue: form.get('street') || this.place.get('street')
+          })(
+            <Input name='street' placeholder="Calle" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Numero exterior" hasFeedback>
+          { getFieldDecorator('outer_number', {
+            rules: [{
+              required: true, message: 'Introduce el numero exterior del lugar',
+              whitespace: true
+            }],
+            initialValue: form.get('outer_number') || this.place.get('outer_number')
+          })(
+            <Input name='outer_number' placeholder="Numero exterior" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Numero interior" hasFeedback>
+          { getFieldDecorator('inner_number', {
+            initialValue: form.get('inner_number') || this.place.get('inner_number')
+          })(
+            <Input name='inner_number' placeholder="Numero interior" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Fraccionamiento" hasFeedback>
+          { getFieldDecorator('neighborhood', {
+            rules: [{
+              required: true, message: 'Introduce el nombre del fraccionamiento del lugar',
+              whitespace: true
+            }],
+            initialValue: form.get('neighborhood') || this.place.get('neighborhood')
+          })(
+            <Input name='neighborhood' placeholder="Fraccionamiento" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Codigo Postal" hasFeedback>
+          { getFieldDecorator('postal_code', {
+            rules: [{
+              pattern: /^\d+$/,
+              message: 'El codigo postal debe ser un número'}, {
+              required: true,
+              message: 'Introduce el codigo postal del lugar',
+              whitespace: true
+            }],
+            initialValue: form.get('postal_code') || this.place.get('postal_code')
+          })(
+            <Input name='postal_code' placeholder="Codigo Postal" onChange={ this.handleChange } />
+          )}
+        </Form.Item>
+
+        <Form.Item {...tailFormItemLayout}>
+          <Button type="primary" htmlType="submit" size="large" disabled={ !isFieldsTouched() }>Actualizar</Button>
+        </Form.Item>
+      </Form>
     )
   }
 }
@@ -106,4 +183,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Edit))
+export default withRouter(connect(mapStateToProps, actionCreators)(Form.create()(Edit)))
