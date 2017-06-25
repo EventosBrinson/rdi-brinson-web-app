@@ -52,7 +52,7 @@ class MasterLayout extends React.Component {
             { this.props.children }
             <Row>
               <pre>
-                { abilitiesHelper.isStaff() || true ? JSON.stringify(this.props.state, null, 2) : '' }
+                { abilitiesHelper.isStaff() || process.env.NODE_ENV === 'development' ? JSON.stringify(this.props.state, null, 2) : '' }
               </pre>
             </Row>
           </Col>
@@ -63,7 +63,7 @@ class MasterLayout extends React.Component {
         <div style={ { position: 'absolute', width: '100%', height: '100%' } }>
           { this.props.children }
           <pre>
-            { true ? JSON.stringify(this.props.state, null, 2) : '' }
+            { process.env.NODE_ENV === 'development' ? JSON.stringify(this.props.state, null, 2) : '' }
           </pre>
         </div>
       )
