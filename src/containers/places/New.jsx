@@ -196,6 +196,7 @@ class New extends React.Component {
 
         <Form.Item {...formItemLayout} label="Cliente">
           { getFieldDecorator('client_id', {
+            rules: [{ required: true, message: 'Es necesario un cliente al cual asignar' }],
             initialValue: form.get('client_id')
           })(
             <Select name='client_id' onChange={ this.handleClientIdChange } disabled={ this.client_id !== undefined }>
