@@ -151,9 +151,9 @@ export function requestSucceeded(state, request, result, payload, callback) {
 
         abilitiesHelper.setUser(data.user)
 
-        if(state.get('session_status') === 'SIGNING_IN') {
+        if(state.get('session_status') !== 'FIRST_SIGNING_IN') {
           newState = newState.setIn(['router', 'action'], 'REDIRECT_TO')
-          if(payload.from) {
+          if(payload && payload.from) {
             newState = newState.setIn(['router', 'pathname'], payload.from)
           } else {
             newState = newState.setIn(['router', 'pathname'], '/')
@@ -172,6 +172,8 @@ export function requestSucceeded(state, request, result, payload, callback) {
 
     case 'REQUEST_RESET_PASSWORD':
       return state.set('recover_password_status', 'SENT')
+                  .setIn(['router', 'action'], 'REDIRECT_TO')
+                  .setIn(['router', 'pathname'], '/sign_in')
 
     case 'GET_USERS':
       var users_hash = {}
