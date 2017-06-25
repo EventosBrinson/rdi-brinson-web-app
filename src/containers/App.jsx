@@ -26,44 +26,49 @@ import RentsPage from './rents/Index'
 import NewRentPage from './rents/New'
 import EditRentPage from './rents/Edit'
 
+import { LocaleProvider } from 'antd';
+import esES from 'antd/lib/locale-provider/es_ES';
+
 export default class App extends React.Component {
   render() {
     return (
-      <Provider store={ store }>
-        <Router>
-          <ReduxRouter>
-            <ScrollToTop>
-              <Layout>
-                <PrivateRoute exact path="/" component={ RentsPage } />
-                <Route exact path="/sign_in" component={ SignInPage } />
-                <Route exact path="/recover" component={ RecoverPasswordPage } />
-                <Route exact path="/reset" component={ ResetPasswordPage } />
-                <Route exact path="/confirmation" component={ AcceptInvitationPage } />
-                <PrivateRoute exact path="/profile" component={ ProfilePage } />
-                <PrivateRoute exact path="/users" component={ UsersPage } />
-                <PrivateRoute exact path="/users/new" component={ NewUserPage } />
-                <PrivateRoute exact path="/users/:id/edit" component={ EditUserPage } />
-                <Switch>
-                  <PrivateRoute exact path="/clients" component={ ClientsPage } />
-                  <PrivateRoute exact path="/clients/new" component={ NewClientPage } />
-                  <PrivateRoute exact path="/clients/:id/edit" component={ EditClientPage } />
-                  <PrivateRoute exact path="/clients/:id" component={ ShowClientPage } />
-                </Switch>
-                <Switch>
-                  <PrivateRoute exact path="/places" component={ PlacesPage } />
-                  <PrivateRoute exact path="/places/new" component={ NewPlacePage } />
-                  <PrivateRoute exact path="/places/:id/edit" component={ EditPlacePage } />
-                </Switch>
-                  <PrivateRoute exact path="/rents" component={ RentsPage } />
-                  <PrivateRoute exact path="/rents/new" component={ NewRentPage } />
-                  <PrivateRoute exact path="/rents/:id/edit" component={ EditRentPage } />
-                <Switch>
-                </Switch>
-              </Layout>
-            </ScrollToTop>
-          </ReduxRouter>
-        </Router>
-      </Provider>
+      <LocaleProvider locale={esES}>
+        <Provider store={ store }>
+          <Router>
+            <ReduxRouter>
+              <ScrollToTop>
+                <Layout>
+                  <PrivateRoute exact path="/" component={ RentsPage } />
+                  <Route exact path="/sign_in" component={ SignInPage } />
+                  <Route exact path="/recover" component={ RecoverPasswordPage } />
+                  <Route exact path="/reset" component={ ResetPasswordPage } />
+                  <Route exact path="/confirmation" component={ AcceptInvitationPage } />
+                  <PrivateRoute exact path="/profile" component={ ProfilePage } />
+                  <PrivateRoute exact path="/users" component={ UsersPage } />
+                  <PrivateRoute exact path="/users/new" component={ NewUserPage } />
+                  <PrivateRoute exact path="/users/:id/edit" component={ EditUserPage } />
+                  <Switch>
+                    <PrivateRoute exact path="/clients" component={ ClientsPage } />
+                    <PrivateRoute exact path="/clients/new" component={ NewClientPage } />
+                    <PrivateRoute exact path="/clients/:id/edit" component={ EditClientPage } />
+                    <PrivateRoute exact path="/clients/:id" component={ ShowClientPage } />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute exact path="/places" component={ PlacesPage } />
+                    <PrivateRoute exact path="/places/new" component={ NewPlacePage } />
+                    <PrivateRoute exact path="/places/:id/edit" component={ EditPlacePage } />
+                  </Switch>
+                    <PrivateRoute exact path="/rents" component={ RentsPage } />
+                    <PrivateRoute exact path="/rents/new" component={ NewRentPage } />
+                    <PrivateRoute exact path="/rents/:id/edit" component={ EditRentPage } />
+                  <Switch>
+                  </Switch>
+                </Layout>
+              </ScrollToTop>
+            </ReduxRouter>
+          </Router>
+        </Provider>
+      </LocaleProvider>
     )
   }
 }
