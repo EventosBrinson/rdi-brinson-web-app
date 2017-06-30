@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import * as abilitiesHelper from '../../modules/abilities-helpers'
+import * as castHelpers from '../../modules/cast-helpers'
 
 import { Button, Popconfirm } from 'antd'
 
@@ -58,7 +59,7 @@ export default class PlaceList extends React.Component {
                   { place.get('name') }
                 </Link>
                 <div>
-                  { place.get('street') } #{ place.get('outer_number') }{ place.get('inner_number') ? (' Int. ' + place.get('inner_number')) : '' }, { place.get('neighborhood') } CP { place.get('postal_code') }
+                  { castHelpers.address(place) }
                 </div>
               </span>
             </td>
