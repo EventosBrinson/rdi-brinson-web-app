@@ -41,3 +41,23 @@ export function idName(value) {
   }
 }
 
+export function rentStatus(value) {
+  switch(value) {
+    case 'reserved':
+      return 'Reservada'
+    case 'on_route':
+      return 'En ruta'
+    case 'delivered':
+      return 'Entregada'
+    case 'on_pick_up':
+      return 'En recolección'
+    case 'pending':
+      return 'Pendiente'
+    case 'finalized':
+      return 'Finalizada'
+    case 'canceled':
+      return 'Cancelada'
+    default:
+      return ''
+  }
+}
