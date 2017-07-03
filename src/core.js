@@ -381,15 +381,20 @@ export function requestSucceeded(state, request, result, payload, callback) {
     case 'CREATE_RENT':
       return state.setIn(['rents', 'create_rent_status'], 'CREATED')
                   .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .updateIn(['rents', 'order'], order => (order || Immutable.List()).push(String(data.id)))
+                  .updateIn(['rents', 'order'], order => (order || Immutable.List()).unshift(String(data.id)))
                   .setIn(['router', 'action'], 'REDIRECT_TO')
                   .setIn(['router', 'pathname'], '/rents')
 
     case 'UPDATE_RENT':
-      return state.setIn(['rents', 'update_rent_statuses', String(data.id)], 'UPDATED')
-                  .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .setIn(['router', 'action'], 'REDIRECT_TO')
-                  .setIn(['router', 'pathname'], '/rents')
+      var newUpdateRentState = state.setIn(['rents', 'update_rent_statuses', String(data.id)], 'UPDATED')
+                                    .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
+
+      if(payload.from) {
+        newUpdateRentState = newUpdateRentState.setIn(['router', 'action'], payload.action)
+                                               .setIn(['router', 'pathname'], payload.from)
+      }
+
+      return newUpdateRentState;
 
     default:
       return state
