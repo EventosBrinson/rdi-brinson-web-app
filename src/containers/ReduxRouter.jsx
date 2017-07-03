@@ -19,8 +19,15 @@ class ReduxRouter extends React.Component {
     if(action && pathname) {
       this.props.cleanRouter()
 
-      if(action === 'REDIRECT_TO') {
-        nextProps.history.push(pathname)
+      switch(action) {
+        case 'REDIRECT_TO':
+          nextProps.history.push(pathname)
+          break
+        case 'GO_BACK':
+          nextProps.history.goBack()
+          break
+        default:
+         break
       }
     }
   }
