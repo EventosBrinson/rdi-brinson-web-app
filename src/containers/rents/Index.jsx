@@ -4,6 +4,9 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
+import RentList from '../../components/rents/RentList'
+
+import { Card, Row, Col, Button, Tabs,  } from 'antd'
 
 class Index extends React.Component {
 
@@ -55,6 +58,61 @@ class Index extends React.Component {
         </tr>
       )
     })
+
+    return (
+      <div style={ { marginTop: '20px'} }>
+        <h2>
+          Rentas
+        </h2>
+        <Button type="primary">
+          <Link to="/rents/new">
+            Rentar
+          </Link>
+        </Button>
+        <Tabs>
+          <Tabs.TabPane tab="Todas" key="1">
+            <RentList order={ this.props.order || Immutable.List() }
+                      hashed={ this.props.hashed || Immutable.Map() }
+                      submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Reservadas" key="2">
+            <RentList status="reserved" order={ this.props.order || Immutable.List() }
+                      hashed={ this.props.hashed || Immutable.Map() }
+                      submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="En ruta" key="3">
+            <RentList status="on_route" order={ this.props.order || Immutable.List() }
+                      hashed={ this.props.hashed || Immutable.Map() }
+                      submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Entregadas" key="4">
+            <RentList status="delivered" order={ this.props.order || Immutable.List() }
+                      hashed={ this.props.hashed || Immutable.Map() }
+                      submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="En recolección" key="5">
+            <RentList status="on_pick_up" order={ this.props.order || Immutable.List() }
+                      hashed={ this.props.hashed || Immutable.Map() }
+                      submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Pendientes" key="6">
+            <RentList status="pending" order={ this.props.order || Immutable.List() }
+                      hashed={ this.props.hashed || Immutable.Map() }
+                      submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Finalizadas" key="7">
+            <RentList status="finalized" order={ this.props.order || Immutable.List() }
+                      hashed={ this.props.hashed || Immutable.Map() }
+                      submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Canceladas" key="8">
+            <RentList status="canceled" order={ this.props.order || Immutable.List() }
+                      hashed={ this.props.hashed || Immutable.Map() }
+                      submitRequest={ this.props.submitRequest }/>
+          </Tabs.TabPane>
+        </Tabs>
+      </div>
+    )
 
     return (
       <div>
