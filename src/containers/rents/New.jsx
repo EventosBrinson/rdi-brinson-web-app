@@ -60,7 +60,11 @@ class New extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setDefaults(nextProps)
+    let form = nextProps.rent_form || Immutable.Map()
+
+    if(!form.get('client_id')) {
+      this.setDefaults(nextProps)
+    }
   }
 
   setDefaultDates(props) {
@@ -81,7 +85,7 @@ class New extends React.Component {
     let form = props.rent_form || Immutable.Map()
     let clients = props.clients || Immutable.Map()
 
-    let client = clients.get(Number(this.client_id || form.get('client_id')))
+    let client = clients.get(Number(this.client_id))
 
     if(client && client.get('active')) {
       let placesOrder = client.get('places_order') || Immutable.List()
