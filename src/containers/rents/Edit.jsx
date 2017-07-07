@@ -5,7 +5,7 @@ import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import { Form, Input, InputNumber, Select, Button, DatePicker } from 'antd'
+import { Form, Input, InputNumber, Button, DatePicker } from 'antd'
 
 const formItemLayout = {
   labelCol: {

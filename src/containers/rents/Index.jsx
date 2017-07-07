@@ -6,7 +6,7 @@ import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 import RentList from '../../components/rents/RentList'
 
-import { Card, Row, Col, Button, Tabs,  } from 'antd'
+import { Button, Tabs } from 'antd'
 
 class Index extends React.Component {
 
@@ -111,36 +111,6 @@ class Index extends React.Component {
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
         </Tabs>
-      </div>
-    )
-
-    return (
-      <div>
-        <h3>Rentas</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Fecha de entrega</th>
-              <th>Fecha de recolección</th>
-              <th>Producto rentado</th>
-              <th>Precio</th>
-              <th>Descuento</th>
-              <th>Cargo adicional</th>
-              <th>Tipo de cargo adicional</th>
-              <th>Tipo de renta</th>
-              <th>Estado</th>
-              <th>Cliente</th>
-              <th>Lugar</th>
-              <th />
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            { rendered_rents }
-          </tbody>
-        </table>
-        <br />
-        <Link to="/rents/new">Rentar</Link>
       </div>
     )
   }
