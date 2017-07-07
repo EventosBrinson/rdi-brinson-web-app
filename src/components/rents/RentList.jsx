@@ -140,9 +140,18 @@ export default class RentList extends React.Component {
           break
       }
 
-      if(abilitiesHelper.isMain() || (abilitiesHelper.isAdmin() && !abilitiesHelper.isAdmin(rent))) {
+      let products = rent.get('product').split('\n')
+      var renderedProducts = []
 
-      }
+      products.forEach((product, index) => {
+        renderedProducts.push(
+          <p key={ 'p-' + rent.get('id') + '-' + index  }>
+            { product }
+          </p>
+        )
+      })
+
+      console.log(rent.get('product'), products)
 
       if(!this.props.status || this.props.status === rent.get('status')) {
         renderedRents.push(
@@ -172,9 +181,7 @@ export default class RentList extends React.Component {
                 <tbody>
                   <tr>
                     <td style={{ paddingTop: '10px' }}>
-                      <p>
-                        { rent.get('product') }
-                      </p>
+                      { renderedProducts }
                     </td>
                     <td style={{ textAlign: 'right', verticalAlign: 'bottom', paddingTop: '10px' }}>
                       <h3>
