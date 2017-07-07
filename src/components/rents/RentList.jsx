@@ -4,6 +4,7 @@ import * as abilitiesHelper from '../../modules/abilities-helpers'
 import * as castHelpers from '../../modules/cast-helpers'
 import * as enumsHelpers from '../../modules/enums-helpers'
 import moment from 'moment'
+import AdditionalChargesFrom from './AdditionalChargesFrom'
 
 moment.locale('es');
 
@@ -28,6 +29,7 @@ export default class RentList extends React.Component {
       var actionButton = undefined
       var additionalButton = undefined
       var tag = undefined
+      var additionalChargesFileds = undefined
 
       if((abilitiesHelper.isAdmin() || (rent.get('status') === 'reserved' || rent.get('status') === 'on_route')) && (rent.get('status') !== 'canceled' && rent.get('status') !== 'finalized')) {
         cancelButton = (
@@ -91,7 +93,7 @@ export default class RentList extends React.Component {
           additionalButton = (
             <Popconfirm title="¿Seguro que deceas establecer esta renta como pendiente de recolección?" onConfirm={ this.updateRent.bind(this, rent, 'pending') } okText="Sí" cancelText="No">
               <Button type="dashed">
-                Pendiente de recolección<Icon type="right" />
+                Pendiente<Icon type="right" />
               </Button>
             </Popconfirm>
           )
@@ -107,6 +109,20 @@ export default class RentList extends React.Component {
               { enumsHelpers.rentStatus(rent.get('status')) }
             </Tag>
           )
+          additionalChargesFileds = (
+            <table style={{ width: '100%' }}>
+              <tbody>
+                <tr>
+                  <td style={{}}>
+                    <AdditionalChargesFrom submitRequest={ this.props.submitRequest }
+                                           rentId={ rent.get('id') }
+                                           additionalCharges={ rent.get('additional_charges') }
+                                           additionalChargesNotes={ rent.get('additional_charges_notes') } />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          )
           break
         case 'pending':
           actionButton = (
@@ -120,6 +136,20 @@ export default class RentList extends React.Component {
             <Tag color="#CCC71A" style={{ margin: '2px 0px 0px 0px' }}>
               { enumsHelpers.rentStatus(rent.get('status')) }
             </Tag>
+          )
+          additionalChargesFileds = (
+            <table style={{ width: '100%' }}>
+              <tbody>
+                <tr>
+                  <td style={{}}>
+                    <AdditionalChargesFrom submitRequest={ this.props.submitRequest }
+                                           rentId={ rent.get('id') }
+                                           additionalCharges={ rent.get('additional_charges') }
+                                           additionalChargesNotes={ rent.get('additional_charges_notes') } />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           )
           break
         case 'finalized':
@@ -151,7 +181,16 @@ export default class RentList extends React.Component {
         )
       })
 
-      console.log(rent.get('product'), products)
+      let charges = (rent.get('additional_charges_notes') || '').split('\n')
+      var renderedCharges = []
+
+      charges.forEach((charge, index) => {
+        renderedCharges.push(
+          <p key={ 'c-' + rent.get('id') + '-' + index  }>
+            { charge }
+          </p>
+        )
+      })
 
       if(!this.props.status || this.props.status === rent.get('status')) {
         renderedRents.push(
@@ -206,9 +245,7 @@ export default class RentList extends React.Component {
                   { rent.get('additional_charges') ? (
                     <tr>
                       <td>
-                        <p>
-                          { rent.get('additional_charges_notes') }
-                        </p>
+                        { renderedCharges }
                       </td>
                       <td style={{ textAlign: 'right', verticalAlign: 'bottom' }}>
                         <h3>
@@ -277,6 +314,7 @@ export default class RentList extends React.Component {
                   </tr>
                 </tbody>
               </table>
+              { additionalChargesFileds }
               { cancelButton || additionalButton || actionButton ? (
                 <div style={{ textAlign: 'center', marginTop: '10px' }}>
                   <Button.Group style={{ display: 'inline-block' }}>
