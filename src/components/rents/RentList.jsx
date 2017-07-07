@@ -224,7 +224,7 @@ export default class RentList extends React.Component {
                     </td>
                     <td style={{ textAlign: 'right', verticalAlign: 'bottom', paddingTop: '10px' }}>
                       <h3>
-                        { castHelpers.priceFormater(Number(rent.get('price')) + Number(rent.get('discount'))) }
+                        { castHelpers.priceFormater(Number(rent.get('price'))) }
                       </h3>
                     </td>
                   </tr>
@@ -266,7 +266,7 @@ export default class RentList extends React.Component {
                     </td>
                     <td style={{ textAlign: 'right', verticalAlign: 'bottom' }}>
                       <h2>
-                        { castHelpers.priceFormater(Number(rent.get('price')) + Number(rent.get('additional_charges'))) }
+                        { castHelpers.priceFormater(Number(rent.get('price')) - Number(rent.get('discount')) + Number(rent.get('additional_charges'))) }
                       </h2>
                     </td>
                   </tr>
