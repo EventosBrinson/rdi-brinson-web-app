@@ -186,7 +186,7 @@ class New extends React.Component {
 
       if(client.get('active')) {
         clientOptions.push(
-          <Select.Option key={ 'cl-' + client_id } value={ client_id }>{ client.get('firstname') + ' ' + client.get('lastname') }</Select.Option>
+          <Select.Option key={ 'cl-' + client_id } value={ client_id }>{ client.get('lastname') + ' ' + client.get('firstname') }</Select.Option>
         )
       }
     })
