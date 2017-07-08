@@ -5,6 +5,7 @@ import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 import queryString from 'query-string'
 import moment from 'moment'
+import TimeSelect from '../../components/rents/TimeSelect'
 
 import { Form, Input, InputNumber, Select, Button, DatePicker } from 'antd'
 
@@ -40,7 +41,9 @@ class New extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleClientChange = this.handleClientChange.bind(this)
     this.handlePlaceChange = this.handlePlaceChange.bind(this)
+    this.handleDeliveryDateChange = this.handleDeliveryDateChange.bind(this)
     this.handleDeliveryTimeChange = this.handleDeliveryTimeChange.bind(this)
+    this.handlePickUpDateChange = this.handlePickUpDateChange.bind(this)
     this.handlePickUpTimeChange = this.handlePickUpTimeChange.bind(this)
     this.handlePriceChange = this.handlePriceChange.bind(this)
     this.handleDiscountChange = this.handleDiscountChange.bind(this)
@@ -70,12 +73,17 @@ class New extends React.Component {
   setDefaultDates(props) {
     let form = props.rent_form || Immutable.Map()
     var defaults = {}
+    let rightNow = moment()
+
+    rightNow.set('minutes', Math.floor(rightNow.get('minutes') / 10) * 10)
 
     if(!form.get('delivery_time')) {
-      defaults['delivery_time'] = moment()
+
+
+      defaults['delivery_time'] = rightNow
     }
     if(!form.get('pick_up_time')) {
-      defaults['pick_up_time'] = moment().add(1, 'day')
+      defaults['pick_up_time'] = moment(rightNow).add(1, 'day')
     }
 
     props.mergeForm('rent_form', defaults)
@@ -137,7 +145,7 @@ class New extends React.Component {
     this.props.changeForm('rent_form', 'place_id', value)
   }
 
-  handleDeliveryTimeChange(value) {
+  handleDeliveryDateChange(value) {
     if(this.props.form.getFieldValue('pick_up_time').isBefore(value)) {
       this.props.mergeForm('rent_form', { delivery_time: value, pick_up_time: moment(value).add(1, 'day') })
     } else {
@@ -145,8 +153,28 @@ class New extends React.Component {
     }
   }
 
-  handlePickUpTimeChange(value) {
+  handleDeliveryTimeChange(value) {
+    let current = this.props.form.getFieldValue('delivery_date')
+
+    current.set('hour', value.get('hour'))
+    current.set('minutes', value.get('minutes'))
+
+    this.props.form.setFieldsValue({ delivery_date: current })
+    this.props.changeForm('rent_form', 'delivery_time', current )
+  }
+
+  handlePickUpDateChange(value) {
     this.props.changeForm('rent_form', 'pick_up_time', value)
+  }
+
+  handlePickUpTimeChange(value) {
+    let current = this.props.form.getFieldValue('pick_up_date')
+
+    current.set('hour', value.get('hour'))
+    current.set('minutes', value.get('minutes'))
+
+    this.props.form.setFieldsValue({ pick_up_date: current })
+    this.props.changeForm('rent_form', 'pick_up_time', current )
   }
 
   handlePriceChange(value) {
@@ -236,34 +264,50 @@ class New extends React.Component {
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Fecha de entrega" hasFeedback>
-          { getFieldDecorator('delivery_time', {
+          { getFieldDecorator('delivery_date', {
             rules: [{ type: 'object', required: true, message: 'Selecciona una fecha de entrega' }],
             initialValue: form.get('delivery_time')
           })(
             <DatePicker
               locale={ datePickerLocale }
-              showTime={{ use12Hours: true, format: 'HH:mm' }}
               format="dddd, DD [de] MMMM [de] YYYY [a las] hh:mm a"
               allowClear={ false }
               style={{ width: '100%' }}
               disabledDate={ current => current.isBefore(moment().startOf('day')) }
-              onChange={ this.handleDeliveryTimeChange }/>
+              onChange={ this.handleDeliveryDateChange }/>
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Hora de entrega" hasFeedback>
+          { getFieldDecorator('delivery_time', {
+            rules: [{ type: 'object', required: true, message: 'Selecciona una hora de entrega' }],
+            initialValue: form.get('delivery_time')
+          })(
+            <TimeSelect name="delivery_time" onChange={ this.handleDeliveryTimeChange }/>
           )}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Fecha de recolección" hasFeedback>
-          { getFieldDecorator('pick_up_time', {
+          { getFieldDecorator('pick_up_date', {
             rules: [{ type: 'object', required: true, message: 'Selecciona una fecha de recolección' }],
             initialValue: form.get('pick_up_time')
           })(
             <DatePicker
               locale={ datePickerLocale }
-              showTime={{ use12Hours: true, format: 'HH:mm' }}
               format="dddd, DD [de] MMMM [de] YYYY [a las] hh:mm a"
               allowClear={ false }
               style={{ width: '100%' }}
               disabledDate={ current => current.isBefore(moment(form.get('delivery_time')).startOf('day')) }
-              onChange={ this.handlePickUpTimeChange }/>
+              onChange={ this.handlePickUpDateChange }/>
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="Hora de recolección" hasFeedback>
+          { getFieldDecorator('pick_up_time', {
+            rules: [{ type: 'object', required: true, message: 'Selecciona una hora de recolección' }],
+            initialValue: form.get('pick_up_time')
+          })(
+            <TimeSelect name="pick_up_time" onChange={ this.handlePickUpTimeChange }/>
           )}
         </Form.Item>
 
