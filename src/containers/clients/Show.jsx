@@ -116,12 +116,12 @@ class Show extends React.Component {
                     { client.get('firstname') + ' ' + client.get('lastname') }
                   </h2>
                   <h3>
-                    { enumsHelpers.rentType(client.get('rent_type'))  }
+                    Cliente: { enumsHelpers.rentType(client.get('rent_type'))  }
                   </h3>
-                  <h2>
-                    { client.get('folio') }
+                  <h3>
+                    N° de cliente: { client.get('folio') }
                     <a style={{ fontSize: 10 }} onClick={ this.copyFolio.bind(this, client.get('folio')) }>Copiar</a>
-                  </h2>
+                  </h3>
                 </td>
                 <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
                   <span style={{ fontSize: 20 }}>
