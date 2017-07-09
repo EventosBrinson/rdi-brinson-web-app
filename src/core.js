@@ -307,12 +307,19 @@ export function requestSucceeded(state, request, result, payload, callback) {
       delete data.places
       data.places_order = update_client_places_order
 
-      return state.setIn(['clients', 'update_client_statuses', String(data.id)], 'UPDATED')
-                  .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .mergeIn(['documents', 'hashed'], update_client_documents_hash)
-                  .mergeIn(['places', 'hashed'], update_client_places_hash)
-                  .setIn(['router', 'action'], 'REDIRECT_TO')
-                  .setIn(['router', 'pathname'], '/clients')
+      let updateClientState = state.setIn(['clients', 'update_client_statuses', String(data.id)], 'UPDATED')
+                                   .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
+                                   .mergeIn(['documents', 'hashed'], update_client_documents_hash)
+                                   .mergeIn(['places', 'hashed'], update_client_places_hash)
+
+      console.log(payload)
+
+      if(payload.from) {
+        updateClientState = updateClientState.setIn(['router', 'action'], 'REDIRECT_TO')
+                                             .setIn(['router', 'pathname'], payload.from)
+      }
+
+      return updateClientState
 
     case 'CREATE_DOCUMENT':
       return state.setIn(['documents', 'create_document_status'], 'CREATED')
