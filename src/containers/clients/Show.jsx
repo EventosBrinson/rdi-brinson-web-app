@@ -8,6 +8,7 @@ import ReactFileReader from 'react-file-reader'
 import * as enumsHelpers from '../../modules/enums-helpers'
 import { API_URL } from '../../web-api'
 import PlaceList from '../../components/places/PlaceList'
+import copy from 'copy-to-clipboard';
 
 import { Icon, Button, Row, Col, Popconfirm, Tabs } from 'antd'
 
@@ -49,6 +50,14 @@ class Show extends React.Component {
     let data = { title: files.fileList[0].name, client_id: this.client_id, filename: files.fileList[0].name, data: files.base64 }
 
     this.props.submitRequest('CREATE_DOCUMENT', { document: data })
+  }
+
+  copyFolio(folio, event) {
+    if (event.preventDefault) {
+      event.preventDefault()
+    }
+
+    copy(folio)
   }
 
   deleteDocument(document, event) {
@@ -111,6 +120,7 @@ class Show extends React.Component {
                   </h3>
                   <h2>
                     { client.get('folio') }
+                    <a style={{ fontSize: 10 }} onClick={ this.copyFolio.bind(this, client.get('folio')) }>Copiar</a>
                   </h2>
                 </td>
                 <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
