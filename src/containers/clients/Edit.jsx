@@ -93,7 +93,7 @@ class Edit extends React.Component {
       if (!err) {
         let data = (this.props.edit_client_form || Immutable.Map()).toJS()
 
-        this.props.submitRequest('UPDATE_CLIENT', { client: data }, { id: this.client_id })
+        this.props.submitRequest('UPDATE_CLIENT', { client: data }, { id: this.client_id, from: '/clients/' + this.client_id })
       }
     })
   }
@@ -183,8 +183,6 @@ class Edit extends React.Component {
             rules: [{
               pattern: /^\d+$/,
               message: 'El codigo postal debe ser un número'}, {
-              required: true,
-              message: 'Introduce el codigo postal del lugar',
               whitespace: true
             }],
             initialValue: form.get('postal_code') || this.client.get('postal_code')
@@ -223,9 +221,7 @@ class Edit extends React.Component {
           { getFieldDecorator('email', {
             rules: [{
               type: 'email',
-              message: 'El email tiene un formato inválido'}, {
-              required: true,
-              message: 'Introduce el correo electrónico de contacto'
+              message: 'El email tiene un formato inválido'
             }],
             initialValue: form.get('email') || this.client.get('email')
           })(

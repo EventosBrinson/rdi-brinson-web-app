@@ -171,8 +171,6 @@ class New extends React.Component {
             rules: [{
               pattern: /^\d+$/,
               message: 'El codigo postal debe ser un número'}, {
-              required: true,
-              message: 'Introduce el codigo postal del lugar',
               whitespace: true
             }],
             initialValue: form.get('postal_code')
@@ -212,7 +210,6 @@ class New extends React.Component {
             rules: [{
               type: 'email',
               message: 'El email tiene un formato inválido'}, {
-              required: true,
               message: 'Introduce el correo electrónico de contacto'
             }],
             initialValue: form.get('email')
