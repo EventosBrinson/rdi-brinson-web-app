@@ -5,6 +5,8 @@ import * as castHelpers from '../../modules/cast-helpers'
 import * as enumsHelpers from '../../modules/enums-helpers'
 import moment from 'moment'
 import AdditionalChargesFrom from './AdditionalChargesFrom'
+import pdfLogo from '../../assets/pdf.svg'
+import { API_URL } from '../../web-api'
 
 moment.locale('es');
 
@@ -317,6 +319,8 @@ export default class RentList extends React.Component {
               { additionalChargesFileds }
               { cancelButton || additionalButton || actionButton ? (
                 <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                  <a href={ API_URL + '/rents/' + rent.get('id') + '.pdf' } target="blank"><img alt="pdf" src={ pdfLogo } style={{ marginLeft: '10px', height: '35px' }}/></a>
+                  <br />
                   <Button.Group style={{ display: 'inline-block' }}>
                     { cancelButton }
                     { additionalButton }
