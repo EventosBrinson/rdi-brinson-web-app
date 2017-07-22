@@ -60,7 +60,7 @@ class MasterLayout extends React.Component {
       )
     } else if(this.props.session_status === 'NOT_SIGNED_IN'){
       userui = (
-        <div style={ { position: 'absolute', width: '100%', height: '100%' } }>
+        <div style={{ position: 'absolute', width: '100%', height: '100%' }}>
           { this.props.children }
           <pre>
             { process.env.NODE_ENV === 'development' ? JSON.stringify(this.props.state, null, 2) : '' }

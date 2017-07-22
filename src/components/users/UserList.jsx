@@ -76,12 +76,12 @@ export default class UserList extends React.Component {
                   </h4>
                 </span>
               </td>
-              <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+              <td style={{ width: '1%', whiteSpace: 'nowrap' }}>
                 <Button>
                   <Link to={ '/users/' + user.get('id') + '/edit'}>Editar</Link>
                 </Button>
               </td>
-              <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+              <td style={{ width: '1%', whiteSpace: 'nowrap' }}>
                 { activationButton }
               </td>
             </tr>

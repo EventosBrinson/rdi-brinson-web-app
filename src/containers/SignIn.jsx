@@ -38,11 +38,11 @@ class SignIn extends React.Component {
     const { getFieldDecorator } = this.props.form
 
     return (
-      <div style={ { position: 'absolute', maxWidth: '300px', maxHeight: '177px', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto' } }>
-        <h1 style={ { textAlign: 'center', fontSize: 55, marginTop: '-88px' } }>
+      <div style={{ position: 'absolute', maxWidth: '300px', maxHeight: '177px', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto' }}>
+        <h1 style={{ textAlign: 'center', fontSize: 55, marginTop: '-88px' }}>
           Brinson
         </h1>
-        <Form onSubmit={this.processSubmit} style={ { maxWidth: '300px' } }>
+        <Form onSubmit={this.processSubmit} style={{ maxWidth: '300px' }}>
           <Form.Item>
             {getFieldDecorator('credential', {
               rules: [{ required: true, message: 'Introduce tu nombre de usuario o correo' }],
@@ -64,8 +64,8 @@ class SignIn extends React.Component {
             })(
               <Checkbox name="remember">Recordarme</Checkbox>
             )}
-            <Link to="/recover" style={ { float: 'right' } }>Olvidé mi contraseña</Link>
-            <Button type="primary" htmlType="submit" style={ { width: '100%' } }>
+            <Link to="/recover" style={{ float: 'right' }}>Olvidé mi contraseña</Link>
+            <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
               Iniciar seción
             </Button>
           </Form.Item>

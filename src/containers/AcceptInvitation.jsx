@@ -41,12 +41,12 @@ class AcceptInvitation extends React.Component {
     const { getFieldDecorator } = this.props.form
 
     return (
-      <div style={ { position: 'absolute', maxWidth: '300px', maxHeight: '177px', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto' } }>
-        <h1 style={ { textAlign: 'center', marginTop: '-36px', marginBottom: '15px' } }>
+      <div style={{ position: 'absolute', maxWidth: '300px', maxHeight: '177px', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto' }}>
+        <h1 style={{ textAlign: 'center', marginTop: '-36px', marginBottom: '15px' }}>
           Activar cuenta
         </h1>
-        <Form onSubmit={ this.processSubmit } style={ { maxWidth: '300px' } }>
-          <Form.Item style={ { marginBottom: '10px' } }>
+        <Form onSubmit={ this.processSubmit } style={{ maxWidth: '300px' }}>
+          <Form.Item style={{ marginBottom: '10px' }}>
             {getFieldDecorator('password', {
               rules: [{ required: true, message: 'Introduce tu contraseña' },
                       { min: 8, message: 'La contraseña debe tener al menos 8 caracteres' }],
@@ -55,7 +55,7 @@ class AcceptInvitation extends React.Component {
             )}
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" style={ { width: '100%' } }>
+            <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
               Establecer contraseña
             </Button>
           </Form.Item>

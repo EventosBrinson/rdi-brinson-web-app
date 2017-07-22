@@ -57,16 +57,16 @@ export default class ClientList extends React.Component {
               <span className="ant-table-row-indent indent-level-0" style={{ paddingLeft: '0px'}}>
                 <Link to={ '/clients/' + client.get('id') }>
                   { client.get('lastname') + ' ' + client.get('firstname') }
-                  <Tag style={ { marginLeft: '5px'} }>{ enumsHelpers.rentType(client.get('rent_type')) }</Tag>
+                  <Tag style={{ marginLeft: '5px'}}>{ enumsHelpers.rentType(client.get('rent_type')) }</Tag>
                 </Link>
               </span>
             </td>
-            <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+            <td style={{ width: '1%', whiteSpace: 'nowrap' }}>
               <Button>
                 <Link to={ '/clients/' + client.get('id') + '/edit'}>Editar</Link>
               </Button>
             </td>
-            <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+            <td style={{ width: '1%', whiteSpace: 'nowrap' }}>
               { activationButton }
             </td>
           </tr>

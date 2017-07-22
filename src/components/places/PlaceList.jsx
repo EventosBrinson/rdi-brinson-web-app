@@ -63,12 +63,12 @@ export default class PlaceList extends React.Component {
                 </div>
               </span>
             </td>
-            <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+            <td style={{ width: '1%', whiteSpace: 'nowrap' }}>
               <Button>
                 <Link to={ '/places/' + place.get('id') + '/edit'}>Editar</Link>
               </Button>
             </td>
-            <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+            <td style={{ width: '1%', whiteSpace: 'nowrap' }}>
               { activationButton }
             </td>
           </tr>

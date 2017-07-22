@@ -27,7 +27,7 @@ class Index extends React.Component {
 
   render() {
     return (
-      <div style={ { marginTop: '20px'} }>
+      <div style={{ marginTop: '20px'}}>
         <Button>
           <Link to="/users/new">
             Crear nuevo

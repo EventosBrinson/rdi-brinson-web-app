@@ -123,7 +123,7 @@ class Show extends React.Component {
                     <a style={{ fontSize: 10 }} onClick={ this.copyFolio.bind(this, client.get('folio')) }>Copiar</a>
                   </h3>
                 </td>
-                <td style={ { width: '1%', whiteSpace: 'nowrap' } }>
+                <td style={{ width: '1%', whiteSpace: 'nowrap' }}>
                   <span style={{ fontSize: 20 }}>
                     <Icon type="star" style={{ color: '#F5A623' }}/>
                     { client.get('trust_level') } / 10

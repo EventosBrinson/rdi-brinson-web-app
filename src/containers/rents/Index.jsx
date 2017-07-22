@@ -60,15 +60,25 @@ class Index extends React.Component {
     })
 
     return (
-      <div style={ { marginTop: '20px'} }>
-        <h2>
-          Rentas
-        </h2>
-        <Button type="primary">
-          <Link to="/rents/new">
-            Rentar
-          </Link>
-        </Button>
+      <div style={{ marginTop: '20px'}}>
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <h2>
+                  Rentas
+                </h2>
+              </td>
+              <td style={{ width: '1%', whiteSpace: 'nowrap' } }>
+                <Button type="primary">
+                  <Link to="/rents/new">
+                    Rentar
+                  </Link>
+                </Button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <Tabs>
           <Tabs.TabPane tab="Todas" key="1">
             <RentList order={ this.props.order || Immutable.List() }
