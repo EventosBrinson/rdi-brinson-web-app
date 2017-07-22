@@ -19,7 +19,7 @@ class Index extends React.Component {
   }
 
   getRents(props) {
-    if(props.session_status === 'SIGNED_IN' && props.rents.get('get_rents_status') === undefined) {
+    if(props.session_status === 'SIGNED_IN') {
       props.submitRequest('GET_RENTS') 
     }
   }

@@ -9,6 +9,7 @@ import * as enumsHelpers from '../../modules/enums-helpers'
 import { API_URL } from '../../web-api'
 import PlaceList from '../../components/places/PlaceList'
 import copy from 'copy-to-clipboard';
+import RentList from '../../components/rents/RentList'
 
 import { Icon, Button, Row, Col, Popconfirm, Tabs } from 'antd'
 
@@ -42,6 +43,7 @@ class Show extends React.Component {
         this.client = props.clients.getIn(['hashed', this.client_id])
       } else if(!props.clients || props.clients.getIn(['get_client_statuses', this.client_id]) !== 'GETTING'){
         this.props.submitRequest('GET_CLIENT', {}, { id: this.client_id })
+        this.props.submitRequest('GET_RENTS', { client_id: this.client_id }, { id: this.client_id })
       }
     }
   }
@@ -190,14 +192,24 @@ class Show extends React.Component {
         </Row>
         <Row>
           <Col style={{ marginTop: '20px' }}>
-            <h4 style={{ marginBottom: '15px' }}>
-              Lugares de entrega
-            </h4>
-            <Button>
-              <Link to={ '/places/new?client_id=' + this.client_id }>
-                Crear nuevo
-              </Link>
-            </Button>
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <h3>
+                      Lugares de entrega
+                    </h3>
+                  </td>
+                  <td style={{ width: '1%', whiteSpace: 'nowrap' } }>
+                    <Button type="primary">
+                      <Link to={ '/places/new?client_id=' + this.client_id }>
+                        Crear nuevo
+                      </Link>
+                    </Button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
             <Tabs>
               <Tabs.TabPane tab="Activos" key="1">
                 <PlaceList active={ true } 
@@ -213,7 +225,70 @@ class Show extends React.Component {
               </Tabs.TabPane>
             </Tabs>
           </Col>
-
+        </Row>
+        <Row>
+          <Col style={{ marginTop: '20px' }}>
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <h3>
+                      Rentas
+                    </h3>
+                  </td>
+                  <td style={{ width: '1%', whiteSpace: 'nowrap' } }>
+                    <Button type="primary">
+                      <Link to={ '/rents/new?client_id=' + this.client_id }>
+                        Rentar
+                      </Link>
+                    </Button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <Tabs>
+              <Tabs.TabPane tab="Todas" key="1">
+                <RentList order={ this.props.rents_order || Immutable.List() }
+                          hashed={ this.props.hashed_rents || Immutable.Map() }
+                          submitRequest={ this.props.submitRequest }/>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Reservadas" key="2">
+                <RentList status="reserved" order={ this.props.rents_order || Immutable.List() }
+                          hashed={ this.props.hashed_rents || Immutable.Map() }
+                          submitRequest={ this.props.submitRequest }/>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="En ruta" key="3">
+                <RentList status="on_route" order={ this.props.rents_order || Immutable.List() }
+                          hashed={ this.props.hashed_rents || Immutable.Map() }
+                          submitRequest={ this.props.submitRequest }/>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Entregadas" key="4">
+                <RentList status="delivered" order={ this.props.rents_order || Immutable.List() }
+                          hashed={ this.props.hashed_rents || Immutable.Map() }
+                          submitRequest={ this.props.submitRequest }/>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="En recolección" key="5">
+                <RentList status="on_pick_up" order={ this.props.rents_order || Immutable.List() }
+                          hashed={ this.props.hashed_rents || Immutable.Map() }
+                          submitRequest={ this.props.submitRequest }/>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Pendientes" key="6">
+                <RentList status="pending" order={ this.props.rents_order || Immutable.List() }
+                          hashed={ this.props.hashed_rents || Immutable.Map() }
+                          submitRequest={ this.props.submitRequest }/>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Finalizadas" key="7">
+                <RentList status="finalized" order={ this.props.rents_order || Immutable.List() }
+                          hashed={ this.props.hashed_rents || Immutable.Map() }
+                          submitRequest={ this.props.submitRequest }/>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Canceladas" key="8">
+                <RentList status="canceled" order={ this.props.rents_order || Immutable.List() }
+                          hashed={ this.props.hashed_rents || Immutable.Map() }
+                          submitRequest={ this.props.submitRequest }/>
+              </Tabs.TabPane>
+            </Tabs>
+          </Col>
         </Row>
       </div>
     )
@@ -225,7 +300,10 @@ function mapStateToProps(state) {
     clients: state.get('clients'),
     documents: state.getIn(['documents', 'hashed']),
     places: state.getIn(['places', 'hashed']),
-    session_status: state.get('session_status')
+    session_status: state.get('session_status'),
+    rents: state.get('rents') || Immutable.Map(),
+    hashed_rents: state.getIn(['rents', 'hashed']),
+    rents_order: state.getIn(['rents', 'order']),
   }
 }
 
