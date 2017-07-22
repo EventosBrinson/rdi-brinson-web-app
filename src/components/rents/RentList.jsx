@@ -317,18 +317,20 @@ export default class RentList extends React.Component {
                 </tbody>
               </table>
               { additionalChargesFileds }
-              { cancelButton || additionalButton || actionButton ? (
-                <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                  <a href={ API_URL + '/rents/' + rent.get('id') + '.pdf' } target="blank"><img alt="pdf" src={ pdfLogo } style={{ marginLeft: '10px', height: '35px' }}/></a>
-                  <br />
-                  <Button.Group style={{ display: 'inline-block' }}>
-                    { cancelButton }
-                    { additionalButton }
-                    { actionButton }
-                  </Button.Group>
-                </div>
-                ) : undefined
-              }
+              <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                <a href={ API_URL + '/rents/' + rent.get('id') + '.pdf' } target="blank"><img alt="pdf" src={ pdfLogo } style={{ marginLeft: '10px', height: '35px' }}/></a>
+                { cancelButton || additionalButton || actionButton ? (
+                  <div>
+                    <br />
+                    <Button.Group style={{ display: 'inline-block' }}>
+                      { cancelButton }
+                      { additionalButton }
+                      { actionButton }
+                    </Button.Group>
+                    </div>
+                  ) : undefined
+                }
+              </div>
             </div>
           </div>
         )
