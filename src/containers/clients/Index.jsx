@@ -27,11 +27,24 @@ class Index extends React.Component {
   render() {
     return (
       <div style={{ marginTop: '20px'}}>
-        <Button>
-          <Link to="/clients/new">
-            Crear nuevo
-          </Link>
-        </Button>
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <h2>
+                  Clientes
+                </h2>
+              </td>
+              <td style={{ width: '1%', whiteSpace: 'nowrap' } }>
+                <Button type="primary">
+                  <Link to="/clients/new">
+                    Crear nuevo
+                  </Link>
+                </Button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <Tabs>
           <Tabs.TabPane tab="Activos" key="1">
             <ClientList active={ true } 

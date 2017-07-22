@@ -170,7 +170,7 @@ class Show extends React.Component {
                     <Icon type="mail" />
                   </td>
                   <td>
-                    { client.get('email') }
+                    { client.get('email') || '---' }
                   </td>
                 </tr>
               </tbody>
