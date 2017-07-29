@@ -117,6 +117,10 @@ export function submitRequest(state, request, data, payload, callback) {
       Api.get(request, '/rents', data, payload, callback, sessionToken)
       return state.setIn(['rents', 'get_rents_status'], 'GETTING')
 
+    case 'GET_CLIENT_RENTS':
+      Api.get(request, '/rents', data, payload, callback, sessionToken)
+      return state.setIn(['rents', 'get_client_rents_statuses', payload.client_id], 'GETTING')
+
     case 'GET_RENT':
       Api.get(request, `/rents/${ payload.id }`, data, payload, callback, sessionToken)
       return state.setIn(['rents', 'get_rent_statuses', payload.id ], 'GETTING')
@@ -381,6 +385,19 @@ export function requestSucceeded(state, request, result, payload, callback) {
                   .setIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
                   .setIn(['rents', 'order'], Immutable.fromJS(get_rents_order))
 
+    case 'GET_CLIENT_RENTS':
+      var get_client_rents_hash = {}
+      var get_client_rents_order = []
+
+      data.forEach(rent => {
+        get_client_rents_hash[rent.id] = rent
+        get_client_rents_order.push(String(rent.id))
+      })
+
+      return state.setIn(['rents', 'get_client_rents_statuses', payload.client_id], 'READY')
+                  .mergeIn(['rents', 'hashed'], Immutable.fromJS(get_client_rents_hash))
+                  .setIn(['clients', 'hashed', payload.client_id, 'rents_order'], Immutable.fromJS(get_client_rents_order))
+
     case 'GET_RENT':
       return state.setIn(['rents', 'get_rent_statuses', String(data.id)], 'READY')
                   .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
@@ -472,6 +489,9 @@ export function requestFailed(state, request, result, payload, callback) {
 
     case 'GET_RENTS':
       return state.setIn(['rents', 'get_rents_status'], 'ERROR')
+
+    case 'GET_CLIENT_RENTS':
+      return state.setIn(['rents', 'get_client_rents_statuses', payload.client_id], 'ERROR')
 
     case 'GET_RENT':
       return state.setIn(['rents', 'get_rent_statuses', payload.id], 'ERROR')
