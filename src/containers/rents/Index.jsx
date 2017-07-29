@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 import RentList from '../../components/rents/RentList'
+import moment from 'moment'
 
-import { Button, Tabs } from 'antd'
+import { Button, Tabs, DatePicker } from 'antd'
 
 class Index extends React.Component {
 
@@ -19,7 +20,7 @@ class Index extends React.Component {
   }
 
   getRents(props) {
-    if(props.session_status === 'SIGNED_IN') {
+    if(props.session_status === 'SIGNED_IN' && props.rents.get('get_rents_status') === undefined) {
       props.submitRequest('GET_RENTS') 
     }
   }
@@ -36,6 +37,16 @@ class Index extends React.Component {
     let rents_order = this.props.order || Immutable.List()
     let rents = this.props.hashed || Immutable.Map()
     let rendered_rents = []
+
+    let datePickerLocale = {
+      "lang": {
+        "placeholder": "Fecha y hora",
+        "now": "Ahora",
+        "ok": "Ok",
+        "timeSelect": "Hora",
+        "dateSelect": "Fecha"
+      }
+    }
 
     rents_order.forEach( rent_id => {
       let rent = rents.get(rent_id)
@@ -79,6 +90,16 @@ class Index extends React.Component {
             </tr>
           </tbody>
         </table>
+        <div>
+          <DatePicker
+            locale={ datePickerLocale }
+            format="dddd, DD [de] MMMM [de] YYYY [a las] hh:mm a"
+            allowClear={ false }
+            style={{ width: '100%' }}
+            onChange={ this.handleDeliveryTimeChange }
+            placeholder="Fecha"
+            allowClear/>
+        </div>
         <Tabs>
           <Tabs.TabPane tab="Todas" key="1">
             <RentList order={ this.props.order || Immutable.List() }
