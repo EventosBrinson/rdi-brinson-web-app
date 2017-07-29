@@ -43,7 +43,7 @@ class Show extends React.Component {
         this.client = props.clients.getIn(['hashed', this.client_id])
       } else if(!props.clients || props.clients.getIn(['get_client_statuses', this.client_id]) !== 'GETTING'){
         this.props.submitRequest('GET_CLIENT', {}, { id: this.client_id })
-        this.props.submitRequest('GET_RENTS', { client_id: this.client_id }, { id: this.client_id })
+        this.props.submitRequest('GET_CLIENT_RENTS', { client_id: this.client_id }, { client_id: this.client_id })
       }
     }
   }
@@ -74,6 +74,7 @@ class Show extends React.Component {
     let client = this.client
     let documents_order = this.client.get('documents_order') || Immutable.List()
     let places_order = this.client.get('places_order') || Immutable.List()
+    let rents_order = client.get('rents_order')
 
     var rendered_documents = []
 
@@ -248,42 +249,42 @@ class Show extends React.Component {
             </table>
             <Tabs>
               <Tabs.TabPane tab="Todas" key="1">
-                <RentList order={ this.props.rents_order || Immutable.List() }
+                <RentList order={ rents_order || Immutable.List() }
                           hashed={ this.props.hashed_rents || Immutable.Map() }
                           submitRequest={ this.props.submitRequest }/>
               </Tabs.TabPane>
               <Tabs.TabPane tab="Reservadas" key="2">
-                <RentList status="reserved" order={ this.props.rents_order || Immutable.List() }
+                <RentList status="reserved" order={ rents_order || Immutable.List() }
                           hashed={ this.props.hashed_rents || Immutable.Map() }
                           submitRequest={ this.props.submitRequest }/>
               </Tabs.TabPane>
               <Tabs.TabPane tab="En ruta" key="3">
-                <RentList status="on_route" order={ this.props.rents_order || Immutable.List() }
+                <RentList status="on_route" order={ rents_order || Immutable.List() }
                           hashed={ this.props.hashed_rents || Immutable.Map() }
                           submitRequest={ this.props.submitRequest }/>
               </Tabs.TabPane>
               <Tabs.TabPane tab="Entregadas" key="4">
-                <RentList status="delivered" order={ this.props.rents_order || Immutable.List() }
+                <RentList status="delivered" order={ rents_order || Immutable.List() }
                           hashed={ this.props.hashed_rents || Immutable.Map() }
                           submitRequest={ this.props.submitRequest }/>
               </Tabs.TabPane>
               <Tabs.TabPane tab="En recolección" key="5">
-                <RentList status="on_pick_up" order={ this.props.rents_order || Immutable.List() }
+                <RentList status="on_pick_up" order={ rents_order || Immutable.List() }
                           hashed={ this.props.hashed_rents || Immutable.Map() }
                           submitRequest={ this.props.submitRequest }/>
               </Tabs.TabPane>
               <Tabs.TabPane tab="Pendientes" key="6">
-                <RentList status="pending" order={ this.props.rents_order || Immutable.List() }
+                <RentList status="pending" order={ rents_order || Immutable.List() }
                           hashed={ this.props.hashed_rents || Immutable.Map() }
                           submitRequest={ this.props.submitRequest }/>
               </Tabs.TabPane>
               <Tabs.TabPane tab="Finalizadas" key="7">
-                <RentList status="finalized" order={ this.props.rents_order || Immutable.List() }
+                <RentList status="finalized" order={ rents_order || Immutable.List() }
                           hashed={ this.props.hashed_rents || Immutable.Map() }
                           submitRequest={ this.props.submitRequest }/>
               </Tabs.TabPane>
               <Tabs.TabPane tab="Canceladas" key="8">
-                <RentList status="canceled" order={ this.props.rents_order || Immutable.List() }
+                <RentList status="canceled" order={ rents_order || Immutable.List() }
                           hashed={ this.props.hashed_rents || Immutable.Map() }
                           submitRequest={ this.props.submitRequest }/>
               </Tabs.TabPane>
@@ -302,8 +303,7 @@ function mapStateToProps(state) {
     places: state.getIn(['places', 'hashed']),
     session_status: state.get('session_status'),
     rents: state.get('rents') || Immutable.Map(),
-    hashed_rents: state.getIn(['rents', 'hashed']),
-    rents_order: state.getIn(['rents', 'order']),
+    hashed_rents: state.getIn(['rents', 'hashed'])
   }
 }
 
