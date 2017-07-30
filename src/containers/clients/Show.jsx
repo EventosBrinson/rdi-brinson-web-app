@@ -41,9 +41,9 @@ class Show extends React.Component {
     if(props.session_status === 'SIGNED_IN') {
       if(props.clients && (props.clients.getIn(['get_client_statuses', this.client_id]) === 'READY' || props.clients.get('get_clients_status') === 'READY')) {
         this.client = props.clients.getIn(['hashed', this.client_id])
+        this.props.submitRequest('GET_CLIENT_RENTS', { client_id: this.client_id }, { client_id: this.client_id })
       } else if(!props.clients || props.clients.getIn(['get_client_statuses', this.client_id]) !== 'GETTING'){
         this.props.submitRequest('GET_CLIENT', {}, { id: this.client_id })
-        this.props.submitRequest('GET_CLIENT_RENTS', { client_id: this.client_id }, { client_id: this.client_id })
       }
     }
   }
