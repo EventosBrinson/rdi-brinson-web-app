@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 import RentList from '../../components/rents/RentList'
-import moment from 'moment'
+import * as abilitiesHelper from '../../modules/abilities-helpers'
 
 import { Button, Tabs, DatePicker } from 'antd'
 
@@ -21,7 +21,13 @@ class Index extends React.Component {
 
   getRents(props) {
     if(props.session_status === 'SIGNED_IN' && props.rents.get('get_rents_status') === undefined) {
-      props.submitRequest('GET_RENTS') 
+      var params = {}
+
+      if(abilitiesHelper.isAdmin()) {
+        params['all'] = true
+      }
+
+      props.submitRequest('GET_RENTS', params) 
     }
   }
 
@@ -45,8 +51,6 @@ class Index extends React.Component {
     let rents_filer = this.props.rents.get('get_date_rents_filter_status') === 'READY'
     let rents_order = this.props.order || Immutable.List()
     let rents_date_filter_order =  this.props.date_filter_order || Immutable.List()
-    let rents = this.props.hashed || Immutable.Map()
-    let rendered_rents = []
 
     let datePickerLocale = {
       "lang": {
@@ -81,7 +85,6 @@ class Index extends React.Component {
           <DatePicker
             locale={ datePickerLocale }
             format="dddd, DD [de] MMMM [de] YYYY"
-            allowClear={ false }
             style={{ width: '100%' }}
             onChange={ this.handleTimeChanged.bind(this) }
             placeholder="Fecha"
