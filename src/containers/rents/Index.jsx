@@ -33,8 +33,18 @@ class Index extends React.Component {
     this.props.submitRequest('DELETE_RENT', {}, { id: rent.get('id') })
   }
 
+  handleTimeChanged(date) {
+    if(date) {
+      this.props.submitRequest('GET_DATE_RENTS', { 'filter_by_time[beginning_time]' : date.startOf('day').format(), 'filter_by_time[end_time]' : date.endOf('day').format(), 'filter_by_time[columns][]' : ['delivery_time', 'pick_up_time'] })
+    } else {
+      this.props.clearStatus(['rents', 'get_date_rents_filter_status'])
+    }
+  }
+
   render() {
+    let rents_filer = this.props.rents.get('get_date_rents_filter_status') === 'READY'
     let rents_order = this.props.order || Immutable.List()
+    let rents_date_filter_order =  this.props.date_filter_order || Immutable.List()
     let rents = this.props.hashed || Immutable.Map()
     let rendered_rents = []
 
@@ -47,29 +57,6 @@ class Index extends React.Component {
         "dateSelect": "Fecha"
       }
     }
-
-    rents_order.forEach( rent_id => {
-      let rent = rents.get(rent_id)
-
-      rendered_rents.push(
-        <tr key={ rent.get('id') }>
-          <td>{ rent.get('delivery_time') }</td>
-          <td>{ rent.get('pick_up_time') }</td>
-          <td>{ rent.get('product') }</td>
-          <td>{ rent.get('price') }</td>
-          <td>{ rent.get('discount') }</td>
-          <td>{ rent.get('additional_charges') }</td>
-          <td>{ rent.get('additional_charges_notes') }</td>
-          <td>{ rent.get('rent_type') }</td>
-          <td>{ rent.get('status') }</td>
-          <td>{ rent.get('client_id') }</td>
-          <td>{ rent.get('place_id') }</td>
-          <td><Link to={ '/rents/' + rent.get('id') + '/edit'}>Edit</Link></td>
-          <td><button onClick={ this.deleteRent.bind(this, rent) }>Eliminar</button></td>
-        </tr>
-      )
-    })
-
     return (
       <div style={{ marginTop: '20px'}}>
         <table>
@@ -93,51 +80,51 @@ class Index extends React.Component {
         <div>
           <DatePicker
             locale={ datePickerLocale }
-            format="dddd, DD [de] MMMM [de] YYYY [a las] hh:mm a"
+            format="dddd, DD [de] MMMM [de] YYYY"
             allowClear={ false }
             style={{ width: '100%' }}
-            onChange={ this.handleDeliveryTimeChange }
+            onChange={ this.handleTimeChanged.bind(this) }
             placeholder="Fecha"
             allowClear/>
         </div>
         <Tabs>
           <Tabs.TabPane tab="Todas" key="1">
-            <RentList order={ this.props.order || Immutable.List() }
+            <RentList order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Reservadas" key="2">
-            <RentList status="reserved" order={ this.props.order || Immutable.List() }
+            <RentList status="reserved" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="En ruta" key="3">
-            <RentList status="on_route" order={ this.props.order || Immutable.List() }
+            <RentList status="on_route" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Entregadas" key="4">
-            <RentList status="delivered" order={ this.props.order || Immutable.List() }
+            <RentList status="delivered" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="En recolección" key="5">
-            <RentList status="on_pick_up" order={ this.props.order || Immutable.List() }
+            <RentList status="on_pick_up" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Pendientes" key="6">
-            <RentList status="pending" order={ this.props.order || Immutable.List() }
+            <RentList status="pending" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Finalizadas" key="7">
-            <RentList status="finalized" order={ this.props.order || Immutable.List() }
+            <RentList status="finalized" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Canceladas" key="8">
-            <RentList status="canceled" order={ this.props.order || Immutable.List() }
+            <RentList status="canceled" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
@@ -152,6 +139,7 @@ function mapStateToProps(state) {
     rents: state.get('rents') || Immutable.Map(),
     hashed: state.getIn(['rents', 'hashed']),
     order: state.getIn(['rents', 'order']),
+    date_filter_order: state.getIn(['rents', 'date_filter_order']),
     session_status: state.get('session_status')
   }
 }
