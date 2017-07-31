@@ -4,6 +4,7 @@ import { withRouter } from 'react-router'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 import queryString from 'query-string'
+import * as abilitiesHelper from '../../modules/abilities-helpers'
 
 import { Form, Input, Select, Button } from 'antd'
 
@@ -46,7 +47,7 @@ class New extends React.Component {
     this.client_id = params.client_id
 
     if(this.props.get_clients_status === undefined) {
-      var params = {}
+      params = {}
 
       if(abilitiesHelper.isAdmin()) {
         params['all'] = true

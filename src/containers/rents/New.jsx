@@ -6,6 +6,7 @@ import Immutable from 'immutable'
 import queryString from 'query-string'
 import moment from 'moment'
 import TimeSelect from '../../components/rents/TimeSelect'
+import * as abilitiesHelper from '../../modules/abilities-helpers'
 
 import { Form, Input, InputNumber, Select, Button, DatePicker } from 'antd'
 
@@ -55,7 +56,7 @@ class New extends React.Component {
     this.client_id = params.client_id
 
     if(this.props.get_clients_status !== 'READY') {
-      var params = {}
+      params = {}
 
       if(abilitiesHelper.isAdmin()) {
         params['all'] = true
