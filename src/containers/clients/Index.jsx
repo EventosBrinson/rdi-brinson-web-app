@@ -20,7 +20,13 @@ class Index extends React.Component {
 
   getClients(props) {
     if(props.session_status === 'SIGNED_IN' && props.clients.get('get_clients_status') === undefined) {
-      props.submitRequest('GET_CLIENTS') 
+      var params = {}
+
+      if(abilitiesHelper.isAdmin()) {
+        params['all'] = true
+      }
+
+      props.submitRequest('GET_CLIENTS', params) 
     }
   }
 
