@@ -41,7 +41,13 @@ class Index extends React.Component {
 
   handleTimeChanged(date) {
     if(date) {
-      this.props.submitRequest('GET_DATE_RENTS', { 'filter_by_time[beginning_time]' : date.startOf('day').format(), 'filter_by_time[end_time]' : date.endOf('day').format(), 'filter_by_time[columns][]' : ['delivery_time', 'pick_up_time'] })
+      var params = { 'filter_by_time[beginning_time]' : date.startOf('day').format(), 'filter_by_time[end_time]' : date.endOf('day').format(), 'filter_by_time[columns][]' : ['delivery_time', 'pick_up_time'] }
+
+      if(abilitiesHelper.isAdmin()) {
+        params['all'] = true
+      }
+
+      this.props.submitRequest('GET_DATE_RENTS', params)
     } else {
       this.props.clearStatus(['rents', 'get_date_rents_filter_status'])
     }
