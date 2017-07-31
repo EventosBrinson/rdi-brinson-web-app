@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import * as actionCreators from '../../action-creators'
 import Immutable from 'immutable'
 import ClientList from '../../components/clients/ClientList'
+import * as abilitiesHelper from '../../modules/abilities-helpers'
 
 import { Tabs, Button } from 'antd'
 
