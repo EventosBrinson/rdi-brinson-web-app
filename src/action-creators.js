@@ -57,3 +57,10 @@ export function cleanRouter() {
     type: 'CLEAN_ROUTER'
   }
 }
+
+export function clearStatus(statusPath) {
+  return {
+    type: 'CLEAR_STATUS',
+    statusPath: statusPath
+  }
+}

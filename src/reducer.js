@@ -19,6 +19,8 @@ export default function reducer(state = Immutable.Map(), action) {
     return core.requestFailed(state, action.request, action.result, action.payload, action.callback)
   case 'CLEAN_ROUTER':
     return core.cleanRouter(state)
+  case 'CLEAR_STATUS':
+    return core.clearStatus(state, action.statusPath)
   default:
     return state
   }

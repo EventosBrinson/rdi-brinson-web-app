@@ -117,6 +117,10 @@ export function submitRequest(state, request, data, payload, callback) {
       Api.get(request, '/rents', data, payload, callback, sessionToken)
       return state.setIn(['rents', 'get_rents_status'], 'GETTING')
 
+    case 'GET_DATE_RENTS':
+      Api.get(request, '/rents', data, payload, callback, sessionToken)
+      return state.setIn(['rents', 'get_date_rents_filter_status'], 'GETTING')
+
     case 'GET_CLIENT_RENTS':
       Api.get(request, '/rents', data, payload, callback, sessionToken)
       return state.setIn(['rents', 'get_client_rents_statuses', payload.client_id], 'GETTING')
@@ -385,6 +389,19 @@ export function requestSucceeded(state, request, result, payload, callback) {
                   .setIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
                   .setIn(['rents', 'order'], Immutable.fromJS(get_rents_order))
 
+    case 'GET_DATE_RENTS':
+      var get_date_rents_hash = {}
+      var get_date_rents_order = []
+
+      data.forEach(rent => {
+        get_date_rents_hash[rent.id] = rent
+        get_date_rents_order.push(String(rent.id))
+      })
+
+      return state.setIn(['rents', 'get_date_rents_filter_status'], 'READY')
+                  .mergeIn(['rents', 'hashed'], Immutable.fromJS(get_date_rents_hash))
+                  .setIn(['rents', 'date_filter_order'], Immutable.fromJS(get_date_rents_order))
+
     case 'GET_CLIENT_RENTS':
       var get_client_rents_hash = {}
       var get_client_rents_order = []
@@ -490,6 +507,9 @@ export function requestFailed(state, request, result, payload, callback) {
     case 'GET_RENTS':
       return state.setIn(['rents', 'get_rents_status'], 'ERROR')
 
+    case 'GET_DATE_RENTS':
+      return state.setIn(['rents', 'get_date_rents_filter_status'], 'ERROR')
+
     case 'GET_CLIENT_RENTS':
       return state.setIn(['rents', 'get_client_rents_statuses', payload.client_id], 'ERROR')
 
@@ -509,4 +529,8 @@ export function requestFailed(state, request, result, payload, callback) {
 
 export function cleanRouter(state) {
   return state.delete('router')
+}
+
+export function clearStatus(state, statusPath) {
+  return state.deleteIn(statusPath)
 }
