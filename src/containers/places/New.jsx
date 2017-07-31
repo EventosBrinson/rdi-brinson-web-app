@@ -46,7 +46,13 @@ class New extends React.Component {
     this.client_id = params.client_id
 
     if(this.props.get_clients_status === undefined) {
-      this.props.submitRequest('GET_CLIENTS')
+      var params = {}
+
+      if(abilitiesHelper.isAdmin()) {
+        params['all'] = true
+      }
+
+      this.props.submitRequest('GET_CLIENTS', params)
     }
 
     this.setDefaults(this.props)

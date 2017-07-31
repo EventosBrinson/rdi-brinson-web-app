@@ -55,7 +55,13 @@ class New extends React.Component {
     this.client_id = params.client_id
 
     if(this.props.get_clients_status !== 'READY') {
-      this.props.submitRequest('GET_CLIENTS')
+      var params = {}
+
+      if(abilitiesHelper.isAdmin()) {
+        params['all'] = true
+      }
+
+      this.props.submitRequest('GET_CLIENTS', params)
     }
 
     this.setDefaultDates(this.props)
