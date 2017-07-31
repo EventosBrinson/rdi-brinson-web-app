@@ -260,9 +260,21 @@ export function requestSucceeded(state, request, result, payload, callback) {
                   .mergeIn(['places', 'hashed'], get_clients_places_hash)
 
     case 'CREATE_CLIENT':
+      var create_client_places_hash = {}
+      var create_client_places_order = []
+
+      data.places.forEach(place => {
+        create_client_places_hash[place.id] = place
+        create_client_places_order.push(String(place.id))
+      })
+
+      delete data.places
+      data.places_order = create_client_places_order
+
       return state.setIn(['clients', 'create_client_status'], 'CREATED')
                   .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
                   .updateIn(['clients', 'order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
+                  .mergeIn(['places', 'hashed'], create_client_places_hash)
                   .setIn(['router', 'action'], 'REDIRECT_TO')
                   .setIn(['router', 'pathname'], '/clients/' + data.id)
 
