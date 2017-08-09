@@ -1,55 +1,110 @@
-var simple_deployer = require('simple-deployer')
+var Deployer = require('simple-deployer')
 var os = require('os')
 
-var deployer = simple_deployer()
-
-deployer.configuration = {
+var deployer = new Deployer({
   host: 'rdi.eventosbrinson.com',
   port: 22,
   username: 'deploy',
-  show_deploy_messages: true,
-}
+  showDeployMessages: true
+})
 
 var appname = 'rdi-brinson-web-app'
 var deploy_to = '/home/deploy/rdi-brinson-web-app'
 var repo_url = 'git@github.com:EventosBrinson/rdi-brinson-web-app.git'
-var limit_release_count = 5
+var limit_release_count = 20
 
 var date = new Date();
 var today = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-var repo_path = deploy_to + '/repo'
+var repo_path = deploy_to + '/' + appname
 var releases_path = deploy_to + '/releases';
 var current_path =  deploy_to + '/current'
 var deployed_to = ""
 
-var commands = [{
-  header: 'git:clone' }, {
+var commands = []
+var commands2 = []
 
-  instruction: 'git clone ' + repo_url + ' ' + repo_path,
-  permited_return_statuses: [128] }, {
+commands.push({
+  header: 'git:clone'
+})
 
-  instruction: 'cd ' + repo_path + ' && git remote update --prune' }, {
+commands.push({
+  command: ['cd', '/tmp', '&&', 'git', 'clone', repo_url].join(' '),
+  continueOnErrorCode: true,
+  local: true
+})
 
-  instruction: 'cd ' + repo_path + ' && git reset origin/master --hard' }, {
+commands.push({
+  command: ['cd', '/tmp/' + appname, '&& git remote update --prune'].join(' '),
+  local: true
+})
 
-  instruction: 'cd ' + repo_path + ' && git fetch' }, {
-  
-  header: 'npm:install dependecies' }, {
+commands.push({
+  command: ['cd', '/tmp/' + appname, '&& git fetch'].join(' '),
+  local: true
+})
 
-  instruction: 'cd ' + repo_path + ' && npm install' }, {
-  
-  header: 'npm:generate build' }, {
+commands.push({
+  header: 'npm:install dependecies'
+})
 
-  instruction: 'cd ' + repo_path + ' && npm run build' }, {
-  
-  header: 'task:generate release' }, {
+commands2.push({
+  command: ['cd', '/tmp/' + appname, '&& npm install'].join(' '),
+  local: true
+})
 
-  instruction: 'mkdir -p ' + releases_path + '/unit' }, {
+commands.push({
+  header: 'npm:generate build'
+})
 
-  instruction: 'ls -dt ' + releases_path + '/*' }, {
+commands2.push({
+  command: ['cd', '/tmp/' + appname, '&& npm run build'].join(' '),
+  local: true
+})
 
-  instruction: function(lastResponse, code) {
-    var lastDirectory = lastResponse.split('\n')[1]
+commands2.push({
+  command: ['rm', '-rf', '/tmp/' + appname + '/node_modules'].join(' '),
+  local: true
+})
+
+commands2.push({
+  command: ['cd', '/tmp/' + appname, '&& npm install --only=dev'].join(' '),
+  local: true
+})
+
+commands.push({
+  header: 'task:transfer release'
+})
+
+commands.push({
+  command: ['cd', '/tmp', '&& tar -zcvf', appname + '.tar.gz', appname].join(' '),
+  local: true
+})
+
+commands2.push({
+  command: ['scp', '-r', '/tmp/' + appname + '.tar.gz', 'deploy@rdi.eventosbrinson.com:' + deploy_to].join(' '),
+  local: true,
+  showResults: true
+})
+
+commands2.push({
+  command: ['cd', deploy_to, '&& tar -zxvf' + appname + '.tar.gz'].join(' ')
+})
+
+commands.push({
+  header: 'task:generate release'
+})
+
+commands.push({
+  command: ['mkdir', '-p', releases_path + '/unit'].join(' ')
+})
+
+commands.push({
+  command: ['ls', '-dt', releases_path + '/*'].join(' ')
+})
+
+commands.push({
+  dynamic: function(lastResult, code) {
+    var lastDirectory = lastResult.split('\n')[1]
     var today_position = lastDirectory.indexOf(today)
     var today_count = 1
 
@@ -59,20 +114,36 @@ var commands = [{
 
     deployed_to = releases_path + '/' + today + '-' + today_count
 
-    return 'mkdir -p ' + deployed_to + ' && cp -a ' + repo_path +  '/. ' + deployed_to + '&& touch ' + deployed_to + '/deploy.txt'
-  }}, {
-  
-  header: 'task:clean up releases' }, {
+    return { command: ['mkdir', '-p', deployed_to].join(' ') }
+  }
+})
 
-  instruction: 'rm -rf ' + releases_path + '/unit' }, {
+commands.push({
+  dynamic: function(lastResult, code) {
+    return { 
+      command: ['cp', '-a', repo_path +  '/.', deployed_to].join(' ')
+    }
+  }
+})
 
-  instruction: 'ls -dt ' + releases_path + '/*'}, {
+commands.push({
+  header: 'task:clean up releases'
+})
 
-  instruction: function(lastResponse, code) {
-    var files = lastResponse.split('\n')
+commands.push({
+  command: ['rm', '-rf', releases_path + '/unit'].join(' ')
+})
+
+commands.push({
+  command: ['ls', '-dt', releases_path + '/*'].join(' ')
+})
+
+commands.push({
+  dynamic: function(lastResult, code) {
+    var files = lastResult.split('\n')
 
     if(files.length <= limit_release_count) {
-      return ''
+      return { command: '' }
     } else {
       var command = ''
 
@@ -81,32 +152,54 @@ var commands = [{
         command += 'rm -rf ' + files[i]
       }
 
-      return command
+      return { command: command }
     }
-  }}, {
-  
-  header: 'pm2:kill' }, {
+  }
+})
 
-  instruction: 'pm2 delete ' + appname,
-  permited_return_statuses: [1] }, {
-  
-  header: 'task:point to current' }, {
+commands.push({
+  header: 'pm2:kill'
+})
 
-  instruction: 'rm -f ' + current_path }, {
+commands.push({
+  command: ['pm2', 'delete', appname].join(' '),
+  continueOnErrorCode: true
+})
 
-  instruction: function(lastResponse, code) {
-    return 'ln -s ' + deployed_to + ' ' + current_path
-  }}, {
-  
-  header: 'pm2:start' }, {
+commands.push({
+  header: 'task:point to current'
+})
 
-  instruction: 'pm2 start ' + current_path + '/server --name ' + appname }, {
-  
-  header: 'deploy:revision' }, {
+commands.push({
+  command: ['rm', '-f', current_path].join(' ')
+})
 
-  instruction: function(lastResponse, code) {
-    return 'echo "' + date + ': deploy on ' + deployed_to + ' by ' + os.hostname() + '" >> ' + deploy_to + '/deploy_revision.log'
-  }}
-]
+commands.push({
+  dynamic: function(lastResult, code) {
+    return { 
+      command: ['ln', '-s', deployed_to, current_path].join(' ')
+    }
+  }
+})
+
+commands.push({
+  header: 'pm2:start'
+})
+
+commands.push({
+  command: ['pm2', 'start', current_path + '/server', '--name', appname].join(' ')
+})
+
+commands.push({
+  header: 'deploy:revision'
+})
+
+commands.push({
+  dynamic: function(lastResult, code) {
+    return { 
+      command: ['echo', '"' + date + ': deploy on ' + deployed_to + ' by ' + os.hostname() + '"', '>>', deploy_to + '/deploy_revision.log'].join(' ')
+    }
+  }
+})
 
 deployer.deploy(commands)
