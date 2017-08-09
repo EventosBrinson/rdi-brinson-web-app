@@ -23,7 +23,7 @@
     "morgan": "^1.8.2",
     "pm2": "^2.6.1",
     "react-scripts": "0.9.5",
-    "simple-deployer": "0.0.1"
+    "simple-deployer": "0.1.0"
   },
   "scripts": {
     "start": "PORT=3001 react-scripts start",
