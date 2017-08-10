@@ -21,7 +21,6 @@ var current_path =  deploy_to + '/current'
 var deployed_to = ""
 
 var commands = []
-var commands2 = []
 
 commands.push({
   header: 'git:clone'
@@ -47,7 +46,7 @@ commands.push({
   header: 'npm:install dependecies'
 })
 
-commands2.push({
+commands.push({
   command: ['cd', '/tmp/' + appname, '&& npm install'].join(' '),
   local: true
 })
@@ -56,18 +55,8 @@ commands.push({
   header: 'npm:generate build'
 })
 
-commands2.push({
+commands.push({
   command: ['cd', '/tmp/' + appname, '&& npm run build'].join(' '),
-  local: true
-})
-
-commands2.push({
-  command: ['rm', '-rf', '/tmp/' + appname + '/node_modules'].join(' '),
-  local: true
-})
-
-commands2.push({
-  command: ['cd', '/tmp/' + appname, '&& npm install --only=dev'].join(' '),
   local: true
 })
 
@@ -80,14 +69,27 @@ commands.push({
   local: true
 })
 
-commands2.push({
+commands.push({
   command: ['scp', '-r', '/tmp/' + appname + '.tar.gz', 'deploy@rdi.eventosbrinson.com:' + deploy_to].join(' '),
-  local: true,
-  showResults: true
+  local: true
 })
 
-commands2.push({
+commands.push({
   command: ['cd', deploy_to, '&& tar -zxvf' + appname + '.tar.gz'].join(' ')
+})
+
+commands.push({
+  header: 'task:clean up'
+})
+
+commands.push({
+  command: ['cd', '/tmp', '&& rm -rf', appname].join(' '),
+  local: true
+})
+
+commands.push({
+  command: ['cd', '/tmp', '&& rm', appname + '.tar.gz'].join(' '),
+  local: true
 })
 
 commands.push({
@@ -124,6 +126,26 @@ commands.push({
       command: ['cp', '-a', repo_path +  '/.', deployed_to].join(' ')
     }
   }
+})
+
+commands.push({
+  dynamic: function(lastResult, code) {
+    return { 
+      command: ['touch', deployed_to + '/deploy.txt'].join(' ')
+    }
+  }
+})
+
+commands.push({
+  header: 'task:clean up'
+})
+
+commands.push({
+  command: ['cd', deploy_to, '&& rm -rf', appname].join(' '),
+})
+
+commands.push({
+  command: ['cd', deploy_to, '&& rm', appname + '.tar.gz'].join(' '),
 })
 
 commands.push({
