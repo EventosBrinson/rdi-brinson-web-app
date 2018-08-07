@@ -4,6 +4,7 @@ import * as core from './core'
 export default function reducer(state = Immutable.Map(), action) {
   switch (action.type) {
   case '@@redux/INIT':
+  case '@@INIT':
     return core.initApp(state)
   case 'CHANGE_FORM':
     return core.changeForm(state, action.form, action.field, action.value)
