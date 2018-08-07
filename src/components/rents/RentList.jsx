@@ -8,9 +8,9 @@ import AdditionalChargesFrom from './AdditionalChargesFrom'
 import pdfLogo from '../../assets/pdf.svg'
 import { API_URL } from '../../web-api'
 
-moment.locale('es');
-
 import { Button, Popconfirm, Row, Tag, Icon } from 'antd'
+
+moment.locale('es');
 
 export default class RentList extends React.Component {
 

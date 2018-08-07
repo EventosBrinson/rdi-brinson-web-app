@@ -19,7 +19,7 @@ export default class TimeSelect extends React.Component {
   componentWillReceiveProps(nextProps) {
     let current = nextProps.value || moment()
 
-    this.state = { hour: String(current.get('hour')), minutes: String(Math.floor(current.get('minutes') / 10) * 10)  }
+    this.setState({ hour: String(current.get('hour')), minutes: String(Math.floor(current.get('minutes') / 10) * 10)  })
   }
 
   handleHourChange(value) {

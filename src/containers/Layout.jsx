@@ -7,7 +7,6 @@ import SignOutButton from '../components/SignOutButton'
 import Immutable from 'immutable'
 import * as abilitiesHelper from '../modules/abilities-helpers'
 
-import MediaQuery from 'react-responsive'
 import { Row, Col, Menu, Icon, Dropdown } from 'antd'
 
 class MasterLayout extends React.Component {
