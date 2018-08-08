@@ -117,10 +117,6 @@ export function submitRequest(state, request, data, payload, callback) {
       Api.get(request, '/rents', data, payload, callback, sessionToken)
       return state.setIn(['rents', 'get_rents_status'], 'GETTING')
 
-    case 'GET_DATE_RENTS':
-      Api.get(request, '/rents', data, payload, callback, sessionToken)
-      return state.setIn(['rents', 'get_date_rents_filter_status'], 'GETTING')
-
     case 'GET_CLIENT_RENTS':
       Api.get(request, '/rents', data, payload, callback, sessionToken)
       return state.setIn(['rents', 'get_client_rents_statuses', payload.client_id], 'GETTING')
@@ -392,27 +388,22 @@ export function requestSucceeded(state, request, result, payload, callback) {
       var get_rents_hash = {}
       var get_rents_order = []
 
-      data.forEach(rent => {
+      data.rents.forEach(rent => {
         get_rents_hash[rent.id] = rent
         get_rents_order.push(String(rent.id))
       })
 
-      return state.setIn(['rents', 'get_rents_status'], 'READY')
-                  .setIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
-                  .setIn(['rents', 'order'], Immutable.fromJS(get_rents_order))
-
-    case 'GET_DATE_RENTS':
-      var get_date_rents_hash = {}
-      var get_date_rents_order = []
-
-      data.forEach(rent => {
-        get_date_rents_hash[rent.id] = rent
-        get_date_rents_order.push(String(rent.id))
-      })
-
-      return state.setIn(['rents', 'get_date_rents_filter_status'], 'READY')
-                  .mergeIn(['rents', 'hashed'], Immutable.fromJS(get_date_rents_hash))
-                  .setIn(['rents', 'date_filter_order'], Immutable.fromJS(get_date_rents_order))
+      if(state.getIn(['rents', 'get_rents_status'])) {
+        return state.setIn(['rents', 'get_rents_status'], 'READY')
+                    .mergeIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
+                    .updateIn(['rents', 'order'], order => (order || Immutable.List()).concat(get_rents_order))
+                    .setIn(['rents', 'total'], data.total)
+      } else {
+        return state.setIn(['rents', 'get_rents_status'], 'READY')
+                    .mergeIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
+                    .setIn(['rents', 'order'], Immutable.List(get_rents_order))
+                    .setIn(['rents', 'total'], data.total)
+      }
 
     case 'GET_CLIENT_RENTS':
       var get_client_rents_hash = {}
@@ -518,9 +509,6 @@ export function requestFailed(state, request, result, payload, callback) {
 
     case 'GET_RENTS':
       return state.setIn(['rents', 'get_rents_status'], 'ERROR')
-
-    case 'GET_DATE_RENTS':
-      return state.setIn(['rents', 'get_date_rents_filter_status'], 'ERROR')
 
     case 'GET_CLIENT_RENTS':
       return state.setIn(['rents', 'get_client_rents_statuses', payload.client_id], 'ERROR')
