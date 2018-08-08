@@ -2,6 +2,7 @@ import Immutable from 'immutable'
 import * as core from './core'
 
 export default function reducer(state = Immutable.Map(), action) {
+  console.log(action)
   switch (action.type) {
   case '@@redux/INIT':
   case '@@INIT':
