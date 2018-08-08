@@ -10,25 +10,26 @@ import * as abilitiesHelper from '../../modules/abilities-helpers'
 import { Button, Tabs, DatePicker } from 'antd'
 
 class Index extends React.Component {
+  static defaultProps = {
+    order: Immutable.List()
+  }
 
   componentDidMount() {
-    this.getRents(this.props)
+    this.checkRents(this.props)
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.getRents(nextProps)
-  }
-
-  getRents(props) {
+  checkRents(props) {
     if(props.session_status === 'SIGNED_IN' && props.rents.get('get_rents_status') === undefined) {
-      var params = {}
-
-      if(abilitiesHelper.isAdmin()) {
-        params['all'] = true
-      }
-
-      props.submitRequest('GET_RENTS', params) 
+      this.getRents({ paginated: { offset: 0, limit: 10 } })
     }
+  }
+
+  getRents(params = {}) {
+    if(abilitiesHelper.isAdmin()) {
+      params['all'] = true
+    }
+
+    this.props.submitRequest('GET_RENTS', params) 
   }
 
   deleteRent(rent, event) {
@@ -38,25 +39,30 @@ class Index extends React.Component {
 
     this.props.submitRequest('DELETE_RENT', {}, { id: rent.get('id') })
   }
+  
+  handleLoadMore() {
+    this.getRents({ paginated: { offset: this.props.order.size, limit: 10}, ...this.dateParams })
+  }
 
   handleTimeChanged(date) {
     if(date) {
-      var params = { 'filter_by_time[beginning_time]' : date.startOf('day').format(), 'filter_by_time[end_time]' : date.endOf('day').format(), 'filter_by_time[columns][]' : ['delivery_time', 'pick_up_time'] }
-
-      if(abilitiesHelper.isAdmin()) {
-        params['all'] = true
+      this.dateParams = {
+        "filter_by_time[beginning_time]": date.startOf("day").format(),
+        "filter_by_time[end_time]": date.endOf("day").format(),
+        "filter_by_time[columns][]": ["delivery_time", "pick_up_time"],
       }
 
-      this.props.submitRequest('GET_DATE_RENTS', params)
+      this.props.clearStatus(['rents', 'order'])
+      this.getRents({ paginated: { offset: 0, limit: 10}, ...this.dateParams })
     } else {
-      this.props.clearStatus(['rents', 'get_date_rents_filter_status'])
+      this.dateParams = undefined
+      this.props.clearStatus(['rents', 'order'])
+      this.getRents({ paginated: { offset: 0, limit: 10} })
     }
   }
 
   render() {
-    let rents_filer = this.props.rents.get('get_date_rents_filter_status') === 'READY'
-    let rents_order = this.props.order || Immutable.List()
-    let rents_date_filter_order =  this.props.date_filter_order || Immutable.List()
+    let rents_order = this.props.order
 
     let datePickerLocale = {
       "lang": {
@@ -68,7 +74,7 @@ class Index extends React.Component {
       }
     }
     return (
-      <div style={{ marginTop: '20px'}}>
+      <div style={{ marginTop: '20px', marginBottom: '30px' }}>
         <table>
           <tbody>
             <tr>
@@ -98,46 +104,53 @@ class Index extends React.Component {
         </div>
         <Tabs>
           <Tabs.TabPane tab="Todas" key="1">
-            <RentList order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
+            <RentList order={ rents_order }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Reservadas" key="2">
-            <RentList status="reserved" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
+            <RentList status="reserved" order={ rents_order }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="En ruta" key="3">
-            <RentList status="on_route" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
+            <RentList status="on_route" order={ rents_order }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Entregadas" key="4">
-            <RentList status="delivered" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
+            <RentList status="delivered" order={ rents_order }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="En recolección" key="5">
-            <RentList status="on_pick_up" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
+            <RentList status="on_pick_up" order={ rents_order }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Pendientes" key="6">
-            <RentList status="pending" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
+            <RentList status="pending" order={ rents_order }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Finalizadas" key="7">
-            <RentList status="finalized" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
+            <RentList status="finalized" order={ rents_order }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Canceladas" key="8">
-            <RentList status="canceled" order={ (rents_filer ? rents_date_filter_order : rents_order) || Immutable.List() }
+            <RentList status="canceled" order={ rents_order }
                       hashed={ this.props.hashed || Immutable.Map() }
                       submitRequest={ this.props.submitRequest }/>
           </Tabs.TabPane>
         </Tabs>
+          { this.props.total > this.props.order.size ? (
+            <Button type="primary" style={{ marginTop: '20px', width: '100%' }} onClick={this.handleLoadMore.bind(this)}>
+              Cargar mas
+            </Button>
+         ) : null
+         }
+
       </div>
     )
   }
@@ -148,8 +161,8 @@ function mapStateToProps(state) {
     rents: state.get('rents') || Immutable.Map(),
     hashed: state.getIn(['rents', 'hashed']),
     order: state.getIn(['rents', 'order']),
-    date_filter_order: state.getIn(['rents', 'date_filter_order']),
-    session_status: state.get('session_status')
+    session_status: state.get('session_status'),
+    total: state.getIn(['rents', 'total'])
   }
 }
 
