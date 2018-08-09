@@ -8,7 +8,6 @@ import Immutable from 'immutable'
 import { Form, Input, Icon, Button, Checkbox } from 'antd'
 
 class SignIn extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -38,33 +37,53 @@ class SignIn extends React.Component {
     const { getFieldDecorator } = this.props.form
 
     return (
-      <div style={{ position: 'absolute', maxWidth: '300px', maxHeight: '177px', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto' }}>
-        <h1 style={{ textAlign: 'center', fontSize: 55, marginTop: '-88px' }}>
-          Brinson
-        </h1>
+      <div
+        style={{
+          position: 'absolute',
+          maxWidth: '300px',
+          maxHeight: '177px',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          margin: 'auto'
+        }}
+      >
+        <h1 style={{ textAlign: 'center', fontSize: 55, marginTop: '-88px' }}>Brinson</h1>
         <Form onSubmit={this.processSubmit} style={{ maxWidth: '300px' }}>
           <Form.Item>
             {getFieldDecorator('credential', {
-              rules: [{ required: true, message: 'Introduce tu nombre de usuario o correo' }],
+              rules: [{ required: true, message: 'Introduce tu nombre de usuario o correo' }]
             })(
-              <Input name="credential" prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Nombre de usuario ó Email" onChange={ this.handleChange }/>
+              <Input
+                name="credential"
+                prefix={<Icon type="user" style={{ fontSize: 13 }} />}
+                placeholder="Nombre de usuario ó Email"
+                onChange={this.handleChange}
+              />
             )}
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('password', {
-              rules: [{ required: true, message: 'Introduce tu contraseña' }],
+              rules: [{ required: true, message: 'Introduce tu contraseña' }]
             })(
-              <Input name="password" prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Contraseña" onChange={ this.handleChange } />
+              <Input
+                name="password"
+                prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
+                type="password"
+                placeholder="Contraseña"
+                onChange={this.handleChange}
+              />
             )}
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('remember', {
               valuePropName: 'checked',
-              initialValue: true,
-            })(
-              <Checkbox name="remember">Recordarme</Checkbox>
-            )}
-            <Link to="/recover" style={{ float: 'right' }}>Olvidé mi contraseña</Link>
+              initialValue: true
+            })(<Checkbox name="remember">Recordarme</Checkbox>)}
+            <Link to="/recover" style={{ float: 'right' }}>
+              Olvidé mi contraseña
+            </Link>
             <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
               Iniciar seción
             </Button>
@@ -81,4 +100,9 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Form.create()(SignIn)))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(Form.create()(SignIn))
+)

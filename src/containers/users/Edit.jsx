@@ -10,29 +10,28 @@ import { Form, Input, Radio, Button } from 'antd'
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 6 },
+    sm: { span: 6 }
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 14 },
-  },
+    sm: { span: 14 }
+  }
 }
 
 const tailFormItemLayout = {
   wrapperCol: {
     xs: {
       span: 24,
-      offset: 0,
+      offset: 0
     },
     sm: {
       span: 14,
-      offset: 6,
-    },
-  },
+      offset: 6
+    }
+  }
 }
 
 class Edit extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -55,19 +54,18 @@ class Edit extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.user.get('id') === undefined) {
+    if (this.user.get('id') === undefined) {
       this.setUpUser(nextProps)
     }
 
     let update_errors = nextProps.users.get('update_errors')
 
-    if(update_errors && this.submited) {
-
+    if (update_errors && this.submited) {
       var errors = {}
-      if(update_errors.get('email')) {
+      if (update_errors.get('email')) {
         errors['email'] = { errors: [new Error('Este correo electronico ya esta en uso')] }
       }
-      if(update_errors.get('username')) {
+      if (update_errors.get('username')) {
         errors['username'] = { errors: [new Error('Este nombre de usuario ya esta en uso')] }
       }
 
@@ -78,12 +76,12 @@ class Edit extends React.Component {
   }
 
   setUpUser(props) {
-    if(props.session_status === 'SIGNED_IN') {
-      if(props.get_users_status === 'READY') {
+    if (props.session_status === 'SIGNED_IN') {
+      if (props.get_users_status === 'READY') {
         this.user = props.users.getIn(['hashed', this.user_id])
-      } else if(String(props.user.get('id')) === this.user_id) {
+      } else if (String(props.user.get('id')) === this.user_id) {
         this.user = props.user
-      } else if(abilitiesHelper.isAdmin()) {
+      } else if (abilitiesHelper.isAdmin()) {
         this.props.submitRequest('GET_USERS')
       }
     }
@@ -116,13 +114,11 @@ class Edit extends React.Component {
   checkEmail(rule, value, callback) {
     const users = this.props.users.get('hashed') || Immutable.Map()
 
-
-
     var found = users.find((user, key) => {
       return user.get('email') === value && String(user.get('id')) !== this.user_id
     })
 
-    if(found) {
+    if (found) {
       callback('Este correo electronico ya esta en uso')
     } else {
       callback()
@@ -136,7 +132,7 @@ class Edit extends React.Component {
       return user.get('username') === value && String(user.get('id')) !== this.user_id
     })
 
-    if(found) {
+    if (found) {
       callback('Este nombre de usuario ya esta en uso')
     } else {
       callback()
@@ -147,36 +143,39 @@ class Edit extends React.Component {
     let form = this.props.edit_user_form || Immutable.Map()
     const { getFieldDecorator, isFieldsTouched } = this.props.form
 
-    var passwordField = ""
+    var passwordField = ''
 
-    if(this.props.session_status === 'SIGNED_IN' && (abilitiesHelper.itsMe(this.user) || abilitiesHelper.isMain() || (abilitiesHelper.isAdmin() && !abilitiesHelper.isAdmin(this.user)))) {
+    if (
+      this.props.session_status === 'SIGNED_IN' &&
+      (abilitiesHelper.itsMe(this.user) ||
+        abilitiesHelper.isMain() ||
+        (abilitiesHelper.isAdmin() && !abilitiesHelper.isAdmin(this.user)))
+    ) {
       passwordField = (
         <div>
           <Form.Item {...tailFormItemLayout}>
-            <h4>
-              Cambiar contraseña
-            </h4>
+            <h4>Cambiar contraseña</h4>
           </Form.Item>
           <Form.Item {...formItemLayout} label="Contraseña" hasFeedback>
-            { getFieldDecorator('password', {
-              rules: [{
-                whitespace: true
-              }],
+            {getFieldDecorator('password', {
+              rules: [
+                {
+                  whitespace: true
+                }
+              ],
               initialValue: form.get('password') || this.user.get('password')
-            })(
-              <Input name='password' type='password' placeholder="Nueva contraseña" onChange={ this.handleChange } />
-            )}
+            })(<Input name="password" type="password" placeholder="Nueva contraseña" onChange={this.handleChange} />)}
           </Form.Item>
         </div>
       )
     }
 
-    var roleInput = ""
+    var roleInput = ''
 
-    if(abilitiesHelper.isMain()) {
+    if (abilitiesHelper.isMain()) {
       roleInput = (
         <Form.Item {...formItemLayout} label="Tipo">
-          { getFieldDecorator('role', {
+          {getFieldDecorator('role', {
             initialValue: form.get('role') || this.user.get('role')
           })(
             <Radio.Group onChange={this.handleRoleChange}>
@@ -189,73 +188,83 @@ class Edit extends React.Component {
     }
 
     return (
-      <Form onSubmit={ this.processSubmit }>
+      <Form onSubmit={this.processSubmit}>
         <Form.Item {...tailFormItemLayout}>
-          <h2>
-            Editar Usuario
-          </h2>
+          <h2>Editar Usuario</h2>
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Email" hasFeedback>
-          { getFieldDecorator('email', {
-            rules: [{
-              type: 'email',
-              message: 'El email tiene un formato inválido'}, {
-              required: true,
-              message: 'Introduce el correo electrónico del usuario'}, {
-              validator: this.checkEmail
-            }],
+          {getFieldDecorator('email', {
+            rules: [
+              {
+                type: 'email',
+                message: 'El email tiene un formato inválido'
+              },
+              {
+                required: true,
+                message: 'Introduce el correo electrónico del usuario'
+              },
+              {
+                validator: this.checkEmail
+              }
+            ],
             initialValue: form.get('email') || this.user.get('email')
-          })(
-            <Input name='email' placeholder="Email" onChange={ this.handleChange } />
-          )}
+          })(<Input name="email" placeholder="Email" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Nombre de usuario" hasFeedback>
-          { getFieldDecorator('username', {
-            rules: [{
-              pattern: /^[a-zA-Z0-9\-._&]+$/,
-              message: 'El nombre de usuario no debe de contener espacios ni caracteres especiales.'}, {
-              required: true,
-              message: 'Introduce el nombre de usuario'}, {
-              validator: this.checkUsername
-            }],
+          {getFieldDecorator('username', {
+            rules: [
+              {
+                pattern: /^[a-zA-Z0-9\-._&]+$/,
+                message: 'El nombre de usuario no debe de contener espacios ni caracteres especiales.'
+              },
+              {
+                required: true,
+                message: 'Introduce el nombre de usuario'
+              },
+              {
+                validator: this.checkUsername
+              }
+            ],
             initialValue: form.get('username') || this.user.get('username')
-          })(
-            <Input name='username' placeholder="Nombre de usuario" onChange={ this.handleChange } />
-          )}
+          })(<Input name="username" placeholder="Nombre de usuario" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Nombre" hasFeedback>
-          { getFieldDecorator('firstname', {
-            rules: [{
-              required: true, message: 'Introduce el o los nombres del usuario',
-              whitespace: true
-            }],
+          {getFieldDecorator('firstname', {
+            rules: [
+              {
+                required: true,
+                message: 'Introduce el o los nombres del usuario',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('firstname') || this.user.get('firstname')
-          })(
-            <Input name='firstname' placeholder="Nombre" onChange={ this.handleChange }/>
-          )}
+          })(<Input name="firstname" placeholder="Nombre" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Apellido" hasFeedback>
-          { getFieldDecorator('lastname', {
-            rules: [{
-              required: true, message: 'Introduce el o los apellidos del usuario',
-              whitespace: true
-            }],
+          {getFieldDecorator('lastname', {
+            rules: [
+              {
+                required: true,
+                message: 'Introduce el o los apellidos del usuario',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('lastname') || this.user.get('lastname')
-          })(
-            <Input name='lastname' placeholder="Apellido" onChange={ this.handleChange } />
-          )}
+          })(<Input name="lastname" placeholder="Apellido" onChange={this.handleChange} />)}
         </Form.Item>
 
-        { roleInput }
+        {roleInput}
 
-        { passwordField }
+        {passwordField}
 
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit" size="large" disabled={ !isFieldsTouched() }>Actializar</Button>
+          <Button type="primary" htmlType="submit" size="large" disabled={!isFieldsTouched()}>
+            Actializar
+          </Button>
         </Form.Item>
       </Form>
     )
@@ -272,4 +281,9 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Form.create()(Edit)))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(Form.create()(Edit))
+)

@@ -5,21 +5,20 @@ import * as actionCreators from '../action-creators'
 import Immutable from 'immutable'
 
 class ReduxRouter extends React.Component {
-
   constructor(props) {
     super(props)
 
-    this.last_redirection = ""
+    this.last_redirection = ''
   }
- 
+
   componentWillReceiveProps(nextProps) {
     let action = nextProps.router.get('action')
     let pathname = nextProps.router.get('pathname')
 
-    if(action && pathname) {
+    if (action && pathname) {
       this.props.cleanRouter()
 
-      switch(action) {
+      switch (action) {
         case 'REDIRECT_TO':
           nextProps.history.push(pathname)
           break
@@ -27,7 +26,7 @@ class ReduxRouter extends React.Component {
           nextProps.history.goBack()
           break
         default:
-         break
+          break
       }
     }
   }
@@ -43,4 +42,9 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(ReduxRouter))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(ReduxRouter)
+)

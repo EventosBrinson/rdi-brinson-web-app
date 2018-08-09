@@ -1,7 +1,6 @@
 import React from 'react'
 
 export default class SignOutButton extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -9,20 +8,16 @@ export default class SignOutButton extends React.Component {
   }
 
   handleClick(event) {
-    if(event.preventDefault) {
+    if (event.preventDefault) {
       event.preventDefault()
     }
 
-    if(this.props.requestFunction) {
+    if (this.props.requestFunction) {
       this.props.requestFunction('SIGN_OUT')
     }
   }
 
   render() {
-    return (
-      <a onClick={ this.handleClick }>
-        { this.props.children }
-      </a>
-    )
+    return <a onClick={this.handleClick}>{this.props.children}</a>
   }
 }

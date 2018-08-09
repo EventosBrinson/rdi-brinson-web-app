@@ -8,7 +8,7 @@ export function isAdmin(other = undefined) {
   let toTest = other || current_user
   var role = toTest.get ? toTest.get('role') : toTest.role
 
-  switch(role) {
+  switch (role) {
     case 'admin':
     case 'staff':
       return true
@@ -18,8 +18,8 @@ export function isAdmin(other = undefined) {
 }
 
 export function isStaff() {
-  if(current_user) {
-    switch(current_user.role) {
+  if (current_user) {
+    switch (current_user.role) {
       case 'staff':
         return true
       default:

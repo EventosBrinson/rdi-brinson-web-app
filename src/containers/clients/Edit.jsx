@@ -9,29 +9,28 @@ import { Form, Input, Rate, Radio, Tooltip, Icon, Select, Button } from 'antd'
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 6 },
+    sm: { span: 6 }
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 14 },
-  },
+    sm: { span: 14 }
+  }
 }
 
 const tailFormItemLayout = {
   wrapperCol: {
     xs: {
       span: 24,
-      offset: 0,
+      offset: 0
     },
     sm: {
       span: 14,
-      offset: 6,
-    },
-  },
+      offset: 6
+    }
+  }
 }
 
 class Edit extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -53,23 +52,31 @@ class Edit extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.client.get('id') === undefined) {
+    if (this.client.get('id') === undefined) {
       this.setUpClient(nextProps)
     }
   }
 
   setUpClient(props) {
-    if(props.session_status === 'SIGNED_IN') {
-      if(props.clients && (props.clients.getIn(['get_client_statuses', this.client_id]) === 'READY' || props.clients.get('get_clients_status') === 'READY')) {
+    if (props.session_status === 'SIGNED_IN') {
+      if (
+        props.clients &&
+        (props.clients.getIn(['get_client_statuses', this.client_id]) === 'READY' ||
+          props.clients.get('get_clients_status') === 'READY')
+      ) {
         this.client = props.clients.getIn(['hashed', this.client_id])
-      } else if(!props.clients || props.clients.getIn(['get_client_statuses', this.client_id]) !== 'GETTING'){
+      } else if (!props.clients || props.clients.getIn(['get_client_statuses', this.client_id]) !== 'GETTING') {
         this.props.submitRequest('GET_CLIENT', {}, { id: this.client_id })
       }
     }
   }
 
   handleChange(event) {
-    this.props.changeForm('edit_client_form', event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value)
+    this.props.changeForm(
+      'edit_client_form',
+      event.target.name,
+      event.target.type === 'checkbox' ? event.target.checked : event.target.value
+    )
   }
 
   handleIDNameChange(value) {
@@ -93,7 +100,11 @@ class Edit extends React.Component {
       if (!err) {
         let data = (this.props.edit_client_form || Immutable.Map()).toJS()
 
-        this.props.submitRequest('UPDATE_CLIENT', { client: data }, { id: this.client_id, from: '/clients/' + this.client_id })
+        this.props.submitRequest(
+          'UPDATE_CLIENT',
+          { client: data },
+          { id: this.client_id, from: '/clients/' + this.client_id }
+        )
       }
     })
   }
@@ -103,144 +114,152 @@ class Edit extends React.Component {
     const { getFieldDecorator, isFieldsTouched } = this.props.form
 
     return (
-      <Form onSubmit={ this.processSubmit }>
+      <Form onSubmit={this.processSubmit}>
         <Form.Item {...tailFormItemLayout}>
-          <h2>
-            Editar Cliente
-          </h2>
+          <h2>Editar Cliente</h2>
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Nombre" hasFeedback>
-          { getFieldDecorator('firstname', {
-            rules: [{
-              required: true, message: 'Introduce el o los nombres del cliente',
-              whitespace: true
-            }],
+          {getFieldDecorator('firstname', {
+            rules: [
+              {
+                required: true,
+                message: 'Introduce el o los nombres del cliente',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('firstname') || this.client.get('firstname')
-          })(
-            <Input name='firstname' placeholder="Nombre" onChange={ this.handleChange }/>
-          )}
+          })(<Input name="firstname" placeholder="Nombre" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Apellido" hasFeedback>
-          { getFieldDecorator('lastname', {
-            rules: [{
-              required: true, message: 'Introduce el o los apellidos del cliente',
-              whitespace: true
-            }],
+          {getFieldDecorator('lastname', {
+            rules: [
+              {
+                required: true,
+                message: 'Introduce el o los apellidos del cliente',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('lastname') || this.client.get('lastname')
-          })(
-            <Input name='lastname' placeholder="Apellido" onChange={ this.handleChange } />
-          )}
+          })(<Input name="lastname" placeholder="Apellido" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Calle" hasFeedback>
-          { getFieldDecorator('street', {
-            rules: [{
-              required: true, message: 'Introduce el nombre de la calle',
-              whitespace: true
-            }],
+          {getFieldDecorator('street', {
+            rules: [
+              {
+                required: true,
+                message: 'Introduce el nombre de la calle',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('street') || this.client.get('street')
-          })(
-            <Input name='street' placeholder="Calle" onChange={ this.handleChange } />
-          )}
+          })(<Input name="street" placeholder="Calle" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Numero exterior" hasFeedback>
-          { getFieldDecorator('outer_number', {
-            rules: [{
-              required: true, message: 'Introduce el numero exterior del lugar',
-              whitespace: true
-            }],
+          {getFieldDecorator('outer_number', {
+            rules: [
+              {
+                required: true,
+                message: 'Introduce el numero exterior del lugar',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('outer_number') || this.client.get('outer_number')
-          })(
-            <Input name='outer_number' placeholder="Numero exterior" onChange={ this.handleChange } />
-          )}
+          })(<Input name="outer_number" placeholder="Numero exterior" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Numero interior" hasFeedback>
-          { getFieldDecorator('inner_number', {
+          {getFieldDecorator('inner_number', {
             initialValue: form.get('inner_number') || this.client.get('inner_number')
-          })(
-            <Input name='inner_number' placeholder="Numero interior" onChange={ this.handleChange } />
-          )}
+          })(<Input name="inner_number" placeholder="Numero interior" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Fraccionamiento" hasFeedback>
-          { getFieldDecorator('neighborhood', {
-            rules: [{
-              required: true, message: 'Introduce el nombre del fraccionamiento del lugar',
-              whitespace: true
-            }],
+          {getFieldDecorator('neighborhood', {
+            rules: [
+              {
+                required: true,
+                message: 'Introduce el nombre del fraccionamiento del lugar',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('neighborhood') || this.client.get('neighborhood')
-          })(
-            <Input name='neighborhood' placeholder="Fraccionamiento" onChange={ this.handleChange } />
-          )}
+          })(<Input name="neighborhood" placeholder="Fraccionamiento" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Codigo Postal" hasFeedback>
-          { getFieldDecorator('postal_code', {
-            rules: [{
-              pattern: /^\d+$/,
-              message: 'El codigo postal debe ser un número'}, {
-              whitespace: true
-            }],
+          {getFieldDecorator('postal_code', {
+            rules: [
+              {
+                pattern: /^\d+$/,
+                message: 'El codigo postal debe ser un número'
+              },
+              {
+                whitespace: true
+              }
+            ],
             initialValue: form.get('postal_code') || this.client.get('postal_code')
-          })(
-            <Input name='postal_code' placeholder="Codigo Postal" onChange={ this.handleChange } />
-          )}
+          })(<Input name="postal_code" placeholder="Codigo Postal" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Teléfono 1" hasFeedback>
-          { getFieldDecorator('telephone_1', {
-            rules: [{
-              pattern: /^\+?(\d+|\s)+$/,
-              message: 'El teléfono tiene un formato inválido'}, {
-              required: true,
-              message: 'Introduce al menos un teléfono para el cliente'
-            }],
+          {getFieldDecorator('telephone_1', {
+            rules: [
+              {
+                pattern: /^\+?(\d+|\s)+$/,
+                message: 'El teléfono tiene un formato inválido'
+              },
+              {
+                required: true,
+                message: 'Introduce al menos un teléfono para el cliente'
+              }
+            ],
             initialValue: form.get('telephone_1') || this.client.get('telephone_1')
-          })(
-            <Input name='telephone_1' placeholder="Teléfono 1" onChange={ this.handleChange } />
-          )}
+          })(<Input name="telephone_1" placeholder="Teléfono 1" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Teléfono 2" hasFeedback>
-          { getFieldDecorator('telephone_2', {
-            rules: [{
-              pattern: /^\+?(\d+|\s)+$/,
-              message: 'El teléfono tiene un formato inválido'
-            }],
+          {getFieldDecorator('telephone_2', {
+            rules: [
+              {
+                pattern: /^\+?(\d+|\s)+$/,
+                message: 'El teléfono tiene un formato inválido'
+              }
+            ],
             initialValue: form.get('telephone_2') || this.client.get('telephone_2')
-          })(
-            <Input name='telephone_2' placeholder="Teléfono 2" onChange={ this.handleChange } />
-          )}
+          })(<Input name="telephone_2" placeholder="Teléfono 2" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Email" hasFeedback>
-          { getFieldDecorator('email', {
-            rules: [{
-              type: 'email',
-              message: 'El email tiene un formato inválido'
-            }],
+          {getFieldDecorator('email', {
+            rules: [
+              {
+                type: 'email',
+                message: 'El email tiene un formato inválido'
+              }
+            ],
             initialValue: form.get('email') || this.client.get('email')
-          })(
-            <Input name='email' placeholder="Email" onChange={ this.handleChange } />
-          )}
+          })(<Input name="email" placeholder="Email" onChange={this.handleChange} />)}
         </Form.Item>
 
-        <Form.Item {...formItemLayout}
+        <Form.Item
+          {...formItemLayout}
           label={
             <span>
               Identificación&nbsp;
               <Tooltip title="¿Con que documento se identifica el cliente?">
                 <Icon type="question-circle-o" />
               </Tooltip>
-            </span> }>
-          { getFieldDecorator('id_name', {
+            </span>
+          }
+        >
+          {getFieldDecorator('id_name', {
             initialValue: form.get('id_name') || this.client.get('id_name')
           })(
-            <Select name='id_name' onChange={ this.handleIDNameChange }>
+            <Select name="id_name" onChange={this.handleIDNameChange}>
               <Select.Option value="ine">INE</Select.Option>
               <Select.Option value="licencia">Licencia</Select.Option>
               <Select.Option value="cartilla">Cartilla militar</Select.Option>
@@ -251,15 +270,13 @@ class Edit extends React.Component {
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Nivel de confianza">
-          { getFieldDecorator('trust_level', {
+          {getFieldDecorator('trust_level', {
             initialValue: form.get('trust_level') || this.client.get('trust_level')
-          })(
-            <Rate count={ 10 } onChange={ this.handleTrustLevelChange }/>
-          )}
+          })(<Rate count={10} onChange={this.handleTrustLevelChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Tipo de cliente">
-          { getFieldDecorator('rent_type', {
+          {getFieldDecorator('rent_type', {
             initialValue: form.get('rent_type') || this.client.get('rent_type')
           })(
             <Radio.Group onChange={this.handleRentTypeChange}>
@@ -271,7 +288,9 @@ class Edit extends React.Component {
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit" size="large" disabled={ !isFieldsTouched() }>Actializar</Button>
+          <Button type="primary" htmlType="submit" size="large" disabled={!isFieldsTouched()}>
+            Actializar
+          </Button>
         </Form.Item>
       </Form>
     )
@@ -286,4 +305,9 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Form.create()(Edit)))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(Form.create()(Edit))
+)

@@ -8,9 +8,7 @@ import UserList from '../../components/users/UserList'
 
 import { Tabs, Button } from 'antd'
 
-
 class Index extends React.Component {
-
   componentDidMount() {
     this.getUsers(this.props)
   }
@@ -20,27 +18,23 @@ class Index extends React.Component {
   }
 
   getUsers(props) {
-    if(props.session_status === 'SIGNED_IN' && props.users.get('get_users_status') === undefined) {
-      props.submitRequest('GET_USERS') 
+    if (props.session_status === 'SIGNED_IN' && props.users.get('get_users_status') === undefined) {
+      props.submitRequest('GET_USERS')
     }
   }
 
   render() {
     return (
-      <div style={{ marginTop: '20px'}}>
+      <div style={{ marginTop: '20px' }}>
         <table>
           <tbody>
             <tr>
               <td>
-                <h2>
-                  Usuarios
-                </h2>
+                <h2>Usuarios</h2>
               </td>
-              <td style={{ width: '1%', whiteSpace: 'nowrap' } }>
+              <td style={{ width: '1%', whiteSpace: 'nowrap' }}>
                 <Button type="primary">
-                  <Link to="/users/new">
-                    Crear nuevo
-                  </Link>
+                  <Link to="/users/new">Crear nuevo</Link>
                 </Button>
               </td>
             </tr>
@@ -48,16 +42,20 @@ class Index extends React.Component {
         </table>
         <Tabs>
           <Tabs.TabPane tab="Activos" key="1">
-            <UserList active={ true } 
-                      order={ this.props.order || Immutable.List() }
-                      hashed={ this.props.hashed || Immutable.Map() }
-                      submitRequest={ this.props.submitRequest }/>
+            <UserList
+              active={true}
+              order={this.props.order || Immutable.List()}
+              hashed={this.props.hashed || Immutable.Map()}
+              submitRequest={this.props.submitRequest}
+            />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Inactivos" key="2">
-            <UserList active={ false } 
-                      order={ this.props.order || Immutable.List() }
-                      hashed={ this.props.hashed || Immutable.Map()}
-                      submitRequest={ this.props.submitRequest }/>
+            <UserList
+              active={false}
+              order={this.props.order || Immutable.List()}
+              hashed={this.props.hashed || Immutable.Map()}
+              submitRequest={this.props.submitRequest}
+            />
           </Tabs.TabPane>
         </Tabs>
       </div>
@@ -74,4 +72,9 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Index))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(Index)
+)

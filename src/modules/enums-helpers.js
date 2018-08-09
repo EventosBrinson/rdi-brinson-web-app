@@ -1,5 +1,5 @@
 export function rentType(value) {
-  switch(value) {
+  switch (value) {
     case 'first_rent':
       return 'Primera renta'
     case 'frecuent':
@@ -12,7 +12,7 @@ export function rentType(value) {
 }
 
 export function role(value) {
-  switch(value) {
+  switch (value) {
     case 'admin':
       return 'Administrador'
     case 'staff':
@@ -25,7 +25,7 @@ export function role(value) {
 }
 
 export function idName(value) {
-  switch(value) {
+  switch (value) {
     case 'ine':
       return 'INE'
     case 'licencia':
@@ -42,7 +42,7 @@ export function idName(value) {
 }
 
 export function rentStatus(value) {
-  switch(value) {
+  switch (value) {
     case 'reserved':
       return 'Reservada'
     case 'on_route':

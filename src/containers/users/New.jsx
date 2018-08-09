@@ -10,29 +10,28 @@ import { Form, Input, Radio, Button } from 'antd'
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 6 },
+    sm: { span: 6 }
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 14 },
-  },
+    sm: { span: 14 }
+  }
 }
 
 const tailFormItemLayout = {
   wrapperCol: {
     xs: {
       span: 24,
-      offset: 0,
+      offset: 0
     },
     sm: {
       span: 14,
-      offset: 6,
-    },
-  },
+      offset: 6
+    }
+  }
 }
 
 class New extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -44,14 +43,14 @@ class New extends React.Component {
   }
 
   componentDidMount() {
-    if(this.props.session_status === 'SIGNED_IN') {
-      if(this.props.get_users_status === undefined) {
-        this.props.submitRequest('GET_USERS') 
+    if (this.props.session_status === 'SIGNED_IN') {
+      if (this.props.get_users_status === undefined) {
+        this.props.submitRequest('GET_USERS')
       }
 
       let form = this.props.user_form || Immutable.Map()
 
-      if(form.get('role') === undefined) {
+      if (form.get('role') === undefined) {
         this.props.mergeForm('user_form', {
           role: 'user'
         })
@@ -59,13 +58,11 @@ class New extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-  }
+  componentWillReceiveProps(nextProps) {}
 
   handleChange(event) {
     this.props.changeForm('user_form', event.target.name, event.target.value)
   }
-
 
   handleRoleChange(object) {
     this.props.changeForm('user_form', 'role', object.target.value)
@@ -92,7 +89,7 @@ class New extends React.Component {
       return user.get('email') === value
     })
 
-    if(found) {
+    if (found) {
       callback('Este correo electronico ya esta en uso')
     } else {
       callback()
@@ -106,7 +103,7 @@ class New extends React.Component {
       return user.get('username') === value
     })
 
-    if(found) {
+    if (found) {
       callback('Este nombre de usuario ya esta en uso')
     } else {
       callback()
@@ -117,12 +114,12 @@ class New extends React.Component {
     let form = this.props.user_form || Immutable.Map()
     const { getFieldDecorator } = this.props.form
 
-    var roleInput = ""
+    var roleInput = ''
 
-    if(abilitiesHelper.isMain()) {
+    if (abilitiesHelper.isMain()) {
       roleInput = (
         <Form.Item {...formItemLayout} label="Tipo">
-          { getFieldDecorator('role', {
+          {getFieldDecorator('role', {
             initialValue: form.get('role')
           })(
             <Radio.Group onChange={this.handleRoleChange}>
@@ -135,71 +132,81 @@ class New extends React.Component {
     }
 
     return (
-      <Form onSubmit={ this.processSubmit }>
+      <Form onSubmit={this.processSubmit}>
         <Form.Item {...tailFormItemLayout}>
-          <h2>
-            Nuevo Usuario
-          </h2>
+          <h2>Nuevo Usuario</h2>
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Email" hasFeedback>
-          { getFieldDecorator('email', {
-            rules: [{
-              type: 'email',
-              message: 'El email tiene un formato inválido'}, {
-              required: true,
-              message: 'Introduce el correo electrónico del usuario'}, {
-              validator: this.checkEmail
-            }],
+          {getFieldDecorator('email', {
+            rules: [
+              {
+                type: 'email',
+                message: 'El email tiene un formato inválido'
+              },
+              {
+                required: true,
+                message: 'Introduce el correo electrónico del usuario'
+              },
+              {
+                validator: this.checkEmail
+              }
+            ],
             initialValue: form.get('email')
-          })(
-            <Input name='email' placeholder="Email" onChange={ this.handleChange } />
-          )}
+          })(<Input name="email" placeholder="Email" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Nombre de usuario" hasFeedback>
-          { getFieldDecorator('username', {
-            rules: [{
-              pattern: /^[a-zA-Z0-9\-._&]+$/,
-              message: 'El nombre de usuario no debe de contener espacios ni caracteres especiales.'}, {
-              required: true,
-              message: 'Introduce el nombre de usuario'}, {
-              validator: this.checkUsername
-            }],
+          {getFieldDecorator('username', {
+            rules: [
+              {
+                pattern: /^[a-zA-Z0-9\-._&]+$/,
+                message: 'El nombre de usuario no debe de contener espacios ni caracteres especiales.'
+              },
+              {
+                required: true,
+                message: 'Introduce el nombre de usuario'
+              },
+              {
+                validator: this.checkUsername
+              }
+            ],
             initialValue: form.get('username')
-          })(
-            <Input name='username' placeholder="Nombre de usuario" onChange={ this.handleChange } />
-          )}
+          })(<Input name="username" placeholder="Nombre de usuario" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Nombre" hasFeedback>
-          { getFieldDecorator('firstname', {
-            rules: [{
-              required: true, message: 'Introduce el o los nombres del usuario',
-              whitespace: true
-            }],
+          {getFieldDecorator('firstname', {
+            rules: [
+              {
+                required: true,
+                message: 'Introduce el o los nombres del usuario',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('firstname')
-          })(
-            <Input name='firstname' placeholder="Nombre" onChange={ this.handleChange }/>
-          )}
+          })(<Input name="firstname" placeholder="Nombre" onChange={this.handleChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Apellido" hasFeedback>
-          { getFieldDecorator('lastname', {
-            rules: [{
-              required: true, message: 'Introduce el o los apellidos del usuario',
-              whitespace: true
-            }],
+          {getFieldDecorator('lastname', {
+            rules: [
+              {
+                required: true,
+                message: 'Introduce el o los apellidos del usuario',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('lastname')
-          })(
-            <Input name='lastname' placeholder="Apellido" onChange={ this.handleChange } />
-          )}
+          })(<Input name="lastname" placeholder="Apellido" onChange={this.handleChange} />)}
         </Form.Item>
 
-        { roleInput }
+        {roleInput}
 
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit" size="large">Crear</Button>
+          <Button type="primary" htmlType="submit" size="large">
+            Crear
+          </Button>
         </Form.Item>
       </Form>
     )
@@ -215,4 +222,9 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Form.create()(New)))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(Form.create()(New))
+)

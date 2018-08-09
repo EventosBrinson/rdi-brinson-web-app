@@ -2,8 +2,8 @@ import Immutable from 'immutable'
 import * as core from './core'
 
 export default function reducer(state = Immutable.Map(), action) {
-  if(/@@.*INIT/.test(action.type)){
-      return core.initApp(state)
+  if (/@@.*INIT/.test(action.type)) {
+    return core.initApp(state)
   }
 
   switch (action.type) {

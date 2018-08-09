@@ -14,7 +14,7 @@ export function initApp(state) {
 }
 
 export function changeForm(state, form, field, value) {
-  return state.setIn(['forms', form , field], Immutable.fromJS(value))
+  return state.setIn(['forms', form, field], Immutable.fromJS(value))
 }
 
 export function cleanForm(state, form) {
@@ -38,7 +38,7 @@ export function submitRequest(state, request, data, payload, callback) {
     case 'REQUEST_RESET_PASSWORD':
       Api.post(request, '/reset_password', data, payload, callback)
       return state.deleteIn(['forms', 'recover_password_form']).set('recover_password_status', 'SENDING')
-    
+
     case 'RESET_PASSWORD':
       Api.patch(request, '/reset_password', data, payload, callback)
       return state.deleteIn(['forms', 'reset_password_form']).set('reset_password_status', 'RESETING')
@@ -53,16 +53,15 @@ export function submitRequest(state, request, data, payload, callback) {
 
     case 'CREATE_USER':
       Api.post(request, '/users', data, payload, callback, sessionToken)
-      return state.deleteIn(['forms', 'user_form']).setIn(['users', 'create_user_status' ], 'CREATING')
+      return state.deleteIn(['forms', 'user_form']).setIn(['users', 'create_user_status'], 'CREATING')
 
     case 'GET_USER':
-      Api.get(request, `/users/${ payload.id }`, data, payload, callback, sessionToken)
-      return state.setIn(['users', 'get_user_statuses', payload.id ], 'GETTING')
+      Api.get(request, `/users/${payload.id}`, data, payload, callback, sessionToken)
+      return state.setIn(['users', 'get_user_statuses', payload.id], 'GETTING')
 
     case 'UPDATE_USER':
-      Api.patch(request, `/users/${ payload.id }`, data, payload, callback, sessionToken)
-      return state.deleteIn(['forms', 'user_form'])
-                  .setIn(['users', 'update_user_statuses', payload.id ], 'UPDATING')
+      Api.patch(request, `/users/${payload.id}`, data, payload, callback, sessionToken)
+      return state.deleteIn(['forms', 'user_form']).setIn(['users', 'update_user_statuses', payload.id], 'UPDATING')
 
     case 'GET_CLIENTS':
       Api.get(request, '/clients', data, payload, callback, sessionToken)
@@ -70,30 +69,31 @@ export function submitRequest(state, request, data, payload, callback) {
 
     case 'CREATE_CLIENT':
       Api.post(request, '/clients', data, payload, callback, sessionToken)
-      return state.deleteIn(['forms', 'client_form'])
-                  .setIn(['clients', 'create_client_status' ], 'CREATING')
+      return state.deleteIn(['forms', 'client_form']).setIn(['clients', 'create_client_status'], 'CREATING')
 
     case 'GET_CLIENT':
-      Api.get(request, `/clients/${ payload.id }`, data, payload, callback, sessionToken)
-      return state.setIn(['clients', 'get_client_statuses', payload.id ], 'GETTING')
+      Api.get(request, `/clients/${payload.id}`, data, payload, callback, sessionToken)
+      return state.setIn(['clients', 'get_client_statuses', payload.id], 'GETTING')
 
     case 'UPDATE_CLIENT':
-      Api.patch(request, `/clients/${ payload.id }`, data, payload, callback, sessionToken)
-      return state.deleteIn(['forms', 'edit_client_form'])
-                  .setIn(['clients', 'update_client_statuses', payload.id ], 'UPDATING')
+      Api.patch(request, `/clients/${payload.id}`, data, payload, callback, sessionToken)
+      return state
+        .deleteIn(['forms', 'edit_client_form'])
+        .setIn(['clients', 'update_client_statuses', payload.id], 'UPDATING')
 
     case 'CREATE_DOCUMENT':
-      Api.post(request, '/documents',data, payload, callback, sessionToken)
-      return state.setIn(['documents', 'create_document_status' ], 'CREATING')
+      Api.post(request, '/documents', data, payload, callback, sessionToken)
+      return state.setIn(['documents', 'create_document_status'], 'CREATING')
 
     case 'DELETE_DOCUMENT':
-      Api.del(request, `/documents/${ payload.id }`, data, payload, callback, sessionToken)
+      Api.del(request, `/documents/${payload.id}`, data, payload, callback, sessionToken)
       return state.setIn(['documents', 'delete_document_status', payload.id], 'DELETING')
 
     case 'UPDATE_DOCUMENT':
-      Api.patch(request, `/clients/${ payload.id }`, data, payload, callback, sessionToken)
-      return state.deleteIn(['forms', 'edit_document_form', payload.id])
-                  .setIn(['documents', 'update_document_status', payload.id], 'UPDATING')
+      Api.patch(request, `/clients/${payload.id}`, data, payload, callback, sessionToken)
+      return state
+        .deleteIn(['forms', 'edit_document_form', payload.id])
+        .setIn(['documents', 'update_document_status', payload.id], 'UPDATING')
 
     case 'GET_PLACES':
       Api.get(request, '/places', data, payload, callback, sessionToken)
@@ -101,17 +101,17 @@ export function submitRequest(state, request, data, payload, callback) {
 
     case 'CREATE_PLACE':
       Api.post(request, '/places', data, payload, callback, sessionToken)
-      return state.deleteIn(['forms', 'place_form'])
-                  .setIn(['places', 'create_place_status' ], 'CREATING')
+      return state.deleteIn(['forms', 'place_form']).setIn(['places', 'create_place_status'], 'CREATING')
 
     case 'GET_PLACE':
-      Api.get(request, `/places/${ payload.id }`, data, payload, callback, sessionToken)
-      return state.setIn(['places', 'get_place_statuses', payload.id ], 'GETTING')
+      Api.get(request, `/places/${payload.id}`, data, payload, callback, sessionToken)
+      return state.setIn(['places', 'get_place_statuses', payload.id], 'GETTING')
 
     case 'UPDATE_PLACE':
-      Api.patch(request, `/places/${ payload.id }`, data, payload, callback, sessionToken)
-      return state.deleteIn(['forms', 'edit_place_form'])
-                  .setIn(['places', 'update_place_statuses', payload.id ], 'UPDATING')
+      Api.patch(request, `/places/${payload.id}`, data, payload, callback, sessionToken)
+      return state
+        .deleteIn(['forms', 'edit_place_form'])
+        .setIn(['places', 'update_place_statuses', payload.id], 'UPDATING')
 
     case 'GET_RENTS':
       Api.get(request, '/rents', data, payload, callback, sessionToken)
@@ -122,18 +122,18 @@ export function submitRequest(state, request, data, payload, callback) {
       return state.setIn(['rents', 'get_client_rents_statuses', payload.client_id], 'GETTING')
 
     case 'GET_RENT':
-      Api.get(request, `/rents/${ payload.id }`, data, payload, callback, sessionToken)
-      return state.setIn(['rents', 'get_rent_statuses', payload.id ], 'GETTING')
+      Api.get(request, `/rents/${payload.id}`, data, payload, callback, sessionToken)
+      return state.setIn(['rents', 'get_rent_statuses', payload.id], 'GETTING')
 
     case 'CREATE_RENT':
       Api.post(request, '/rents', data, payload, callback, sessionToken)
-      return state.deleteIn(['forms', 'rent_form'])
-                  .setIn(['rents', 'create_rent_status' ], 'CREATING')
+      return state.deleteIn(['forms', 'rent_form']).setIn(['rents', 'create_rent_status'], 'CREATING')
 
     case 'UPDATE_RENT':
-      Api.patch(request, `/rents/${ payload.id }`, data.rent, payload, callback, sessionToken)
-      return state.deleteIn(['forms', 'edit_rent_form'])
-                  .setIn(['rents', 'update_rent_statuses', payload.id ], 'UPDATING')
+      Api.patch(request, `/rents/${payload.id}`, data.rent, payload, callback, sessionToken)
+      return state
+        .deleteIn(['forms', 'edit_rent_form'])
+        .setIn(['rents', 'update_rent_statuses', payload.id], 'UPDATING')
 
     default:
       return state
@@ -147,17 +147,17 @@ export function requestSucceeded(state, request, result, payload, callback) {
     case 'SIGN_IN':
     case 'RESET_PASSWORD':
     case 'CONFIRM_ACCOUNT':
-      if(data) {
+      if (data) {
         cookies.set('ssid', data.token, { path: '/' })
         sessionToken = data.token
 
-        var newState = Immutable.Map({ 'session_status': 'SIGNED_IN', 'user': Immutable.fromJS(data.user) })
+        var newState = Immutable.Map({ session_status: 'SIGNED_IN', user: Immutable.fromJS(data.user) })
 
         abilitiesHelper.setUser(data.user)
 
-        if(state.get('session_status') !== 'FIRST_SIGNING_IN') {
+        if (state.get('session_status') !== 'FIRST_SIGNING_IN') {
           newState = newState.setIn(['router', 'action'], 'REDIRECT_TO')
-          if(payload && payload.from) {
+          if (payload && payload.from) {
             newState = newState.setIn(['router', 'pathname'], payload.from)
           } else {
             newState = newState.setIn(['router', 'pathname'], '/')
@@ -165,59 +165,63 @@ export function requestSucceeded(state, request, result, payload, callback) {
         }
         return newState
       } else {
-        return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
+        return Immutable.Map({ session_status: 'NOT_SIGNED_IN' })
       }
 
     case 'SIGN_OUT':
       cookies.remove('ssid')
       sessionToken = undefined
 
-      return Immutable.Map({ 'session_status': 'NOT_SIGNED_IN' })
+      return Immutable.Map({ session_status: 'NOT_SIGNED_IN' })
 
     case 'REQUEST_RESET_PASSWORD':
-      return state.set('recover_password_status', 'SENT')
-                  .setIn(['router', 'action'], 'REDIRECT_TO')
-                  .setIn(['router', 'pathname'], '/sign_in')
+      return state
+        .set('recover_password_status', 'SENT')
+        .setIn(['router', 'action'], 'REDIRECT_TO')
+        .setIn(['router', 'pathname'], '/sign_in')
 
     case 'GET_USERS':
       var users_hash = {}
       var users_order = []
-      data.forEach( user => {
+      data.forEach(user => {
         users_hash[user.id] = user
         users_order.push(String(user.id))
       })
-      return state.setIn(['users', 'get_users_status'], 'READY')
-                  .setIn(['users', 'hashed'], Immutable.fromJS(users_hash))
-                  .setIn(['users', 'order'], Immutable.fromJS(users_order))
+      return state
+        .setIn(['users', 'get_users_status'], 'READY')
+        .setIn(['users', 'hashed'], Immutable.fromJS(users_hash))
+        .setIn(['users', 'order'], Immutable.fromJS(users_order))
 
     case 'CREATE_USER':
-      return state.setIn(['users', 'create_user_status'], 'CREATED')
-                  .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .updateIn(['users', 'order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
-                  .setIn(['router', 'action'], 'REDIRECT_TO')
-                  .setIn(['router', 'pathname'], '/users')
+      return state
+        .setIn(['users', 'create_user_status'], 'CREATED')
+        .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
+        .updateIn(['users', 'order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
+        .setIn(['router', 'action'], 'REDIRECT_TO')
+        .setIn(['router', 'pathname'], '/users')
 
     case 'GET_USER':
-      return state.setIn(['users', 'get_user_statuses', String(data.id)], 'READY')
-                  .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
+      return state
+        .setIn(['users', 'get_user_statuses', String(data.id)], 'READY')
+        .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
 
     case 'UPDATE_USER':
-      if(!data.id) {
+      if (!data.id) {
         return state.setIn(['users', 'update_errors'], Immutable.fromJS(data))
       } else {
         var updateUserState = state
 
-        if(payload.id === String(data.id)) {
+        if (payload.id === String(data.id)) {
           updateUserState = state.set('user', Immutable.fromJS(data))
         }
 
-        return updateUserState.setIn(['users', 'update_user_statuses', String(data.id)], 'UPDATED')
-                              .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
-                              .setIn(['router', 'action'], 'REDIRECT_TO')
-                              .setIn(['router', 'pathname'], '/users')
-                              .deleteIn(['users', 'update_errors'])
+        return updateUserState
+          .setIn(['users', 'update_user_statuses', String(data.id)], 'UPDATED')
+          .setIn(['users', 'hashed', String(data.id)], Immutable.fromJS(data))
+          .setIn(['router', 'action'], 'REDIRECT_TO')
+          .setIn(['router', 'pathname'], '/users')
+          .deleteIn(['users', 'update_errors'])
       }
-
 
     case 'GET_CLIENTS':
       var get_clients_hash = {}
@@ -249,11 +253,12 @@ export function requestSucceeded(state, request, result, payload, callback) {
         client.places_order = get_clients_places_order
       })
 
-      return state.setIn(['clients', 'get_clients_status'], 'READY')
-                  .setIn(['clients', 'hashed'], Immutable.fromJS(get_clients_hash))
-                  .setIn(['clients', 'order'], Immutable.fromJS(get_clients_order))
-                  .mergeIn(['documents', 'hashed'], get_clients_documents_hash)
-                  .mergeIn(['places', 'hashed'], get_clients_places_hash)
+      return state
+        .setIn(['clients', 'get_clients_status'], 'READY')
+        .setIn(['clients', 'hashed'], Immutable.fromJS(get_clients_hash))
+        .setIn(['clients', 'order'], Immutable.fromJS(get_clients_order))
+        .mergeIn(['documents', 'hashed'], get_clients_documents_hash)
+        .mergeIn(['places', 'hashed'], get_clients_places_hash)
 
     case 'CREATE_CLIENT':
       var create_client_places_hash = {}
@@ -267,12 +272,13 @@ export function requestSucceeded(state, request, result, payload, callback) {
       delete data.places
       data.places_order = create_client_places_order
 
-      return state.setIn(['clients', 'create_client_status'], 'CREATED')
-                  .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .updateIn(['clients', 'order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
-                  .mergeIn(['places', 'hashed'], create_client_places_hash)
-                  .setIn(['router', 'action'], 'REDIRECT_TO')
-                  .setIn(['router', 'pathname'], '/clients/' + data.id)
+      return state
+        .setIn(['clients', 'create_client_status'], 'CREATED')
+        .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
+        .updateIn(['clients', 'order'], order => (order || Immutable.List()).unshift(Immutable.fromJS(String(data.id))))
+        .mergeIn(['places', 'hashed'], create_client_places_hash)
+        .setIn(['router', 'action'], 'REDIRECT_TO')
+        .setIn(['router', 'pathname'], '/clients/' + data.id)
 
     case 'GET_CLIENT':
       var get_client_documents_hash = {}
@@ -296,10 +302,11 @@ export function requestSucceeded(state, request, result, payload, callback) {
       delete data.places
       data.places_order = get_client_places_order
 
-      return state.setIn(['clients', 'get_client_statuses', String(data.id)], 'READY')
-                  .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .mergeIn(['documents', 'hashed'], get_client_documents_hash)
-                  .mergeIn(['places', 'hashed'], get_client_places_hash)
+      return state
+        .setIn(['clients', 'get_client_statuses', String(data.id)], 'READY')
+        .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
+        .mergeIn(['documents', 'hashed'], get_client_documents_hash)
+        .mergeIn(['places', 'hashed'], get_client_places_hash)
 
     case 'UPDATE_CLIENT':
       var update_client_documents_hash = {}
@@ -323,35 +330,46 @@ export function requestSucceeded(state, request, result, payload, callback) {
       delete data.places
       data.places_order = update_client_places_order
 
-      let updateClientState = state.setIn(['clients', 'update_client_statuses', String(data.id)], 'UPDATED')
-                                   .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
-                                   .mergeIn(['documents', 'hashed'], update_client_documents_hash)
-                                   .mergeIn(['places', 'hashed'], update_client_places_hash)
+      let updateClientState = state
+        .setIn(['clients', 'update_client_statuses', String(data.id)], 'UPDATED')
+        .setIn(['clients', 'hashed', String(data.id)], Immutable.fromJS(data))
+        .mergeIn(['documents', 'hashed'], update_client_documents_hash)
+        .mergeIn(['places', 'hashed'], update_client_places_hash)
 
       console.log(payload)
 
-      if(payload.from) {
-        updateClientState = updateClientState.setIn(['router', 'action'], 'REDIRECT_TO')
-                                             .setIn(['router', 'pathname'], payload.from)
+      if (payload.from) {
+        updateClientState = updateClientState
+          .setIn(['router', 'action'], 'REDIRECT_TO')
+          .setIn(['router', 'pathname'], payload.from)
       }
 
       return updateClientState
 
     case 'CREATE_DOCUMENT':
-      return state.setIn(['documents', 'create_document_status'], 'CREATED')
-                  .setIn(['documents', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .updateIn(['documents', 'order'], order => (order || Immutable.List()).push(String(data.id)))
-                  .updateIn(['clients', 'hashed', String(data.client_id), 'documents_order'], order => (order || Immutable.List()).push(String(data.id)))
+      return state
+        .setIn(['documents', 'create_document_status'], 'CREATED')
+        .setIn(['documents', 'hashed', String(data.id)], Immutable.fromJS(data))
+        .updateIn(['documents', 'order'], order => (order || Immutable.List()).push(String(data.id)))
+        .updateIn(['clients', 'hashed', String(data.client_id), 'documents_order'], order =>
+          (order || Immutable.List()).push(String(data.id))
+        )
 
     case 'DELETE_DOCUMENT':
-      return state.setIn(['documents', 'delete_document_status', payload.id], 'DELETED')
-                  .deleteIn(['documents', 'hashed', String(payload.id)])
-                  .updateIn(['documents', 'order'], order => (order || Immutable.List()).filterNot(value => value === String(payload.id)))
-                  .updateIn(['clients', 'hashed', String(payload.client_id), 'documents_order'], order => (order || Immutable.List()).filterNot(value => value === String(payload.id)))
+      return state
+        .setIn(['documents', 'delete_document_status', payload.id], 'DELETED')
+        .deleteIn(['documents', 'hashed', String(payload.id)])
+        .updateIn(['documents', 'order'], order =>
+          (order || Immutable.List()).filterNot(value => value === String(payload.id))
+        )
+        .updateIn(['clients', 'hashed', String(payload.client_id), 'documents_order'], order =>
+          (order || Immutable.List()).filterNot(value => value === String(payload.id))
+        )
 
     case 'UPDATE_DOCUMENT':
-      return state.setIn(['documents', 'update_document_status', String(data.id)], 'UPDATED')
-                  .setIn(['documents', 'hashed', String(data.id)], Immutable.fromJS(data))
+      return state
+        .setIn(['documents', 'update_document_status', String(data.id)], 'UPDATED')
+        .setIn(['documents', 'hashed', String(data.id)], Immutable.fromJS(data))
 
     case 'GET_PLACES':
       var get_places_hash = {}
@@ -362,27 +380,33 @@ export function requestSucceeded(state, request, result, payload, callback) {
         get_places_order.push(String(place.id))
       })
 
-      return state.setIn(['places', 'get_places_status'], 'READY')
-                  .setIn(['places', 'hashed'], Immutable.fromJS(get_places_hash))
-                  .setIn(['places', 'order'], Immutable.fromJS(get_places_order))
+      return state
+        .setIn(['places', 'get_places_status'], 'READY')
+        .setIn(['places', 'hashed'], Immutable.fromJS(get_places_hash))
+        .setIn(['places', 'order'], Immutable.fromJS(get_places_order))
 
     case 'CREATE_PLACE':
-      return state.setIn(['places', 'create_place_status'], 'CREATED')
-                  .setIn(['places', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .updateIn(['places', 'order'], order => (order || Immutable.List()).push(String(data.id)))
-                  .updateIn(['clients', 'hashed', String(data.client_id), 'places_order'], order => (order || Immutable.List()).push(String(data.id)))
-                  .setIn(['router', 'action'], 'REDIRECT_TO')
-                  .setIn(['router', 'pathname'], '/clients/' + data.client_id)
+      return state
+        .setIn(['places', 'create_place_status'], 'CREATED')
+        .setIn(['places', 'hashed', String(data.id)], Immutable.fromJS(data))
+        .updateIn(['places', 'order'], order => (order || Immutable.List()).push(String(data.id)))
+        .updateIn(['clients', 'hashed', String(data.client_id), 'places_order'], order =>
+          (order || Immutable.List()).push(String(data.id))
+        )
+        .setIn(['router', 'action'], 'REDIRECT_TO')
+        .setIn(['router', 'pathname'], '/clients/' + data.client_id)
 
     case 'GET_PLACE':
-      return state.setIn(['places', 'get_place_statuses', String(data.id)], 'READY')
-                  .setIn(['places', 'hashed', String(data.id)], Immutable.fromJS(data))
+      return state
+        .setIn(['places', 'get_place_statuses', String(data.id)], 'READY')
+        .setIn(['places', 'hashed', String(data.id)], Immutable.fromJS(data))
 
     case 'UPDATE_PLACE':
-      return state.setIn(['places', 'update_place_statuses', String(data.id)], 'UPDATED')
-                  .setIn(['places', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .setIn(['router', 'action'], 'REDIRECT_TO')
-                  .setIn(['router', 'pathname'], '/clients/' + data.client_id)
+      return state
+        .setIn(['places', 'update_place_statuses', String(data.id)], 'UPDATED')
+        .setIn(['places', 'hashed', String(data.id)], Immutable.fromJS(data))
+        .setIn(['router', 'action'], 'REDIRECT_TO')
+        .setIn(['router', 'pathname'], '/clients/' + data.client_id)
 
     case 'GET_RENTS':
       var get_rents_hash = {}
@@ -393,16 +417,18 @@ export function requestSucceeded(state, request, result, payload, callback) {
         get_rents_order.push(String(rent.id))
       })
 
-      if(state.getIn(['rents', 'get_rents_status'])) {
-        return state.setIn(['rents', 'get_rents_status'], 'READY')
-                    .mergeIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
-                    .updateIn(['rents', 'order'], order => (order || Immutable.List()).concat(get_rents_order))
-                    .setIn(['rents', 'total'], data.total)
+      if (state.getIn(['rents', 'get_rents_status'])) {
+        return state
+          .setIn(['rents', 'get_rents_status'], 'READY')
+          .mergeIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
+          .updateIn(['rents', 'order'], order => (order || Immutable.List()).concat(get_rents_order))
+          .setIn(['rents', 'total'], data.total)
       } else {
-        return state.setIn(['rents', 'get_rents_status'], 'READY')
-                    .mergeIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
-                    .setIn(['rents', 'order'], Immutable.List(get_rents_order))
-                    .setIn(['rents', 'total'], data.total)
+        return state
+          .setIn(['rents', 'get_rents_status'], 'READY')
+          .mergeIn(['rents', 'hashed'], Immutable.fromJS(get_rents_hash))
+          .setIn(['rents', 'order'], Immutable.List(get_rents_order))
+          .setIn(['rents', 'total'], data.total)
       }
 
     case 'GET_CLIENT_RENTS':
@@ -414,31 +440,36 @@ export function requestSucceeded(state, request, result, payload, callback) {
         get_client_rents_order.push(String(rent.id))
       })
 
-      return state.setIn(['rents', 'get_client_rents_statuses', payload.client_id], 'READY')
-                  .mergeIn(['rents', 'hashed'], Immutable.fromJS(get_client_rents_hash))
-                  .setIn(['clients', 'hashed', payload.client_id, 'rents_order'], Immutable.fromJS(get_client_rents_order))
+      return state
+        .setIn(['rents', 'get_client_rents_statuses', payload.client_id], 'READY')
+        .mergeIn(['rents', 'hashed'], Immutable.fromJS(get_client_rents_hash))
+        .setIn(['clients', 'hashed', payload.client_id, 'rents_order'], Immutable.fromJS(get_client_rents_order))
 
     case 'GET_RENT':
-      return state.setIn(['rents', 'get_rent_statuses', String(data.id)], 'READY')
-                  .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
+      return state
+        .setIn(['rents', 'get_rent_statuses', String(data.id)], 'READY')
+        .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
 
     case 'CREATE_RENT':
-      return state.setIn(['rents', 'create_rent_status'], 'CREATED')
-                  .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
-                  .updateIn(['rents', 'order'], order => (order || Immutable.List()).unshift(String(data.id)))
-                  .setIn(['router', 'action'], 'REDIRECT_TO')
-                  .setIn(['router', 'pathname'], '/rents')
+      return state
+        .setIn(['rents', 'create_rent_status'], 'CREATED')
+        .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
+        .updateIn(['rents', 'order'], order => (order || Immutable.List()).unshift(String(data.id)))
+        .setIn(['router', 'action'], 'REDIRECT_TO')
+        .setIn(['router', 'pathname'], '/rents')
 
     case 'UPDATE_RENT':
-      var newUpdateRentState = state.setIn(['rents', 'update_rent_statuses', String(data.id)], 'UPDATED')
-                                    .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
+      var newUpdateRentState = state
+        .setIn(['rents', 'update_rent_statuses', String(data.id)], 'UPDATED')
+        .setIn(['rents', 'hashed', String(data.id)], Immutable.fromJS(data))
 
-      if(payload.from) {
-        newUpdateRentState = newUpdateRentState.setIn(['router', 'action'], payload.action)
-                                               .setIn(['router', 'pathname'], payload.from)
+      if (payload.from) {
+        newUpdateRentState = newUpdateRentState
+          .setIn(['router', 'action'], payload.action)
+          .setIn(['router', 'pathname'], payload.from)
       }
 
-      return newUpdateRentState;
+      return newUpdateRentState
 
     default:
       return state
@@ -448,7 +479,7 @@ export function requestSucceeded(state, request, result, payload, callback) {
 export function requestFailed(state, request, result, payload, callback) {
   switch (request) {
     case 'SIGN_IN':
-      return Immutable.Map({ 'session_status': 'SIGNING_IN_ERROR' })
+      return Immutable.Map({ session_status: 'SIGNING_IN_ERROR' })
 
     case 'SIGN_OUT':
       return state.set('session_status', 'SIGN_OUT_ERROR')

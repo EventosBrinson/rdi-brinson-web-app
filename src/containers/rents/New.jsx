@@ -13,29 +13,28 @@ import { Form, Input, InputNumber, Select, Button, DatePicker } from 'antd'
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 6 },
+    sm: { span: 6 }
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 14 },
-  },
+    sm: { span: 14 }
+  }
 }
 
 const tailFormItemLayout = {
   wrapperCol: {
     xs: {
       span: 24,
-      offset: 0,
+      offset: 0
     },
     sm: {
       span: 14,
-      offset: 6,
-    },
-  },
+      offset: 6
+    }
+  }
 }
 
 class New extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -55,10 +54,10 @@ class New extends React.Component {
     let params = queryString.parse(this.props.location.search)
     this.client_id = params.client_id
 
-    if(this.props.get_clients_status !== 'READY') {
+    if (this.props.get_clients_status !== 'READY') {
       params = {}
 
-      if(abilitiesHelper.isAdmin()) {
+      if (abilitiesHelper.isAdmin()) {
         params['all'] = true
       }
 
@@ -72,7 +71,7 @@ class New extends React.Component {
   componentWillReceiveProps(nextProps) {
     let form = nextProps.rent_form || Immutable.Map()
 
-    if(!form.get('client_id')) {
+    if (!form.get('client_id')) {
       this.setDefaults(nextProps)
     }
   }
@@ -84,12 +83,10 @@ class New extends React.Component {
 
     rightNow.set('minutes', Math.floor(rightNow.get('minutes') / 10) * 10)
 
-    if(!form.get('delivery_time')) {
-
-
+    if (!form.get('delivery_time')) {
       defaults['delivery_time'] = rightNow
     }
-    if(!form.get('pick_up_time')) {
+    if (!form.get('pick_up_time')) {
       defaults['pick_up_time'] = moment(rightNow).add(1, 'day')
     }
 
@@ -102,7 +99,7 @@ class New extends React.Component {
 
     let client = clients.get(Number(this.client_id))
 
-    if(client && client.get('active')) {
+    if (client && client.get('active')) {
       let placesOrder = client.get('places_order') || Immutable.List()
 
       props.mergeForm('rent_form', {
@@ -112,13 +109,13 @@ class New extends React.Component {
     } else {
       let clientsOrder = props.clients_order || Immutable.List()
 
-      clientsOrder = clientsOrder.filter((client_id) => {
+      clientsOrder = clientsOrder.filter(client_id => {
         return clients.get(client_id).get('active')
       })
 
       client = clients.get(clientsOrder.get(0))
 
-      if(client) {
+      if (client) {
         let placesOrder = client.get('places_order') || Immutable.List()
 
         props.mergeForm('rent_form', {
@@ -153,7 +150,7 @@ class New extends React.Component {
   }
 
   handleDeliveryDateChange(value) {
-    if(this.props.form.getFieldValue('pick_up_time').isBefore(value)) {
+    if (this.props.form.getFieldValue('pick_up_time').isBefore(value)) {
       this.props.mergeForm('rent_form', { delivery_time: value, pick_up_time: moment(value).add(1, 'day') })
     } else {
       this.props.changeForm('rent_form', 'delivery_time', value)
@@ -167,7 +164,7 @@ class New extends React.Component {
     current.set('minutes', value.get('minutes'))
 
     this.props.form.setFieldsValue({ delivery_date: current })
-    this.props.changeForm('rent_form', 'delivery_time', current )
+    this.props.changeForm('rent_form', 'delivery_time', current)
   }
 
   handlePickUpDateChange(value) {
@@ -181,7 +178,7 @@ class New extends React.Component {
     current.set('minutes', value.get('minutes'))
 
     this.props.form.setFieldsValue({ pick_up_date: current })
-    this.props.changeForm('rent_form', 'pick_up_time', current )
+    this.props.changeForm('rent_form', 'pick_up_time', current)
   }
 
   handlePriceChange(value) {
@@ -216,170 +213,202 @@ class New extends React.Component {
 
     var clientOptions = []
 
-    clientsOrder.forEach( client_id => {
+    clientsOrder.forEach(client_id => {
       let client = this.props.clients.get(client_id)
 
-      if(client.get('active')) {
+      if (client.get('active')) {
         clientOptions.push(
-          <Select.Option key={ 'cl-' + client_id } value={ client_id }>{ client.get('lastname') + ' ' + client.get('firstname') }</Select.Option>
+          <Select.Option key={'cl-' + client_id} value={client_id}>
+            {client.get('lastname') + ' ' + client.get('firstname')}
+          </Select.Option>
         )
       }
     })
 
     var placeOptions = []
 
-    places_order.forEach( place_id => {
+    places_order.forEach(place_id => {
       let place = this.props.places.get(place_id)
 
-      if(place.get('active')) {
+      if (place.get('active')) {
         placeOptions.push(
-          <Select.Option key={ 'pl-' + place_id } value={ place_id }>{ place.get('name') }</Select.Option>
+          <Select.Option key={'pl-' + place_id} value={place_id}>
+            {place.get('name')}
+          </Select.Option>
         )
       }
     })
 
     var datePickerLocale = {
-      "lang": {
-        "placeholder": "Fecha y hora",
-        "now": "Ahora",
-        "ok": "Ok",
-        "timeSelect": "Hora",
-        "dateSelect": "Fecha"
+      lang: {
+        placeholder: 'Fecha y hora',
+        now: 'Ahora',
+        ok: 'Ok',
+        timeSelect: 'Hora',
+        dateSelect: 'Fecha'
       }
     }
 
-    const priceFormater = (value) => {
+    const priceFormater = value => {
       var splited = String(value).split('.')
-      var first = '', last = undefined
+      var first = '',
+        last = undefined
 
-      if(splited[0]) {
+      if (splited[0]) {
         first = splited[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       }
-      if(splited[1] !== undefined) {
+      if (splited[1] !== undefined) {
         last = splited[1]
       }
 
-      return `$${first}${last !== undefined ? '.' + last.slice(-2) : '' }`
+      return `$${first}${last !== undefined ? '.' + last.slice(-2) : ''}`
     }
 
     return (
-      <Form onSubmit={ this.processSubmit }>
+      <Form onSubmit={this.processSubmit}>
         <Form.Item {...tailFormItemLayout}>
-          <h2>
-            Nueva renta
-          </h2>
+          <h2>Nueva renta</h2>
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Fecha de entrega" hasFeedback>
-          { getFieldDecorator('delivery_date', {
+          {getFieldDecorator('delivery_date', {
             rules: [{ type: 'object', required: true, message: 'Selecciona una fecha de entrega' }],
             initialValue: form.get('delivery_time')
           })(
             <DatePicker
-              locale={ datePickerLocale }
+              locale={datePickerLocale}
               format="dddd, DD [de] MMMM [de] YYYY [a las] hh:mm a"
-              allowClear={ false }
+              allowClear={false}
               style={{ width: '100%' }}
-              disabledDate={ current => current.isBefore(moment().startOf('day')) }
-              onChange={ this.handleDeliveryDateChange }/>
+              disabledDate={current => current.isBefore(moment().startOf('day'))}
+              onChange={this.handleDeliveryDateChange}
+            />
           )}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Hora de entrega" hasFeedback>
-          { getFieldDecorator('delivery_time', {
+          {getFieldDecorator('delivery_time', {
             rules: [{ type: 'object', required: true, message: 'Selecciona una hora de entrega' }],
             initialValue: form.get('delivery_time')
-          })(
-            <TimeSelect name="delivery_time" onChange={ this.handleDeliveryTimeChange }/>
-          )}
+          })(<TimeSelect name="delivery_time" onChange={this.handleDeliveryTimeChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Fecha de recolección" hasFeedback>
-          { getFieldDecorator('pick_up_date', {
+          {getFieldDecorator('pick_up_date', {
             rules: [{ type: 'object', required: true, message: 'Selecciona una fecha de recolección' }],
             initialValue: form.get('pick_up_time')
           })(
             <DatePicker
-              locale={ datePickerLocale }
+              locale={datePickerLocale}
               format="dddd, DD [de] MMMM [de] YYYY [a las] hh:mm a"
-              allowClear={ false }
+              allowClear={false}
               style={{ width: '100%' }}
-              disabledDate={ current => current.isBefore(moment(form.get('delivery_time')).startOf('day')) }
-              onChange={ this.handlePickUpDateChange }/>
+              disabledDate={current => current.isBefore(moment(form.get('delivery_time')).startOf('day'))}
+              onChange={this.handlePickUpDateChange}
+            />
           )}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Hora de recolección" hasFeedback>
-          { getFieldDecorator('pick_up_time', {
+          {getFieldDecorator('pick_up_time', {
             rules: [{ type: 'object', required: true, message: 'Selecciona una hora de recolección' }],
             initialValue: form.get('pick_up_time')
-          })(
-            <TimeSelect name="pick_up_time" onChange={ this.handlePickUpTimeChange }/>
-          )}
+          })(<TimeSelect name="pick_up_time" onChange={this.handlePickUpTimeChange} />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Producto" hasFeedback>
-          { getFieldDecorator('product', {
-            rules: [{
-              required: true, message: 'Introduce el producto rentado',
-              whitespace: true
-            }],
+          {getFieldDecorator('product', {
+            rules: [
+              {
+                required: true,
+                message: 'Introduce el producto rentado',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('product')
           })(
-            <Input  type='textarea' name='product' placeholder="Producto rentado" autosize onChange={ this.handleChange } />
+            <Input
+              type="textarea"
+              name="product"
+              placeholder="Producto rentado"
+              autosize
+              onChange={this.handleChange}
+            />
           )}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Precio" hasFeedback>
-          { getFieldDecorator('price', {
-            rules: [{
-              type: 'number',
-              required: true, message: 'Introduce el monto de la renta',
-              whitespace: true
-            }],
+          {getFieldDecorator('price', {
+            rules: [
+              {
+                type: 'number',
+                required: true,
+                message: 'Introduce el monto de la renta',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('price')
           })(
-            <InputNumber max={9999999} min={0} formatter={ priceFormater } parser={ value => value.replace(/\$\s?|(,*)/g, '') } style={{ width: '100%' }} onChange={ this.handlePriceChange }/>
+            <InputNumber
+              max={9999999}
+              min={0}
+              formatter={priceFormater}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
+              style={{ width: '100%' }}
+              onChange={this.handlePriceChange}
+            />
           )}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Descuento" hasFeedback>
-          { getFieldDecorator('discount', {
-            rules: [{
-              type: 'number',
-              required: true, message: 'Introduce el monto descontado',
-              whitespace: true
-            }],
+          {getFieldDecorator('discount', {
+            rules: [
+              {
+                type: 'number',
+                required: true,
+                message: 'Introduce el monto descontado',
+                whitespace: true
+              }
+            ],
             initialValue: form.get('discount')
           })(
-            <InputNumber max={9999999} min={0} formatter={ priceFormater } parser={ value => value.replace(/\$\s?|(,*)/g, '') } style={{ width: '100%' }} onChange={ this.handleDiscountChange }/>
+            <InputNumber
+              max={9999999}
+              min={0}
+              formatter={priceFormater}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
+              style={{ width: '100%' }}
+              onChange={this.handleDiscountChange}
+            />
           )}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Cliente">
-          { getFieldDecorator('client_id', {
+          {getFieldDecorator('client_id', {
             rules: [{ required: true, message: 'Es necesario un cliente el cual asignar' }],
             initialValue: form.get('client_id')
           })(
-            <Select name='client_id' onChange={ this.handleClientChange }>
-              { clientOptions }
+            <Select name="client_id" onChange={this.handleClientChange}>
+              {clientOptions}
             </Select>
           )}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="Lugar">
-          { getFieldDecorator('place_id', {
+          {getFieldDecorator('place_id', {
             rules: [{ required: true, message: 'Es necesario un lugar el cual asignar' }],
             initialValue: form.get('place_id')
           })(
-            <Select name='place_id' onChange={ this.handlePlaceChange }>
-              { placeOptions }
+            <Select name="place_id" onChange={this.handlePlaceChange}>
+              {placeOptions}
             </Select>
           )}
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit" size="large">Reservar</Button>
+          <Button type="primary" htmlType="submit" size="large">
+            Reservar
+          </Button>
         </Form.Item>
       </Form>
     )
@@ -397,4 +426,9 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Form.create()(New)))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(Form.create()(New))
+)

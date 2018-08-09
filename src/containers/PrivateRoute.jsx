@@ -5,7 +5,6 @@ import { Route, Redirect } from 'react-router-dom'
 import * as actionCreators from '../action-creators'
 
 class PrivateRoute extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -13,18 +12,23 @@ class PrivateRoute extends React.Component {
   }
 
   authenticated() {
-    return (this.props.session_status === 'SIGNED_IN' || this.props.session_status === 'FIRST_SIGNING_IN')
+    return this.props.session_status === 'SIGNED_IN' || this.props.session_status === 'FIRST_SIGNING_IN'
   }
 
   render() {
     let { component: Component, ...rest } = this.props
 
     return (
-      <Route {...rest} render={ props => (
-        this.authenticated() ? (<Component {...props}/>
-      ) : (
-        <Redirect to={{ pathname: '/sign_in', state: { from: props.location }}}/>
-      ))}/>
+      <Route
+        {...rest}
+        render={props =>
+          this.authenticated() ? (
+            <Component {...props} />
+          ) : (
+            <Redirect to={{ pathname: '/sign_in', state: { from: props.location } }} />
+          )
+        }
+      />
     )
   }
 }
@@ -35,4 +39,9 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(PrivateRoute))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(PrivateRoute)
+)

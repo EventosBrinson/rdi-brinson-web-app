@@ -8,7 +8,6 @@ import queryString from 'query-string'
 import { Form, Input, Icon, Button } from 'antd'
 
 class AcceptInvitation extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -41,17 +40,34 @@ class AcceptInvitation extends React.Component {
     const { getFieldDecorator } = this.props.form
 
     return (
-      <div style={{ position: 'absolute', maxWidth: '300px', maxHeight: '177px', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto' }}>
-        <h1 style={{ textAlign: 'center', marginTop: '-36px', marginBottom: '15px' }}>
-          Activar cuenta
-        </h1>
-        <Form onSubmit={ this.processSubmit } style={{ maxWidth: '300px' }}>
+      <div
+        style={{
+          position: 'absolute',
+          maxWidth: '300px',
+          maxHeight: '177px',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          margin: 'auto'
+        }}
+      >
+        <h1 style={{ textAlign: 'center', marginTop: '-36px', marginBottom: '15px' }}>Activar cuenta</h1>
+        <Form onSubmit={this.processSubmit} style={{ maxWidth: '300px' }}>
           <Form.Item style={{ marginBottom: '10px' }}>
             {getFieldDecorator('password', {
-              rules: [{ required: true, message: 'Introduce tu contraseña' },
-                      { min: 8, message: 'La contraseña debe tener al menos 8 caracteres' }],
+              rules: [
+                { required: true, message: 'Introduce tu contraseña' },
+                { min: 8, message: 'La contraseña debe tener al menos 8 caracteres' }
+              ]
             })(
-              <Input name="password" prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Nueva contraseña" onChange={ this.handleChange } />
+              <Input
+                name="password"
+                prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
+                type="password"
+                placeholder="Nueva contraseña"
+                onChange={this.handleChange}
+              />
             )}
           </Form.Item>
           <Form.Item>
@@ -72,4 +88,9 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Form.create()(AcceptInvitation)))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(Form.create()(AcceptInvitation))
+)
