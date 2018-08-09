@@ -70,7 +70,7 @@ commands.push({
 })
 
 commands.push({
-  command: ['scp', '-r', '/tmp/' + appname + '.tar.gz', 'deploy@rdi.eventosbrinson.com:' + deploy_to].join(' '),
+  command: ['scp', '-o StrictHostKeyChecking=no', '-r', '/tmp/' + appname + '.tar.gz', 'deploy@rdi.eventosbrinson.com:' + deploy_to].join(' '),
   local: true
 })
 
