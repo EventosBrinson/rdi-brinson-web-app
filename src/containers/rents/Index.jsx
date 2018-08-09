@@ -175,7 +175,7 @@ class Index extends React.Component {
         ) : null}
         {this.props.total > this.props.order.size ? (
           <Button type="primary" style={{ marginTop: '20px', width: '100%' }} onClick={this.handleLoadAll.bind(this)}>
-            Cargar todo alv
+            Cargar todo
           </Button>
         ) : null}
       </div>

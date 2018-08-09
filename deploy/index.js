@@ -11,7 +11,7 @@ var deployer = new Deployer({
 var appname = 'rdi-brinson-web-app'
 var deploy_to = '/home/deploy/rdi-brinson-web-app'
 var repo_url = 'git@github.com:EventosBrinson/rdi-brinson-web-app.git'
-var limit_release_count = 20
+var limit_release_count = 5
 
 var date = new Date();
 var today = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
