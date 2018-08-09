@@ -21,6 +21,7 @@
     "express": "^4.15.3",
     "morgan": "^1.8.2",
     "pm2": "^2.6.1",
+    "prettier": "^1.14.1",
     "react-scripts": "1.1.4",
     "redux-devtools-extension": "^2.13.5",
     "simple-deployer": "0.2.3"
@@ -31,6 +32,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "deploy": "node deploy",
-    "server": "node server"
+    "server": "node server",
+    "format": "prettier --write \"src/**/{*.js,*.jsx}\""
   }
 }
