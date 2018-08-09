@@ -97,14 +97,19 @@ class New extends React.Component {
     let form = props.rent_form || Immutable.Map()
     let clients = props.clients || Immutable.Map()
 
-    let client = clients.get(Number(this.client_id))
+    let client = clients.get(this.client_id)
 
     if (client && client.get('active')) {
       let placesOrder = client.get('places_order') || Immutable.List()
+      let placeId = form.get('place_id')
+
+      if (!placesOrder.includes(placeId)) {
+        placeId = placesOrder.get(0)
+      }
 
       props.mergeForm('rent_form', {
-        client_id: String(client.get('id')),
-        place_id: form.get('place_id') || placesOrder.get(0)
+        client_id: this.client_id,
+        place_id: placeId
       })
     } else {
       let clientsOrder = props.clients_order || Immutable.List()
