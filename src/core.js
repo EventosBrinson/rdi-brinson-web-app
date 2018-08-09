@@ -435,7 +435,7 @@ export function requestSucceeded(state, request, result, payload, callback) {
       var get_client_rents_hash = {}
       var get_client_rents_order = []
 
-      data.forEach(rent => {
+      data.rents.forEach(rent => {
         get_client_rents_hash[rent.id] = rent
         get_client_rents_order.push(String(rent.id))
       })

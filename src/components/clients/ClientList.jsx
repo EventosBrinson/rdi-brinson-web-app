@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import * as abilitiesHelper from '../../modules/abilities-helpers'
 import * as enumsHelpers from '../../modules/enums-helpers'
 
-import { Button, Tag, Popconfirm } from 'antd'
+import { Button, Icon, Tag, Popconfirm } from 'antd'
 
 export default class ClientList extends React.Component {
   deactivate(client, event) {
@@ -55,6 +55,17 @@ export default class ClientList extends React.Component {
         }
       }
 
+      var optionalTelephone = undefined
+
+      if (client.get('telephone_2')) {
+        optionalTelephone = (
+          <span className="ant-table-row-indent indent-level-0" style={{ paddingLeft: '0px' }}>
+            /<Icon type="phone" />
+            {client.get('telephone_2')}
+          </span>
+        )
+      }
+
       if (client.get('active') === this.props.active) {
         rendered_clients.push(
           <tr className="ant-table-row  ant-table-row-level-0" key={'cl-' + client.get('id')}>
@@ -64,6 +75,12 @@ export default class ClientList extends React.Component {
                   {client.get('lastname') + ' ' + client.get('firstname')}
                   <Tag style={{ marginLeft: '5px' }}>{enumsHelpers.rentType(client.get('rent_type'))}</Tag>
                 </Link>
+              </span>
+              <br />
+              <span className="ant-table-row-indent indent-level-0" style={{ paddingLeft: '0px' }}>
+                <Icon type="phone" />
+                {client.get('telephone_1')}
+                {optionalTelephone}
               </span>
             </td>
             <td style={{ width: '1%', whiteSpace: 'nowrap' }}>

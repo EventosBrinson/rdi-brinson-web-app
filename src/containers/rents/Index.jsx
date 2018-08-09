@@ -44,6 +44,10 @@ class Index extends React.Component {
     this.getRents({ paginated: { offset: this.props.order.size, limit: 10 }, ...this.dateParams })
   }
 
+  handleLoadAll() {
+    this.getRents({ paginated: { offset: this.props.order.size, limit: this.props.total }, ...this.dateParams })
+  }
+
   handleTimeChanged(date) {
     if (date) {
       this.dateParams = {
@@ -167,6 +171,11 @@ class Index extends React.Component {
         {this.props.total > this.props.order.size ? (
           <Button type="primary" style={{ marginTop: '20px', width: '100%' }} onClick={this.handleLoadMore.bind(this)}>
             Cargar mas
+          </Button>
+        ) : null}
+        {this.props.total > this.props.order.size ? (
+          <Button type="primary" style={{ marginTop: '20px', width: '100%' }} onClick={this.handleLoadAll.bind(this)}>
+            Cargar todo alv
           </Button>
         ) : null}
       </div>
